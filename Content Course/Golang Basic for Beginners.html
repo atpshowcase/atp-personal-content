@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -208,57 +208,57 @@
     <div class="actions">
       <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
       <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
-      <span class="copy-note" id="copyStatus">Copy ini, lalu paste ke Tiptap.</span>
+      <span class="copy-note" id="copyStatus">Copy this, then paste into Tiptap.</span>
     </div>
 
     <article class="doc">
       <p class="meta">Tiptap Style Notes - Golang Fundamentals</p>
       <h1>Golang Fundamentals Learning Roadmap Complete</h1>
-      <p class="subtitle">Belajar Go dari basic sampai siap bikin service backend, dibahas santai, runtut, dan tetap teknikal.</p>
+      <p class="subtitle">Learn Go from basic to ready to build backend services, discussed casually, comprehensive, and still technical.</p>
 
       <div class="summary">
-        <strong>Map Cepat Section:</strong>
-        <p>BAB A Introduction and Setup, BAB B Basic Syntax and Data, BAB C Control Flow and Functions, BAB D Arrays Slices Maps and Structs, BAB E Pointers Methods Interfaces, BAB F Error Handling Packages and Files, BAB G Concurrency with Goroutines and Channels, BAB H HTTP JSON and Testing, BAB I Suggested Path and Practice.</p>
-        <p>Sub-bab pakai format A.1, A.2, B.1, B.2, dan seterusnya.</p>
+        <strong>Quick Map Section:</strong>
+        <p>CHAPTER A Introduction and Setup, CHAPTER B Basic Syntax and Data, CHAPTER C Control Flow and Functions, CHAPTER D Arrays Slices Maps and Structs, CHAPTER E Pointers Methods Interfaces, CHAPTER F Error Handling Packages and Files, CHAPTER G Concurrency with Goroutines and Channels, CHAPTER H HTTP JSON and Testing, CHAPTER I Suggested Path and Practice.</p>
+        <p>Sub-chapters use format A.1, A.2, B.1, B.2, and so on.</p>
       </div>
 
       <section class="node section">
-        <h2>BAB A. Introduction and Setup</h2>
+        <h2>CHAPTER A. Introduction and Setup</h2>
 
         <h3>A.1 What is Go and Why It Matters</h3>
-        <p>Go adalah bahasa pemrograman yang didesain buat sederhana, cepat, dan gampang dipelihara. Filosofinya jelas: sintaks jangan ribet, performa tetap kencang, dan concurrency jadi warga kelas satu.</p>
-        <p>Di dunia kerja, Go sering dipilih buat backend service, microservices, CLI tool, dan sistem cloud karena build-nya cepat dan deployment-nya enak.</p>
+        <p>Go is a programming language designed to be simple, fast, and easy to maintain. Its philosophy is clear: don't make syntax complicated, keep performance fast, and make concurrency first-class citizens.</p>
+        <p>In the working world, Go is often chosen for backend services, microservices, CLI tools, and cloud systems because its builds are fast and deployment is easy.</p>
         <pre><code>package main
 
 import "fmt"
 
 func main() {
-    fmt.Println("Halo Go")
+    fmt.Println("Hello Go")
 }</code></pre>
-        <blockquote class="callout">Analogi: Go itu kayak motor harian yang sederhana, irit, tapi tetap kuat buat perjalanan jauh.</blockquote>
+        <blockquote class="callout">Analogy: Go is like a daily motorcycle that's simple, fuel-efficient, but still strong for long journeys.</blockquote>
 
         <h3>A.2 History and Philosophy of Go</h3>
-        <p>Go lahir di Google untuk ngatasin problem software skala besar: waktu compile lama, dependency ribet, dan maintenance codebase yang berat.</p>
+        <p>Go was born at Google to solve large-scale software problems: long compile times, complicated dependencies, and heavy codebase maintenance.</p>
         <ul>
-          <li><strong>Simplicity</strong>: style coding dibuat konsisten.</li>
+          <li><strong>Simplicity</strong>: coding style is made consistent.</li>
           <li><strong>Performance</strong>: compiled language, native binary.</li>
-          <li><strong>Concurrency</strong>: goroutines dan channels built-in.</li>
+          <li><strong>Concurrency</strong>: goroutines and channels built-in.</li>
         </ul>
-        <p><strong>Fakta unik yang bikin Go beda:</strong></p>
+        <p><strong>Unique facts that make Go different:</strong></p>
         <ul>
-          <li>Go mulai dikembangkan di Google sekitar 2007 oleh Robert Griesemer, Rob Pike, dan Ken Thompson.</li>
-          <li>Go di-open source ke publik pada 2009, lalu rilis stabil Go 1 pada 2012.</li>
-          <li>Go punya janji kompatibilitas Go 1, jadi code lama umumnya tetap jalan di versi baru.</li>
-          <li>Tool gofmt jadi standar format resmi, makanya style coding tim Go biasanya konsisten tanpa debat panjang.</li>
-          <li>Mascot Go yang terkenal adalah Gopher, ilustrasinya dibuat oleh Renee French.</li>
+          <li>Go started being developed at Google around 2007 by Robert Griesemer, Rob Pike, and Ken Thompson.</li>
+          <li>Go was open-sourced to the public in 2009, then released stable Go 1 in 2012.</li>
+          <li>Go has a Go 1 compatibility promise, so old code generally still runs in new versions.</li>
+          <li>Tool gofmt became the official standard format, so Go team coding styles are usually consistent without long debates.</li>
+          <li>Go's famous mascot is the Gopher, its illustration was created by Renee French.</li>
         </ul>
         <pre><code>go version
 
 go env</code></pre>
-        <blockquote class="callout">Analogi: dibanding pisau Swiss army yang serba ada, Go lebih kayak pisau dapur utama yang fokus, tajam, dan dipakai tiap hari.</blockquote>
+        <blockquote class="callout">Analogy: compared to Swiss army knives that have everything, Go is more like a main kitchen knife that's focused, sharp, and used every day.</blockquote>
 
         <h3>A.3 Installing Go and Environment Setup</h3>
-        <p>Setup minimum: install Go, pastikan PATH benar, lalu test program pertama. Untuk project modern, pakai module dari awal biar dependency rapi.</p>
+        <p>Minimum setup: install Go, ensure PATH is correct, then test first program. For modern projects, use modules from the start so dependencies stay organized.</p>
         <pre><code>go version
 
 mkdir belajar-go
@@ -266,31 +266,31 @@ cd belajar-go
 go mod init belajar-go
 
 go run main.go</code></pre>
-        <blockquote class="callout">Analogi: sebelum masak, lo cek kompor nyala, gas aman, dan bahan sudah siap di meja.</blockquote>
+        <blockquote class="callout">Analogy: before cooking, you check if the stove is on, gas is safe, and ingredients are ready on the table.</blockquote>
       </section>
 
       <section class="node section">
-        <h2>BAB B. Basic Syntax and Data</h2>
+        <h2>CHAPTER B. Basic Syntax and Data</h2>
 
         <h3>B.1 Program Structure in Go</h3>
-        <p>Setiap program executable Go dimulai dari <strong>package main</strong> dan <strong>func main()</strong>. Import dipakai buat ngambil package standar atau package sendiri.</p>
+        <p>Every executable Go program starts with <strong>package main</strong> and <strong>func main()</strong>. Import is used to get standard packages or your own packages.</p>
         <pre><code>package main
 
 import "fmt"
 
 func main() {
-    fmt.Println("Program dimulai")
+    fmt.Println("Program started")
 }</code></pre>
-        <blockquote class="callout">Analogi: package main itu pintu masuk venue, func main itu titik mulai acaranya.</blockquote>
+        <blockquote class="callout">Analogy: package main is the venue entrance door, func main is the event's starting point.</blockquote>
 
         <h3>B.2 Variables and Basic Data Types</h3>
-        <p>Di Go, lo bisa deklarasi variable pakai <strong>var</strong> atau shorthand <strong>:=</strong>. Tipe dasar yang paling sering dipakai: int, float64, bool, string.</p>
-        <p><strong>Kapan pakai var vs :=</strong>: pakai <strong>:=</strong> kalau lo inisialisasi langsung di dalam function. Pakai <strong>var</strong> kalau butuh deklarasi tanpa nilai awal, butuh tipe eksplisit, atau deklarasi di level package.</p>
-        <p><strong>Reason kenapa gak harus over-declare tipe (misal selalu nulis string, int, float manual)</strong>: compiler Go sudah bisa infer tipe dari nilai awal. Kode jadi lebih ringkas, tetap type-safe, dan lebih cepat dibaca saat review.</p>
+        <p>In Go, you can declare variables using <strong>var</strong> or shorthand <strong>:=</strong>. The most commonly used basic types: int, float64, bool, string.</p>
+        <p><strong>When to use var vs :=</strong>: use <strong>:=</strong> when you initialize directly within function. Use <strong>var</strong> when you need declaration without initial value, need explicit type, or declare at package level.</p>
+        <p><strong>Reason why you don't have to over-declare types (like always writing string, int, float manually)</strong>: Go compiler can already infer type from initial value. Code becomes more concise, stays type-safe, and is faster to read during review.</p>
         <ul>
-          <li>Lebih sedikit noise, jadi fokus ke logic, bukan repetisi tipe.</li>
-          <li>Tetap aman karena Go strong-typed, bukan dynamic-typed.</li>
-          <li>Refactor lebih enak karena perubahan nilai awal otomatis ikut mengubah inferensi tipe yang relevan.</li>
+          <li>Less noise, so focus stays on logic, not type repetition.</li>
+          <li>Stays safe because Go is strongly-typed, not dynamically-typed.</li>
+          <li>Refactoring is easier because initial value changes automatically follow relevant type inference changes.</li>
         </ul>
         <pre><code>var umur int = 25
 kota := "Bandung"
@@ -298,7 +298,7 @@ aktif := true
 nilai := 87.5
 
 fmt.Println(umur, kota, aktif, nilai)</code></pre>
-        <p>Go juga support deklarasi banyak variable sekaligus, jadi enak buat nilai yang saling berhubungan.</p>
+        <p>Go also supports multiple variable declarations at once, making it convenient for related values.</p>
         <pre><code>var (
           firstName string = "Rani"
           lastName  string = "Saputra"
@@ -309,15 +309,15 @@ fmt.Println(umur, kota, aktif, nilai)</code></pre>
 
       fmt.Println(firstName, lastName, isMember)
       fmt.Println("koordinat:", lat, lng)</code></pre>
-        <p><strong>Catatan penting</strong>: Go tidak mengizinkan variable dideklarasi tapi tidak dipakai. Ini sengaja supaya code tetap bersih dan minim dead code.</p>
-        <blockquote class="callout">Analogi: variable itu laci-laci penyimpanan, setiap laci punya label isi yang jelas.</blockquote>
+        <p><strong>Important note</strong>: Go doesn't allow variables to be declared but not used. This is intentional so code stays clean and minimizes dead code.</p>
+        <blockquote class="callout">Analogy: variables are storage drawers, each drawer has a clear content label.</blockquote>
 
         <h3>B.3 Zero Values and Constants</h3>
-        <p>Kalau variable dideklarasi tanpa nilai awal, Go kasih zero value otomatis. Ini bikin behavior default lebih predictable.</p>
+        <p>If variable is declared without initial value, Go automatically gives zero value. This makes default behavior more predictable.</p>
         <ul>
-          <li>int jadi 0</li>
-          <li>bool jadi false</li>
-          <li>string jadi ""</li>
+          <li>int becomes 0</li>
+          <li>bool becomes false</li>
+          <li>string becomes ""</li>
         </ul>
         <pre><code>var total int
 var isReady bool
@@ -326,12 +326,12 @@ var nama string
 const appName = "BelajarGo"
 
 fmt.Println(total, isReady, nama, appName)</code></pre>
-        <p>Selain itu, tipe lain juga punya zero value bawaan:</p>
+        <p>Besides that, other types also have built-in zero values:</p>
         <ul>
-          <li>pointer jadi nil</li>
-          <li>slice jadi nil (len 0, belum alokasi data)</li>
-          <li>map jadi nil (harus make sebelum diisi)</li>
-          <li>struct berisi zero value dari setiap field-nya</li>
+          <li>pointer becomes nil</li>
+          <li>slice becomes nil (len 0, data not allocated)</li>
+          <li>map becomes nil (must make before filling)</li>
+          <li>struct contains zero value from each of its fields</li>
         </ul>
         <pre><code>var p *int
       var tags []string
@@ -348,7 +348,7 @@ fmt.Println(total, isReady, nama, appName)</code></pre>
       fmt.Println(tags == nil)      // true
       fmt.Println(scores == nil)    // true
       fmt.Println(u.Name, u.Age)    // "" 0</code></pre>
-        <p><strong>Constants</strong> cocok untuk nilai yang tidak boleh berubah seperti tax rate, batas maksimum retry, atau nama aplikasi.</p>
+        <p><strong>Constants</strong> suitable for values that shouldn't change like tax rate, maximum retry limit, or application name.</p>
         <pre><code>const (
           taxRate   = 0.11
           maxRetry  = 3
@@ -356,15 +356,15 @@ fmt.Println(total, isReady, nama, appName)</code></pre>
       )
 
       fmt.Println(taxRate, maxRetry, appRegion)</code></pre>
-        <blockquote class="callout">Analogi: kalau lo belum isi form, sistem tetap kasih nilai default biar alur gak rusak.</blockquote>
+        <blockquote class="callout">Analogy: if you haven't filled the form, the system still gives default values so the flow doesn't break.</blockquote>
 
         <h3>B.4 Type Conversion and Operators</h3>
-        <p>Go tegas soal tipe data, jadi conversion harus eksplisit. Operator standar dipakai buat hitung, bandingin, dan bikin logika.</p>
-        <p><strong>Kenapa gak pakai tipe decimal bawaan?</strong> Go sengaja menjaga tipe primitif tetap kecil dan sederhana. Karena itu, tidak ada primitive <strong>decimal</strong> seperti di sebagian bahasa lain.</p>
-        <p>Untuk kebutuhan uang/akuntansi, praktik aman biasanya:</p>
+        <p>Go is strict about data types, so conversions must be explicit. Standard operators are used for calculation, comparison, and making logic.</p>
+        <p><strong>Why not use built-in decimal type?</strong> Go intentionally keeps primitive types small and simple. Because of that, there's no built-in <strong>decimal</strong> like in some other languages.</p>
+        <p>For money/accounting needs, safe practices are usually:</p>
         <ul>
-          <li>Simpan nilai sebagai integer satuan terkecil (contoh: rupiah penuh atau cents) agar presisi stabil.</li>
-          <li>Kalau butuh presisi tinggi non-biner, pakai package seperti <strong>math/big</strong> atau library decimal khusus.</li>
+          <li>Save values as smallest integer units (example: full rupiah or cents) so precision stays stable.</li>
+          <li>If you need high non-binary precision, use packages like <strong>math/big</strong> or special decimal libraries.</li>
         </ul>
         <pre><code>a := 10
 b := 3
@@ -381,18 +381,18 @@ harga := 150000   // Rp150.000
 diskon := 12500   // Rp12.500
 total := harga - diskon
 fmt.Println(total) // 137500</code></pre>
-        <p>Karena strong typing, int tidak otomatis berubah ke float64. Lo harus konversi manual supaya hasil hitung sesuai ekspektasi.</p>
+        <p>Because of strong typing, int doesn't automatically convert to float64. You must convert manually so calculation results match expectations.</p>
         <pre><code>price := 15000
       discount := 12.5
 
       finalPrice := float64(price) - (float64(price) * discount / 100)
       fmt.Println(finalPrice)</code></pre>
-        <p>Contoh operator yang sering dipakai di code harian:</p>
+        <p>Examples of operators commonly used in daily code:</p>
         <ul>
           <li>Arithmetic: +, -, *, /, %</li>
           <li>Comparison: ==, !=, &gt;, &lt;, &gt;=, &lt;=</li>
           <li>Logical: &amp;&amp;, ||, !</li>
-          <li>Assignment kombinasi: +=, -=, *=</li>
+          <li>Combination assignment: +=, -=, *=</li>
         </ul>
         <pre><code>x := 7
       y := 2
@@ -403,15 +403,15 @@ fmt.Println(total) // 137500</code></pre>
 
       x += 3
       fmt.Println(x) // 10</code></pre>
-        <p><strong>Tips</strong>: hati-hati integer division. 5 / 2 hasilnya 2, bukan 2.5. Kalau mau desimal, konversi dulu ke float64.</p>
-        <blockquote class="callout">Analogi: barang beda ukuran harus disesuaikan dulu sebelum masuk rak yang sama.</blockquote>
+        <p><strong>Tips</strong>: be careful with integer division. 5 / 2 results in 2, not 2.5. If you want decimals, convert to float64 first.</p>
+        <blockquote class="callout">Analogy: items of different sizes must be adjusted first before entering the same shelf.</blockquote>
       </section>
 
       <section class="node section">
-        <h2>BAB C. Control Flow and Functions</h2>
+        <h2>CHAPTER C. Control Flow and Functions</h2>
 
         <h3>C.1 If Else and Switch</h3>
-        <p>Control flow dipakai buat ngatur jalur program berdasarkan kondisi. Go juga punya short statement di if yang sering kepake buat validasi cepat.</p>
+        <p>Control flow is used to direct program paths based on conditions. Go also has short statements in if that are often used for quick validation.</p>
         <pre><code>nilai := 82
 
 if nilai &gt;= 85 {
@@ -419,7 +419,7 @@ if nilai &gt;= 85 {
 } else if nilai &gt;= 70 {
     fmt.Println("Grade B")
 } else {
-    fmt.Println("Perlu latihan")
+    fmt.Println("Need practice")
 }
 
 switch {
@@ -430,10 +430,10 @@ case nilai &gt;= 75:
 default:
     fmt.Println("Keep learning")
 }</code></pre>
-        <blockquote class="callout">Analogi: kayak satpam parkir yang ngarahin kendaraan ke jalur beda sesuai kondisi lapangan.</blockquote>
+        <blockquote class="callout">Analogy: like a parking attendant who directs vehicles to different lanes according to field conditions.</blockquote>
 
         <h3>C.2 Looping with For</h3>
-        <p>Go cuma punya satu keyword loop: <strong>for</strong>. Tapi bentuknya fleksibel, bisa gaya klasik, mirip while, sampai infinite loop.</p>
+        <p>Go only has one loop keyword: <strong>for</strong>. But its form is flexible, can be classic style, similar to while, up to infinite loop.</p>
         <pre><code>for i := 1; i &lt;= 3; i++ {
     fmt.Println("for klasik", i)
 }
@@ -448,10 +448,10 @@ for {
     fmt.Println("infinite loop")
     break
 }</code></pre>
-        <blockquote class="callout">Analogi: satu remote bisa buat banyak fungsi, tinggal mode pemakaiannya yang beda.</blockquote>
+        <blockquote class="callout">Analogy: one remote can do many functions, just different usage modes.</blockquote>
 
         <h3>C.3 Functions and Multiple Return Values</h3>
-        <p>Function di Go bisa ngembaliin lebih dari satu nilai. Ini fitur inti yang sering dipakai bareng error handling.</p>
+        <p>Functions in Go can return more than one value. This is a core feature often used together with error handling.</p>
         <pre><code>func bagi(a int, b int) (int, int) {
     return a / b, a % b
 }
@@ -461,8 +461,8 @@ fmt.Println(hasil, sisa)</code></pre>
         <blockquote class="callout">Analogi: sekali transaksi bisa dapet struk dan kembalian sekaligus.</blockquote>
 
         <h3>C.4 Variadic and Anonymous Functions</h3>
-        <p>Variadic function menerima jumlah argumen yang fleksibel. Anonymous function cocok buat operasi cepat atau callback kecil.</p>
-        <p><strong>Variadic</strong> pakai tanda <strong>...</strong> sebelum tipe parameter. Secara internal, parameter ini diperlakukan seperti slice. Jadi lo bisa kirim nilai satuan atau langsung lempar slice pakai <strong>...</strong> juga.</p>
+        <p>Variadic functions accept flexible number of arguments. Anonymous functions are suitable for quick operations or small callbacks.</p>
+        <p><strong>Variadic</strong> uses <strong>...</strong> before parameter type. Internally, this parameter is treated like a slice. So you can send individual values or directly pass a slice using <strong>...</strong> too.</p>
         <pre><code>func jumlah(nums ...int) int {
     total := 0
     for _, n := range nums {
@@ -479,7 +479,7 @@ fmt.Println(jumlah(1, 2, 3, 4))
 fmt.Println(double(5))</code></pre>
     <pre><code>angka := []int{10, 20, 30}
 fmt.Println(jumlah(angka...)) // slice di-unpack jadi argumen variadic</code></pre>
-    <p><strong>Apa arti underscore (_) di for range?</strong> Di Go, <strong>range</strong> biasanya ngasih dua nilai: index dan value. Simbol <strong>_</strong> artinya nilai itu sengaja diabaikan karena tidak dipakai.</p>
+    <p><strong>What does underscore (_) mean in for range?</strong> In Go, <strong>range</strong> usually returns two values: index and value. The <strong>_</strong> symbol means that value is intentionally ignored because it's not used.</p>
     <pre><code>for i, n := range nums {
   fmt.Println(i, n) // pakai index dan value
 }
@@ -491,7 +491,7 @@ for _, n := range nums {
 for i := range nums {
   fmt.Println(i) // cuma index
 }</code></pre>
-    <p><strong>Anonymous function</strong> juga sering dipakai sebagai closure, yaitu function yang "ingat" variable di scope luar.</p>
+    <p><strong>Anonymous function</strong> is also often used as closure, which is a function that "remembers" variables in outer scope.</p>
     <pre><code>counter := func() func() int {
   x := 0
   return func() int {
@@ -501,8 +501,19 @@ for i := range nums {
 }
 
 next := counter()
-fmt.Println(next()) // 1
-fmt.Println(next()) // 2</code></pre>
+fmt.Println(next())  // 1
+fmt.Println(next())  // 2
+fmt.Println(next())  // 3
+fmt.Println(next())  // 4
+fmt.Println(next())  // 5
+
+next2 := counter()
+
+fmt.Println(next2())  // 1
+fmt.Println(next2())  // 2
+fmt.Println(next2())  // 3
+fmt.Println(next2())  // 4
+fmt.Println(next2())  // 5</code></pre>
   <p><strong>Maksud contoh closure di atas:</strong></p>
   <ol>
     <li><strong>counter()</strong> membuat variable <strong>x</strong> dengan nilai awal 0.</li>
@@ -707,7 +718,7 @@ fmt.Println(string(data))</code></pre>
         <h2>BAB G. Concurrency with Goroutines and Channels</h2>
 
         <h3>G.1 Goroutines Fundamentals</h3>
-        <p>Goroutine adalah fungsi yang jalan concurrent dengan biaya ringan. Ini alasan utama Go kuat di service yang butuh proses paralel banyak.</p>
+        <p>Goroutine is a function that runs concurrently with low overhead. This is the main reason Go is strong in services that need many parallel processes.</p>
         <pre><code>func kerja(nama string) {
     fmt.Println("mulai", nama)
     time.Sleep(300 * time.Millisecond)
@@ -720,7 +731,7 @@ time.Sleep(1 * time.Second)</code></pre>
         <blockquote class="callout">Analogi: satu dapur dengan banyak koki yang bisa masak menu berbeda di waktu bareng.</blockquote>
 
         <h3>G.2 Channels for Safe Communication</h3>
-        <p>Channel dipakai buat komunikasi antar goroutine tanpa rebutan data sembarangan. Ini bikin pola concurrent lebih aman dan mudah dipahami.</p>
+        <p>Channel is used for communication between goroutines without data race conditions. This makes concurrent patterns safer and easier to understand.</p>
         <pre><code>ch := make(chan string)
 
 go func() {
@@ -729,10 +740,10 @@ go func() {
 
 msg := &lt;-ch
 fmt.Println(msg)</code></pre>
-        <blockquote class="callout">Analogi: channel itu jalur kirim paket resmi, jadi barang sampai ke tujuan tanpa lempar-lempar liar.</blockquote>
+        <blockquote class="callout">Analogy: channel is like official package delivery route, so items arrive at destination without random throwing.</blockquote>
 
         <h3>G.3 Buffered Channels and Select</h3>
-        <p>Buffered channel bisa menampung data sebelum dibaca. Select dipakai saat lo menunggu banyak channel sekaligus.</p>
+        <p>Buffered channel can wait for data before being read. Select is used when you wait for many channels at once.</p>
         <pre><code>ch1 := make(chan string, 1)
 ch2 := make(chan string, 1)
 
@@ -745,26 +756,26 @@ case m1 := &lt;-ch1:
 case m2 := &lt;-ch2:
     fmt.Println(m2)
 default:
-    fmt.Println("belum ada pesan")
+    fmt.Println("no messages yet")
 }</code></pre>
         <blockquote class="callout">Analogi: select itu seperti operator call center yang siap terima telepon dari beberapa jalur masuk.</blockquote>
 
         <h3>G.4 Common Concurrency Pitfalls</h3>
-        <p>Yang sering bikin bug: deadlock, goroutine leak, dan race condition. Biasakan desain alur channel jelas dan tutup channel saat memang selesai dipakai.</p>
+        <p>Common bugs: deadlock, goroutine leak, and race condition. Always design clear channel flows and close channels when finished using.</p>
         <pre><code>go test -race ./...</code></pre>
         <ul>
-          <li>Hindari kirim ke channel yang tidak pernah dibaca.</li>
-          <li>Gunakan context untuk cancel operasi panjang.</li>
-          <li>Audit ownership data yang diakses banyak goroutine.</li>
+          <li>Avoid sending to channels that are never read.</li>
+          <li>Use context to cancel long operations.</li>
+          <li>Audit data ownership accessed by many goroutines.</li>
         </ul>
-        <blockquote class="callout">Analogi: kalau semua orang ngobrol bareng tanpa aturan giliran, rapat pasti chaos.</blockquote>
+        <blockquote class="callout">Analogy: if everyone talks randomly without rules, it will definitely be chaos.</blockquote>
       </section>
 
       <section class="node section">
         <h2>BAB H. HTTP JSON and Testing</h2>
 
         <h3>H.1 Building Simple HTTP Server</h3>
-        <p>Package net/http cukup buat bikin server sederhana tanpa framework tambahan. Cocok buat paham fondasi web di Go.</p>
+        <p>Package net/http is sufficient to build simple server without additional frameworks. Suitable for understanding web foundations in Go.</p>
         <pre><code>http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
     fmt.Fprintln(w, "pong")
 })
@@ -773,7 +784,7 @@ http.ListenAndServe(":8080", nil)</code></pre>
         <blockquote class="callout">Analogi: net/http itu dapur dasar, lo sudah bisa buka warung tanpa dekor mewah dulu.</blockquote>
 
         <h3>H.2 Routing and JSON Response</h3>
-        <p>Endpoint API umum akan kirim response JSON. Encoding decoding JSON jadi skill wajib backend Go.</p>
+        <p>API endpoints usually send JSON responses. Encoding and decoding JSON is a mandatory skill for Go backend.</p>
         <pre><code>type Resp struct {
     Message string `json:"message"`
 }
@@ -782,10 +793,10 @@ http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
     json.NewEncoder(w).Encode(Resp{Message: "halo"})
 })</code></pre>
-        <blockquote class="callout">Analogi: JSON itu format paket standar, jadi sistem beda-beda tetap bisa saling paham isi kiriman.</blockquote>
+        <blockquote class="callout">Analogy: JSON is a standard package format, so different systems can still understand the contents of sent messages.</blockquote>
 
         <h3>H.3 JSON Decode with Struct Tags</h3>
-        <p>Struct tag memastikan field Go bisa match dengan key JSON yang biasanya snake_case atau lower case.</p>
+        <p>Struct tags ensure Go fields can match with JSON keys that are usually snake_case or lower case.</p>
         <pre><code>type User struct {
     FullName string `json:"full_name"`
     Age      int    `json:"age"`
@@ -802,7 +813,7 @@ fmt.Println(u.FullName, u.Age)</code></pre>
         <blockquote class="callout">Analogi: struct tag itu label penerjemah biar format luar dan format internal bisa nyambung rapi.</blockquote>
 
         <h3>H.4 Basic Unit Testing in Go</h3>
-        <p>Testing di Go ringan dan langsung kepake lewat package testing. Biasakan nulis test kecil sejak awal biar refactor lebih aman.</p>
+        <p>Testing in Go is simple and done directly through the testing package. Usually write small tests from the beginning to make refactoring safer.</p>
         <pre><code>// file: math_test.go
 func TestTambah(t *testing.T) {
     got := tambah(2, 3)
@@ -815,22 +826,22 @@ func TestTambah(t *testing.T) {
 
 // jalankan:
 // go test ./...</code></pre>
-        <blockquote class="callout">Analogi: test itu quality check sebelum barang dikirim ke pelanggan.</blockquote>
+        <blockquote class="callout">Analogy: testing is like quality check before shipping products to customers.</blockquote>
       </section>
 
       <section class="node section">
         <h2>BAB I. Suggested Path and Practice</h2>
 
         <h3>I.1 Suggested Learning Path</h3>
-        <p>Biar belajarnya gak loncat-loncat, ini urutan yang paling masuk akal:</p>
+        <p>So learning doesn't jump around, here's the most logical order:</p>
         <ol>
-          <li>Basics dulu: intro, syntax, variable, control flow, loop.</li>
-          <li>Naik ke function, slice, map, struct, interface.</li>
-          <li>Kuatkan error handling dan package module.</li>
-          <li>Masuk concurrency pelan-pelan sampai paham pola.</li>
-          <li>Tutup dengan HTTP, JSON, dan testing.</li>
+          <li>Basics first: intro, syntax, variable, control flow, loop.</li>
+          <li>Move to functions, slices, maps, structs, interfaces.</li>
+          <li>Strengthen error handling and package modules.</li>
+          <li>Learn concurrency gradually until you understand patterns.</li>
+          <li>Finish with HTTP, JSON, and testing.</li>
         </ol>
-        <blockquote class="callout">Analogi: jangan langsung main liga utama, bangun stamina dari latihan dasar yang konsisten.</blockquote>
+        <blockquote class="callout">Analogy: don't jump straight to the main league, build stamina from consistent basic exercises.</blockquote>
 
         <h3>I.2 Practice Project Ideas</h3>
         <p>Project kecil yang realistis dan efektif buat ngunci konsep:</p>
