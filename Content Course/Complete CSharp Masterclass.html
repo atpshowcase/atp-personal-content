@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complete C# Masterclass - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - C# & .NET Development</p>
+      <h1>Complete C# Masterclass</h1>
+      <p class="subtitle">A comprehensive roadmap to mastering C# and the .NET ecosystem, from basic syntax to enterprise patterns, desktop GUI, and game development.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Introduction & Fundamentals, BAB B Control Flow, BAB C Methods & Functions, BAB D Data Structures, BAB E Object-Oriented Programming (OOP), BAB F Advanced C# Concepts, BAB G Multithreading & Async, BAB H Working with Databases, BAB I Desktop Development (WPF), BAB J Game Development (Unity), BAB K Clean Code & Best Practices, BAB L Testing & Professional Development.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction & Fundamentals</h2>
+
+        <h3>A.1 Introduction to C#</h3>
+        <p>C# is a modern, object-oriented language developed by Microsoft as part of the .NET initiative. It's powerful, safe, and can be used to build almost anything: from high-performance web backends to stunning 3D games.</p>
+        <blockquote class="callout">Analogy: C# is like a "Swiss Army Knife" for high-tech engineers. It's sturdy, incredibly well-designed, and has a dedicated tool for almost every job you'll face in the field.</blockquote>
+        <ul>
+          <li>C# and .NET: The language vs. the execution platform.</li>
+          <li>Use cases: Web (ASP.NET), Desktop (WPF/WinForms), Mobile (MAUI), and Games (Unity).</li>
+          <li>Setup: Getting started with Visual Studio or VS Code + .NET SDK.</li>
+        </ul>
+
+        <h3>A.2 First Program & Basics</h3>
+        <p>Every journey starts with a single line of code. Understanding the structure of a C# program—from namespaces to the <code>Main</code> method—is crucial for everything that follows.</p>
+        <blockquote class="callout">Analogy: Writing your first program is like learning to say "Hello" in a new language. It's simple, but it's the first bridge between your mind and the machine.</blockquote>
+        <pre><code>using System;
+
+class Program {
+  static void Main() {
+    Console.WriteLine("Hello, C# World!");
+  }
+}</code></pre>
+
+        <h3>A.3 Variables & Data Types</h3>
+        <p>Variables are named storage locations in memory. C# is a strongly-typed language, meaning you must be explicit about what kind of data you're storing.</p>
+        <blockquote class="callout">Analogy: Data types are like different containers in a kitchen. You don't put soup in a colander, and you don't store flour in a glass—choosing the right container (type) prevents a mess (bugs).</blockquote>
+        <ul>
+          <li>Primitive types: <code>int</code>, <code>string</code>, <code>double</code>, <code>bool</code>.</li>
+          <li>Value Types (Stack) vs. Reference Types (Heap).</li>
+          <li>Type conversion: Implicit casting and explicit parsing.</li>
+        </ul>
+
+        <h3>A.4 Operators & Expressions</h3>
+        <p>Operators are symbols used to perform calculations, compare values, or execute logical operations. They are the "verbs" of your programming sentences.</p>
+        <blockquote class="callout">Analogy: Operators are like the basic controls on a calculator. Plus, minus, bigger than, and "and/or" logic allow you to process raw numbers into meaningful results.</blockquote>
+
+        <h3>A.5 Debugging Basics</h3>
+        <p>Bugs are a natural part of coding. Learning to distinguish between syntax errors (compile-time) and logic errors (runtime) using breakpoints is a superpower.</p>
+        <blockquote class="callout">Analogy: Debugging with breakpoints is like having a "Pause Button" for time. You can stop the world, look at exactly what's in every variable, and see exactly where things went sideways.</blockquote>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Control Flow</h2>
+
+        <h3>B.1 Conditional Statements</h3>
+        <p>Control flow allows your program to make decisions. <code>if/else</code> and <code>switch</code> statements are the primary ways to branch your logic.</p>
+        <blockquote class="callout">Analogy: Conditional statements are like a "Choose Your Own Adventure" book. If you walk through the door, go to page 20; otherwise, go to page 25.</blockquote>
+        <pre><code>if (age >= 18) {
+  Console.WriteLine("Welcome!");
+} else {
+  Console.WriteLine("Access Denied.");
+}</code></pre>
+
+        <h3>B.2 Boolean Logic</h3>
+        <p>Combining conditions requires logical operators like AND (<code>&amp;&amp;</code>), OR (<code>||</code>), and NOT (<code>!</code>). Mastery of logic prevents complex bugs in branching paths.</p>
+        <blockquote class="callout">Analogy: Boolean logic is like a strict club entrance rule. "You can enter IF you have a ticket AND you are wearing shoes"—if either one is false, you're staying outside.</blockquote>
+
+        <h3>B.3 Loops</h3>
+        <p>Loops allow you to execute a block of code repeatedly. <code>for</code>, <code>while</code>, and <code>foreach</code> are essential for processing lists, grids, or waiting for conditions.</p>
+        <blockquote class="callout">Analogy: A loop is like a gym instructor telling you to do 10 pushups. Instead of them saying "Do a pushup" ten times manually, they just say "Do this 10 times."</blockquote>
+
+        <h3>B.4 Loop Control</h3>
+        <p>The <code>break</code> and <code>continue</code> keywords give you fine-grained control over when a loop should stop early or skip a specific turn.</p>
+        <blockquote class="callout">Analogy: <code>break</code> is like an E-stop on a treadmill—you stop everything immediately. <code>continue</code> is like a runner jumping over a single puddle—you skip one step and keep going.</blockquote>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Methods & Functions</h2>
+
+        <h3>C.1 Methods Basics</h3>
+        <p>Methods allow you to group code into reusable blocks. They can take inputs (parameters) and return a specific output (return value).</p>
+        <blockquote class="callout">Analogy: A method is like a "Kitchen Appliance." You put in raw bread (Parameters), press start (Execution), and it gives you back toast (Return value). You don't care about the internal wiring, just that it works.</blockquote>
+        <pre><code>int Add(int a, int b) {
+  return a + b;
+}</code></pre>
+
+        <h3>C.2 Advanced Methods</h3>
+        <p>C# offers powerful features like method overloading, where you can have multiple methods with the same name but different parameters, and special keywords like <code>ref</code> and <code>out</code>.</p>
+        <blockquote class="callout">Analogy: Overloading is like a coffee machine with different sized cups. Whether you want a Small, Medium, or Large, the button says "Coffee," but the machine knows exactly how much water to use for each.</blockquote>
+
+        <h3>C.3 Scope & Variables</h3>
+        <p>Variables only exist within the "curly braces" where they were defined. Understanding local vs. global scope prevents variable name collisions and memory issues.</p>
+        <blockquote class="callout">Analogy: Scope is like a "Private Conversation." If you whisper a secret inside a small room (Local scope), people in the hallway (Global scope) can't hear you.</blockquote>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Data Structures</h2>
+
+        <h3>D.1 Arrays</h3>
+        <p>Arrays are fixed-size collections of elements of the same type. They are the most basic and efficient way to store multiple items.</p>
+        <blockquote class="callout">Analogy: An array is like a physical egg carton. It has a fixed number of slots, and once you buy a 12-slot carton, you can't magically make it fit 13 eggs—you need a bigger carton.</blockquote>
+
+        <h3>D.2 Collections</h3>
+        <p>C# provides dynamic collections like <code>List&lt;T&gt;</code> and <code>Dictionary&lt;Key, Value&gt;</code> that can grow and shrink as needed, offering much more flexibility than raw arrays.</p>
+        <blockquote class="callout">Analogy: A <code>List</code> is like a digital shopping list on your phone. You can add items as you think of them and delete them once they're in the cart—it grows and shrinks with your needs.</blockquote>
+        <ul>
+          <li><code>List&lt;T&gt;</code>: Ordered collection with dynamic sizing.</li>
+          <li><code>Dictionary&lt;K, V&gt;</code>: Fast lookup using unique keys.</li>
+          <li>ArrayList & Hashtable: Legacy non-generic collections.</li>
+        </ul>
+
+        <h3>D.3 LINQ Basics</h3>
+        <p>LINQ (Language Integrated Query) allows you to filter, sort, and transform data from collections using a syntax that stays consistent across databases, XML, and local lists.</p>
+        <blockquote class="callout">Analogy: LINQ is like a "Baggage Scanner" at an airport. You don't open every bag manually; you just set a filter (e.g., "Find all bags over 30kg") and LINQ gives you the results instantly.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Object-Oriented Programming (OOP)</h2>
+
+        <h3>E.1 Classes & Objects</h3>
+        <p>C# is an OOP language at its core. Classes are blueprints, and Objects are the actual instances you work with in your code.</p>
+        <blockquote class="callout">Analogy: A <code>Class</code> is a blueprint for a car. It says a car has wheels and can drive. An <code>Object</code> is the specific red car sitting in your driveway right now.</blockquote>
+        <pre><code>class Car {
+  public string Model { get; set; }
+  public void Drive() { /* ... */ }
+}
+
+Car myCar = new Car();</code></pre>
+
+        <h3>E.2 Encapsulation</h3>
+        <p>Encapsulation is about hiding internal complexity and protecting data integrity using access modifiers (<code>public</code>, <code>private</code>) and properties.</p>
+        <blockquote class="callout">Analogy: Encapsulation is like the "Vending Machine" interface. You press a button (Public method), and it gives you a soda. You can't see the gears or reach in and grab the money (Private data)—the machine protects itself.</blockquote>
+
+        <h3>E.3 Inheritance</h3>
+        <p>Inheritance allows a child class to reuse code from a parent class, promoting code reuse and forming logical "is-a" relationships.</p>
+        <blockquote class="callout">Analogy: Inheritance is like "Family Genes." A child inherits their parents' height (Base behavior), but they can also learn new skills like playing the piano (Extended behavior).</blockquote>
+
+        <h3>E.4 Polymorphism</h3>
+        <p>Polymorphism allows objects of different types to be treated as a common parent type. The most common form is method overriding.</p>
+        <blockquote class="callout">Analogy: Polymorphism is like the word "Play." You can "Play" a guitar, "Play" a movie, or "Play" a sport. The action changes based on what you're interacting with, but the command is the same.</blockquote>
+
+        <h3>E.5 Interfaces</h3>
+        <p>An interface is a contract. Any class that implements an interface *must* provide the logic for the methods defined in that interface.</p>
+        <blockquote class="callout">Analogy: An interface is like a "USB Port." As long as you have a USB plug (Implementation), you can connect to any computer (System), regardless of whether you're a mouse, keyboard, or hard drive.</blockquote>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Advanced C# Concepts</h2>
+
+        <h3>F.1 Error Handling</h3>
+        <p>Professional code must handle failures gracefully. The <code>try-catch-finally</code> block ensures your app doesn't just vanish when an error occurs.</p>
+        <blockquote class="callout">Analogy: Error handling is like the "Airbags" in a car. You hope you never need them, but if something goes wrong, they deploy to prevent total destruction.</blockquote>
+
+        <h3>F.2 File Handling</h3>
+        <p>Reading from and writing to files is essential for data persistence, logging, and configuration management.</p>
+        <blockquote class="callout">Analogy: File handling is like a "Locker Room." You can put data inside a locker (Write), lock the door (Close stream), and come back a week later to retrieve it (Read).</blockquote>
+
+        <h3>F.3 Delegates & Events</h3>
+        <p>Delegates are type-safe function pointers, and Events are the backbone of reactive and UI-driven programming in C#.</p>
+        <blockquote class="callout">Analogy: An Event is like a "Fire Alarm." The alarm doesn't know who is in the building; it just broadcasts a signal. Whoever is interested (Subscribers) decides how to react.</blockquote>
+
+        <h3>F.4 Generics</h3>
+        <p>Generics allow you to write classes and methods that work with *any* data type while maintaining full type safety and performance.</p>
+        <blockquote class="callout">Analogy: A Generic is like a "Shipping Container." It doesn't care if you're shipping cars, TVs, or toys—the container handles the transport in exactly the same safe, standardized way.</blockquote>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Multithreading & Async</h2>
+
+        <h3>G.1 Threading Basics</h3>
+        <p>Multithreading allows your app to perform multiple tasks at the same time by utilizing several CPU cores simultaneously.</p>
+        <blockquote class="callout">Analogy: Threading is like a "Busy Kitchen." Instead of one chef doing everything, you have one chef dedicated to sauces, one for meat, and one for plating—results come out much faster.</blockquote>
+
+        <h3>G.2 Asynchronous Programming</h3>
+        <p><code>async</code> and <code>await</code> allow your app to stay responsive while performing long-running tasks like network requests or database queries.</p>
+        <blockquote class="callout">Analogy: Async is like "Ordering Coffee." You don't stand at the counter staring at the machine until it's done. You take a pager (Task), go sit down, and the pager buzzes (Await) when the coffee is ready.</blockquote>
+        <pre><code>public async Task&lt;string&gt; FetchDataAsync() {
+  var data = await _httpClient.GetStringAsync("https://...");
+  return data;
+}</code></pre>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Working with Databases</h2>
+
+        <h3>H.1 Database Basics</h3>
+        <p>Enterprise applications live and die by their data. Understanding SQL Server and CRUD operations is vital for any C# professional.</p>
+        <blockquote class="callout">Analogy: A database is like an "organized warehouse." SQL is the language you use to tell the warehouse robot exactly which box to bring you.</blockquote>
+
+        <h3>H.2 Connecting C# with Database</h3>
+        <p>Learn how to use ADO.NET or Entity Framework to bridge your C# code with persistent database storage.</p>
+        <blockquote class="callout">Analogy: Database integration is like "Pipe Fitting." You're connecting the clean water (Your Data) from the source (Database) to the tap (Your UI) using reliable connectors.</blockquote>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Desktop Development (WPF)</h2>
+
+        <h3>I.1 Introduction to WPF</h3>
+        <p>Windows Presentation Foundation (WPF) uses XAML to create rich, modern desktop applications with separation of concerns between UI and logic.</p>
+        <blockquote class="callout">Analogy: WPF is like building a "Stage Set." XAML is the scenery and lighting (UI), and the C# code-behind is the actor moving between the sets (Logic).</blockquote>
+
+        <h3>I.2 Building GUI Applications</h3>
+        <p>Mastering layouts, controls, and data binding allows you to create enterprise-grade desktop tools that people actually enjoy using.</p>
+        <blockquote class="callout">Analogy: Building a GUI is like "Cockpit Design." You need to place the buttons where the pilot (user) can reach them easily and make surely the indicators (data binding) update instantly.</blockquote>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. Game Development (Unity)</h2>
+
+        <h3>J.1 Unity Basics</h3>
+        <p>Unity uses C# as its primary scripting language. Understanding the Unity lifecycle and GameObjects is the first step toward game dev mastery.</p>
+        <blockquote class="callout">Analogy: Unity is like a "Virtual Toybox." You have props (GameObjects) and properties (Components), and C# is the "Magic Spell" that brings them all to life.</blockquote>
+
+        <h3>J.2 C# in Unity</h3>
+        <p>Learn how to translate your C# knowledge into game logic—handling input, physics, and gameplay mechanics.</p>
+        <blockquote class="callout">Analogy: Scripting in games is like being a "Director." You write the script (Code), and when you press play, the actors follow your commands exactly—gravity works, bullets fly, and players win.</blockquote>
+      </section>
+
+      <!-- ==================== BAB K ==================== -->
+      <section class="node section">
+        <h2>BAB K. Clean Code & Best Practices</h2>
+
+        <h3>K.1 Clean Code Principles</h3>
+        <p>Readable code is a gift to your future self. Follow naming conventions and keep your methods small and focused.</p>
+        <blockquote class="callout">Analogy: Clean code is like a "Well-organized Library." Even if you haven't been there in years, you can find exactly what you need because the labels make sense and everything is in its place.</blockquote>
+
+        <h3>K.2 SOLID Principles</h3>
+        <p>SOLID is the gold standard for object-oriented design. Mastering these five principles ensures your software is easy to extend and hard to break.</p>
+        <blockquote class="callout">Analogy: SOLID principles are like "Modular Furniture." Each piece has one function, they fit together perfectly, and you can add a new shelf without rebuilding the entire desk.</blockquote>
+
+        <h3>K.3 Code Maintainability</h3>
+        <p>Refactoring isn't just "cleaning up"—it's an essential part of the engineering process that keeps your project from becoming technical debt.</p>
+        <blockquote class="callout">Analogy: Maintenance is like "Regular Dental Checks." A small cleaning today prevents an expensive and painful "root canal" (system failure) next year.</blockquote>
+      </section>
+
+      <!-- ==================== BAB L ==================== -->
+      <section class="node section">
+        <h2>BAB L. Testing & Professional Development</h2>
+
+        <h3>L.1 Unit Testing</h3>
+        <p>Automated tests give you the confidence to refactor and release. If it isn't tested, it's probably broken.</p>
+        <blockquote class="callout">Analogy: A Unit Test is like a "Smoke Alarm" for a specific room. If you change a wire in the kitchen and start a fire, the alarm tells you immediately before the whole house (App) burns down.</blockquote>
+
+        <h3>L.2 Debugging & Optimization</h3>
+        <p>Go beyond simple fixes. Learn to use profilers to find performance bottlenecks and memory leaks in production code.</p>
+        <blockquote class="callout">Analogy: Optimization is like "Tuning a Racing Engine." You're not just making it run; you're adjusting every valve to squeeze out every drop of power and efficiency.</blockquote>
+
+        <h3>L.3 Becoming a C# Developer</h3>
+        <p>Finally, build your portfolio with real-world projects, understand the career paths in the .NET ecosystem, and commit to continuous learning.</p>
+        <blockquote class="callout">Analogy: This is your "Black Belt Ceremony." You've mastered the kata; now it's time to step out into the real world and build systems that change lives.</blockquote>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

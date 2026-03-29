@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complete English Master Course - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky; top: 0; z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover { background: #e5dec5; }
+
+    .section-copy-btn { margin: 0.25rem 0 0.55rem; }
+
+    .copy-actions-inline {
+      display: flex; flex-wrap: wrap; gap: 6px; margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note { color: var(--muted); font-size: 0.78rem; font-family: "Segoe UI", Arial, sans-serif; }
+
+    .doc { padding: 30px 24px 46px; max-width: 760px; margin: 0 auto; }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 { margin: 10px 0 8px; line-height: 1.25; font-size: clamp(1.6rem, 2.6vw, 2.15rem); }
+
+    .subtitle { margin-top: 0; color: #4b463d; font-size: 1rem; }
+
+    h2 {
+      margin-top: 1.8rem; margin-bottom: 0.4rem; line-height: 1.3; font-size: 1.35rem;
+      padding-bottom: 8px; border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 { margin-top: 1.4rem; margin-bottom: 0.3rem; font-size: 1.1rem; color: #2e2a22; }
+
+    p { margin: 0.6rem 0; }
+
+    ul, ol { margin: 0.6rem 0 1rem 1.4rem; }
+
+    li { margin-bottom: 0.4rem; }
+
+    .node { margin-top: 24px; }
+
+    .summary { border: 1px solid #dfd6c5; background: #f7f2e8; padding: 14px 16px; margin: 16px 0; }
+
+    .summary strong { display: inline-block; margin-bottom: 6px; }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b; margin: 1rem 0; padding: 0.4rem 1rem;
+      color: #433d33; background: #f8f4ec; font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e; color: #d4d4d4; border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b; padding: 14px 16px; overflow-x: auto;
+      line-height: 1.6; margin: 1rem 0;
+    }
+
+    code { font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace; font-size: 0.9rem; }
+
+    strong { color: #111; }
+
+    @media print { .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; } }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - Linguistic Mastery & Communication</p>
+      <h1>Learn English Grammar Online — Complete English Master Course</h1>
+      <p class="subtitle">A full-spectrum journey from foundational grammar rules and core verb tenses to professional writing, native-level pronunciation, and real-world fluency.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Foundations, BAB B Grammar Fundamentals, BAB C Tenses CORE, BAB D Advanced Grammar, BAB E Pronunciation & Accent, BAB F Speaking Skills, BAB G Writing Skills, BAB H Listening, BAB I Vocabulary, BAB J Practice, BAB K Exam Prep, BAB L Application, BAB M AI Tools, BAB N Mastery.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction to English Learning</h2>
+
+        <h3>A.1 Course Overview</h3>
+        <p>English is more than a subject; it's a global passport. This course is designed to bridge the gap between "knowing the rules" and "using the language" with confidence.</p>
+        <blockquote class="callout">Analogy: Learning English is like "Learning to Drive." You start with the manual (Grammar), but the goal is to get out on the open road (Conversation) and reach your destination.</blockquote>
+
+        <h3>A.2 English Skills Overview</h3>
+        <p>Mastering the big five: Grammar (The skeletal structure), Speaking (The personality), Writing (The record), Listening (The input), and Pronunciation (The clarity).</p>
+        <blockquote class="callout">Analogy: English skills are like "A Music Band." Grammar is the drummer (The beat); Speaking is the singer; Listening is the audience feedback. You need the whole band to make a hit song.</blockquote>
+
+        <h3>A.3 Learning Strategy</h3>
+        <p>Consistency beats intensity. We'll focus on practice-based learning and the power of repetition to move English from your "conscious" mind to your "instinctive" mind.</p>
+        <blockquote class="callout">Analogy: Learning strategy is like "Going to the Gym." One 10-hour session once a month will just hurt; 20 minutes every single day will build a strong, healthy body.</blockquote>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. English Grammar Fundamentals (THE CORE 🔥)</h2>
+
+        <h3>B.1 Parts of Speech</h3>
+        <p>Nouns, Pronouns, Verbs, Adjectives, and Adverbs. These are the building blocks of every sentence you will ever speak or write.</p>
+        <blockquote class="callout">Analogy: Parts of speech are like "LEGO Bricks." Every piece has a different shape and a specific place where it fits best. Use the wrong piece, and the tower falls down.</blockquote>
+
+        <h3>B.2 Sentence Structure</h3>
+        <p>Master the Subject + Verb + Object (SVO) pattern. Learn how to build simple, effective sentences that transfer your exact thoughts to another person's mind.</p>
+        <blockquote class="callout">Analogy: Sentence structure is like "Train Tracks." They provide the path for your 'Thought Train' to travel from your station to the listener's station without crashing.</blockquote>
+
+        <h3>B.3 Articles & Determiners</h3>
+        <p>The messy rules of 'a,' 'an,' and 'the.' Learn when to be specific and when to be general so you sound like a natural speaker.</p>
+        <blockquote class="callout">Analogy: Articles are like "Pointing a Finger." 'A' is pointing at a crowd; 'The' is pointing at a specific person in that crowd. They help the listener know exactly where to look.</blockquote>
+
+        <h3>B.4 Prepositions & Conjunctions</h3>
+        <p>'In,' 'on,' 'at,' and the 'and,' 'but,' 'because' connectors. These are the "glue" that holds your sentences together.</p>
+        <blockquote class="callout">Analogy: Prepositions are like "GPS Coordinates." They tell the listener exactly *where* and *when* something is happening. Without them, you're lost in space.</blockquote>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Verb Tenses (VERY IMPORTANT 🔥)</h2>
+
+        <h3>C.1 Present Tense</h3>
+        <p>Simple Present for habits and facts; Present Continuous for things happening right now. Master the "Default" settings of your English life.</p>
+        <blockquote class="callout">Analogy: Present tense is "The Live Stream." You're showing the world what you're doing right now or what you do every day on your channel.</blockquote>
+
+        <h3>C.2 Past Tense</h3>
+        <p>Simple Past for finished actions and Past Continuous for the "background story" of what was happening at a specific time.</p>
+        <blockquote class="callout">Analogy: Past tense is "The Replay Booth." You're looking back at the game highlights and describing exactly what happened before the whistle blew.</blockquote>
+
+        <h3>C.3 Future Tense</h3>
+        <p>The difference between "Will" (Decisions made now) and "Going to" (Plans for the future). Learn to predict and plan with clarity.</p>
+        <blockquote class="callout">Analogy: Future tense is "The Flight Departure Board." Some things are scheduled and firm ('Going to'); others depend on the weather ('Will').</blockquote>
+
+        <h3>C.4 Perfect Tenses</h3>
+        <p>Present, Past, and Future Perfect. These tenses connect two different points in time, showing how the past impacts the present.</p>
+        <blockquote class="callout">Analogy: Perfect tenses are like "A Bridge between Islands." They aren't just about 'now' or 'then'; they're about how 'then' and 'now' are connected.</blockquote>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Advanced Grammar</h2>
+
+        <h3>D.1 Passive Voice</h3>
+        <p>When the "Action" is more important than the "Actor." Learn to shift the focus of your sentences for professional and scientific writing.</p>
+        <blockquote class="callout">Analogy: Passive voice is like "The News Headline." We care that 'The Bank was Robbed,' not necessarily who the specific robber was in the moment.</blockquote>
+
+        <h3>D.2 Modal Verbs</h3>
+        <p>Can, could, must, should. These verbs add "flavor" to your actions—showing possibility, obligation, or permission.</p>
+        <blockquote class="callout">Analogy: Modal verbs are like "Traffic Signals." Green is permission (Can), Yellow is advice (Should), and Red is obligation (Must).</blockquote>
+
+        <h3>D.3 Conditionals (If Clauses)</h3>
+        <p>The "What If" engine. Learn to talk about real possibilities, imaginary scenarios, and past regrets using 0, 1, 2, and 3 conditionals.</p>
+        <blockquote class="callout">Analogy: Conditionals are "The Multi-Ending Video Game." If you do X, you get ending A; if you do Y, you get ending B. It’s the logic of consequences.</blockquote>
+
+        <h3>D.4 Complex Sentences</h3>
+        <p>Relative clauses and Noun clauses. Learn to stack ideas within a single sentence to express complex, high-level thoughts.</p>
+        <blockquote class="callout">Analogy: A complex sentence is like "A Train with multiple Cars." You start with the engine (main idea) and then attach coaches for extra information (clauses) as needed.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Pronunciation & Accent</h2>
+
+        <h3>E.1 Sounds & Phonetics</h3>
+        <p>Master the vowel and consonant sounds that don't exist in your native language. Learn to move your mouth and tongue in new ways.</p>
+        <blockquote class="callout">Analogy: Phonetics is "Mouth Yoga." You're training 40 tiny muscles in your face to do a complex dance so the sound comes out exactly right.</blockquote>
+
+        <h3>E.2 Accent Training</h3>
+        <p>American vs. British. Choose your style and learn the distinctive "Melody" that makes each accent sound authentic.</p>
+        <blockquote class="callout">Analogy: Accent is "The Filter on a Photo." The content (The Person) is the same, but the filter gives it a different 'vibe' and aesthetic.</blockquote>
+
+        <h3>E.3 Speaking Clarity</h3>
+        <p>Stress and Intonation. In English, *how* you say it is as important as *what* you say. Learn to put the "Weight" on the right syllable.</p>
+        <blockquote class="callout">Analogy: Intonation is "The Music Score of the Sentence." Without it, you're just a robot; with it, you're a human with emotions and emphasis.</blockquote>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Speaking Skills (THE CORE 🔥)</h2>
+
+        <h3>F.1 Daily Conversations</h3>
+        <p>Introducing yourself, small talk, and the "Social Scripts" required to navigate a basic conversation in English without freezing up.</p>
+        <blockquote class="callout">Analogy: Daily conversation is "The Handshake." It’s a simple, standardized way to show that you are friendly, capable, and ready to interact.</blockquote>
+
+        <h3>F.2 Real-Life Situations</h3>
+        <p>Shopping, travel, and work. Learn the specific phrases you need to get things done in the English-speaking world.</p>
+        <blockquote class="callout">Analogy: Real-life skills are "The Maintenance Kit." You need different tools to fix a sink than you do to fix a car. We're giving you the right tool for every situation.</blockquote>
+
+        <h3>F.3 Fluency Development</h3>
+        <p>Stopping the "Mental Translation" machine. We'll train your brain to think directly in English so you can speak at the speed of thought.</p>
+        <blockquote class="callout">Analogy: Fluency is "Removing the Middleman." Instead of going from Concept -> Native Language -> English, you go Concept -> English instantly.</blockquote>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Writing Skills</h2>
+
+        <h3>G.1 Sentence Writing</h3>
+        <p>Writing clear, punchy, and correct sentences. Learn how to avoid "Run-on Sentences" that confuse your readers.</p>
+        <blockquote class="callout">Analogy: A good sentence is like "A Clear Window." It should be so clear that the reader doesn't even notice the glass; they only see the view (your idea) behind it.</blockquote>
+
+        <h3>G.2 Paragraph Writing</h3>
+        <p>Structure and flow. Learn the Topic Sentence -> Supporting Detail -> Concluding Thought pattern for professional writing.</p>
+        <blockquote class="callout">Analogy: A paragraph is "A Single Room in a House." It has one theme, it’s organized, and it has a door (The transition) that leads to the next room.</blockquote>
+
+        <h3>G.3 Punctuation Mastery</h3>
+        <p>Commas, semicolons, and the 14 marks of English punctuation. Learn why a comma can literally change the meaning of life (or a sentence).</p>
+        <blockquote class="callout">Analogy: Punctuation marks are "The Road Signs for the Reader." A period is a stop sign; a comma is a yield sign. They keep the reader from crashing into your ideas.</blockquote>
+
+        <h3>G.4 Professional Writing</h3>
+        <p>Emails and formal reports. Learn the "Tone" of professional English so you sound competent and respectful in a business setting.</p>
+        <blockquote class="callout">Analogy: Professional writing is "The Virtual Handshake." Even if I've never met you, your email tells me if you're a professional I can trust or a amateur I should ignore.</blockquote>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Listening & Comprehension</h2>
+
+        <h3>H.1 Listening Practice</h3>
+        <p>Training your ears to catch different accents and speeds. We'll start slow and move toward real-world native conversations.</p>
+        <blockquote class="callout">Analogy: Listening practice is "Tuning a Radio." At first, you only hear static; but as you adjust your ear, the music starts to come through crystal clear.</blockquote>
+
+        <h3>H.2 Understanding Context</h3>
+        <p>Learning to understand what is "NOT" said. Body language, tone, and cultural context are 50% of the message.</p>
+        <blockquote class="callout">Analogy: Context is "The Background Scene of a Movie." The characters are talking, but the scene tells you if it’s a comedy, a horror story, or a romance.</blockquote>
+
+        <h3>H.3 Improving Comprehension</h3>
+        <p>Building the "Mental Library" of sounds and rhythms so you can understand anyone, anywhere, at any speed.</p>
+        <blockquote class="callout">Analogy: Comprehension is "Building a Library." The more books (Conversations) you have on the shelf, the faster you can find the match for the next word you hear.</blockquote>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Vocabulary Building</h2>
+
+        <h3>I.1 Daily Vocabulary</h3>
+        <p>The 2,000 words that make up 80% of daily English. We focus on high-frequency words so you get the biggest results for your effort.</p>
+        <blockquote class="callout">Analogy: High-frequency words are "The Foundation of a Building." You can't put on the fancy roof (advanced vocab) until the foundation is solid.</blockquote>
+
+        <h3>I.2 Topic-Based Vocabulary</h3>
+        <p>Specialized words for travel, work, social life, and hobbies. Build the specific sets you need for your actual life.</p>
+        <blockquote class="callout">Analogy: Topic-based vocab is like "A Special Set of Tools." A plumber doesn't need to carry a chef's knife. Learn the tools for your specific 'job' in life.</blockquote>
+
+        <h3>I.3 Expressions & Idioms</h3>
+        <p>The "Secret Language" of natives. Learn why you 'break a leg' to wish someone luck and why you don't 'spill the beans' to keep a secret.</p>
+        <blockquote class="callout">Analogy: Idioms are "The Local Graffiti." They don't make literal sense, but they add color, character, and proof that you are part of the 'sub-culture' of English speakers.</blockquote>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. Practice & Exercises</h2>
+
+        <h3>J.1 Grammar Quizzes</h3>
+        <p>Interactive self-tests to prove you've mastered the rules before we move to the next stage. No more guessing; only knowing.</p>
+        <blockquote class="callout">Analogy: Quizzes are "The Calibration Check." You're checking the sensors on your machine to make sure they're reading the world correctly.</blockquote>
+
+        <h3>J.2 Speaking Practice (Role-Play)</h3>
+        <p>Simulating real conversations to build muscle memory. Practice talking to yourself or a partner in safe, controlled scenarios.</p>
+        <blockquote class="callout">Analogy: Speaking practice is "The Simulation Flight." You practice landing the plane 100 times in the sim so you're ready when there are real passengers on board.</blockquote>
+
+        <h3>J.3 Writing Exercises</h3>
+        <p>Turning thoughts into structured paragraphs and essays. We'll give you the "Prompt," you bring the "Personality."</p>
+        <blockquote class="callout">Analogy: Writing exercises are "The Sketchbook." You're drawing the same hand 50 times until you can do it perfectly without thinking.</blockquote>
+      </section>
+
+      <!-- ==================== BAB K ==================== -->
+      <section class="node section">
+        <h2>BAB K. Exam Preparation (TOEFL/IELTS)</h2>
+
+        <h3>K.1 Exam Grammar</h3>
+        <p>Deep-dive into the specific grammar patterns that examiners look for to give you those high 8.0+ scores.</p>
+        <blockquote class="callout">Analogy: Exam grammar is "The Formal Uniform." You don't wear it every day, but you wear it when it’s time to impress the judges at the grand ball.</blockquote>
+
+        <h3>K.2 Test Strategies</h3>
+        <p>Timing, question types, and how to find the "Traps" that the tests set for non-native speakers.</p>
+        <blockquote class="callout">Analogy: Test strategy is "The Game Plan." You aren't just playing hard; you're playing smart to beat the person who designed the level.</blockquote>
+
+        <h3>K.3 Practice Questions</h3>
+        <p>Real-world mock tests. Experience the pressure of the clock and the specific format of international English exams.</p>
+        <blockquote class="callout">Analogy: Mock tests are "The Scrimmage Game." It doesn't count for points, but it shows you exactly where you're ready and where you're still weak.</blockquote>
+      </section>
+
+      <!-- ==================== BAB L ==================== -->
+      <section class="node section">
+        <h2>BAB L. Real-World English Application</h2>
+
+        <h3>L.1 Business English</h3>
+        <p>Meetings, presentations, and professional etiquette. Learn to sound like a leader, not just a speaker.</p>
+        <blockquote class="callout">Analogy: Business English is "The Boardroom Voice." It’s professional, direct, and designed to inspire confidence in your partners.</blockquote>
+
+        <h3>L.2 Academic English</h3>
+        <p>Writing essays and reports for university. Learn the "Objective Tone" and how to cite sources like a scholar.</p>
+        <blockquote class="callout">Analogy: Academic English is "The Lab Coat." It’s clean, precise, and tellsEveryone that you are there to do serious, evidence-based work.</blockquote>
+
+        <h3>L.3 Daily Life Usage</h3>
+        <p>Casual slang, text message shortcuts, and the "Real English" spoken on the street and in social media.</p>
+        <blockquote class="callout">Analogy: Daily English is "Your Favorite Old Hoodie." It’s not fancy, it’s not for a job interview, but it’s what you wear when you’re hanging out with friends.</blockquote>
+      </section>
+
+      <!-- ==================== BAB M ==================== -->
+      <section class="node section">
+        <h2>BAB M. AI & Modern Learning Tools</h2>
+
+        <h3>M.1 AI English Coach</h3>
+        <p>Using ChatGPT and other AI models as your 24/7 speaking and grammar partner. Immediate feedback, zero judgment.</p>
+        <blockquote class="callout">Analogy: AI Coach is "The Robot Butler for your Mind." He's always there, he never gets tired of your mistakes, and he knows everything in the dictionary.</blockquote>
+
+        <h3>M.2 Interactive Learning</h3>
+        <p>Apps and VR tools that put you in real situations before you even leave your house. Experience a London pub or a NYC office in virtual reality.</p>
+        <blockquote class="callout">Analogy: Interactive tools are "The Training Holodeck." You can practice until you're perfect, and then step out into the real world.</blockquote>
+
+        <h3>M.3 Personalized Feedback</h3>
+        <p>Using data to see exactly where you are failing. Is it your 'Th' sound? Is it your 'Present Perfect'? Let the data tell the truth.</p>
+        <blockquote class="callout">Analogy: Feedback data is "The Heart Monitor for your English." It tells you exactly where the system is struggling so you can fix it.</blockquote>
+      </section>
+
+      <!-- ==================== BAB N ==================== -->
+      <section class="node section">
+        <h2>BAB N. Mastery & Fluency</h2>
+
+        <h3>N.1 Speaking Like a Native</h3>
+        <p>Natural idioms, complex rhythms, and the "Hidden Logic" of how natives actually talk. The final stage of your journey.</p>
+        <blockquote class="callout">Analogy: Mastering English is "Becoming Part of the Family." You stop being a guest in the language and start being an owner.</blockquote>
+
+        <h3>N.2 Confidence Building</h3>
+        <p>Overcoming the fear of making mistakes. Realizing that a mistake is just a data point, not a failure. Commanding any room you walk into.</p>
+        <blockquote class="callout">Analogy: Confidence is "The Armor of a Warrior." Once you have it, you can walk through the fire of any conversation and come out stronger on the other side.</blockquote>
+
+        <h3>N.3 Long-Term Improvement</h3>
+        <p>How to stay fluent forever. Building a lifestyle of English immersion that keeps your skills sharp while you live your life.</p>
+        <blockquote class="callout">Analogy: Long-term fluency is "Keeping the Car Maintained." You've built the engine; now you just have to keep adding fuel and driving it every day.</blockquote>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

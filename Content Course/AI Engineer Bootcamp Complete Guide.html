@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Engineer Bootcamp Complete Guide - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - AI Engineering & LLM Orchestration</p>
+      <h1>AI Engineer Bootcamp Complete Guide</h1>
+      <p class="subtitle">A 13-chapter masterclass designed to take you from foundational data science to building production-ready AI applications using LLMs, LangChain, and vector databases.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Foundations, BAB B Data & AI concepts, BAB C GenAI CORE, BAB D Python for AI, BAB E NLP, BAB F Transformers & Hugging Face, BAB G Build AI Apps, BAB H AI Tech Stack, BAB I In-Practice, BAB J System Challenges, BAB K Career path, BAB L Ethics, BAB M Capstone.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction to AI Engineering</h2>
+
+        <h3>A.1 Course Overview</h3>
+        <p>AI Engineering is the art of turning research into reality. We aren't just training models; we're building systems that use models to solve real-world problems for real users.</p>
+        <blockquote class="callout">Analogy: An AI Engineer is like "A Master Architect." Research scientists invent the concrete (the data models), but the Engineer builds the skyscrapers (the Apps) that people actually live and work in.</blockquote>
+        <ul>
+          <li>Learning path: From logic to LLMs.</li>
+          <li>How to approach AI as a systems-builder.</li>
+        </ul>
+
+        <h3>A.2 What is Artificial Intelligence</h3>
+        <p>Understanding the hierarchy: AI is the broad concept, Machine Learning is the method, and Deep Learning is the specialized engine under the hood.</p>
+        <blockquote class="callout">Analogy: AI is like "Automated Transport." Machine Learning is "The Car." Deep Learning is "The High-Performance Turbo Engine" that makes the car go fast and handle complex roads.</blockquote>
+
+        <h3>A.3 AI Landscape</h3>
+        <p>Explore the diverse fields: Computer Vision (Eyes), NLP (Voice), Robotics (Hands), and Generative AI (Imagination). We're focused on the brain of the operation.</p>
+        <blockquote class="callout">Analogy: The AI landscape is like "A Modern City." It has transport (CV), communication (NLP), and infrastructure (Generative AI). Each part is essential, but they all need to work together to be a city.</blockquote>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Data & AI Fundamentals</h2>
+
+        <h3>B.1 Data Basics</h3>
+        <p>Data is the fuel. Learn the difference between structured data (Spreadsheets) and unstructured data (PDFs, Videos, Audio) and why metadata is the secret ingredient.</p>
+        <blockquote class="callout">Analogy: Data is like "Ingredients for a Chef." If the ingredients are messy and unlabelled (Unstructured/Unlabelled), the meal will be a disaster. If they are fresh and organized, the Chef can make anything.</blockquote>
+
+        <h3>B.2 Machine Learning Basics</h3>
+        <p>Supervised (Learning with a teacher), Unsupervised (Finding patterns alone), and Reinforcement Learning (Learning through rewards and stakes).</p>
+        <blockquote class="callout">Analogy: Supervised learning is like "School" (The teacher has the answer key). Reinforcement learning is like "Video Games" (You die 100 times until you learn the right path to the boss).</blockquote>
+
+        <h3>B.3 Deep Learning</h3>
+        <p>Neural networks inspired by the human brain. We'll demystify how layers of "weights" learn to recognize complex patterns over millions of examples.</p>
+        <blockquote class="callout">Analogy: A Neural Network is like "An Orchestra of Switches." As the music (Data) flows through, millions of switches turn on and off in a specific pattern to create the perfect sound (The Prediction).</blockquote>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Generative AI (THE CORE 🔥)</h2>
+
+        <h3>C.1 Introduction to Generative AI</h3>
+        <p>The paradigm shift. Move from AI that "Predicts" to AI that "Creates." Understand why ChatGPT was the iPhone moment for artificial intelligence.</p>
+        <blockquote class="callout">Analogy: Traditional AI was a "Librarian" (They can find the book for you). Generative AI is the "Author" (They write the book for you from scratch).</blockquote>
+
+        <h3>C.2 Language Models → LLMs</h3>
+        <p>How we went from simple sentence completion (N-grams) to massive trillion-parameter Foundation Models like GPT-4.</p>
+        <blockquote class="callout">Analogy: LLMs are like "A Person who has Read every Book in the Library." They don't know everything, but they know how everything *sounds* like, so they can talk about any topic convincingly.</blockquote>
+
+        <h3>C.3 LLM Optimization Techniques</h3>
+        <p>Learn the three levels of control: Prompt Engineering (The command), Fine-tuning (The training), and RAG (The external knowledge base).</p>
+        <blockquote class="callout">Analogy: If an AI is a Doctor: Prompting is "Giving them a specific patient file." Fine-tuning is "Sending them back to Medical School." RAG is "Giving them a real-time connection to Google to check the latest research."</blockquote>
+
+        <h3>C.4 Challenges in GenAI</h3>
+        <p>Hallucinations (Confident lying), Latency (Speed issues), and the massive cost of API usage in production systems.</p>
+        <blockquote class="callout">Analogy: A Hallucinating AI is like "A Confident Pathological Liar." They look exactly like they are telling the truth, which makes them much more dangerous than a regular liar.</blockquote>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Python for AI Engineering</h2>
+
+        <h3>D.1 Python Basics</h3>
+        <p>Why Python is the king of AI. Syntax, variables, and functions—build the base you need to interact with the world's most powerful models.</p>
+        <blockquote class="callout">Analogy: Python is "The Control Room." The AI models are the massive rockets, but Python is the simple dashboard that lets you launch them safely and steer them toward the moon.</blockquote>
+
+        <h3>D.2 Python for AI</h3>
+        <p>Mastering the specialized libraries: Pandas for data, NumPy for math, and the API clients for OpenAI, Anthropic, and Google.</p>
+        <blockquote class="callout">Analogy: AI Libraries are "The Power Tools." You could build a house with a hand saw (Base Python), but with power tools (Pandas/NumPy), you can build an entire city in half the time.</blockquote>
+
+        <h3>D.3 Coding Practice</h3>
+        <p>Real-world exercises: cleaning messy data, building simple chatbots, and working with complex JSON outputs from Large Language Models.</p>
+        <blockquote class="callout">Analogy: Coding practice is "The Training Room." You sweat in here so that when you go into the real world, the code flows out of your fingers naturally.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Natural Language Processing (NLP)</h2>
+
+        <h3>E.1 NLP Fundamentals</h3>
+        <p>Text processing, Tokenization (breaking words into chunks), and how machines "read" the messiness of human language.</p>
+        <blockquote class="callout">Analogy: Tokenization is like "Chopping a Sentence into Legos." Once the sentence is in pieces, the machine can build patterns and understand the structure of the message.</blockquote>
+
+        <h3>E.2 NLP Techniques</h3>
+        <p>Classification (Spam or Not?), Sentiment Analysis (Happy or Mad?), and Entity Recognition (Who mentioned whom?).</p>
+        <blockquote class="callout">Analogy: Sentiment Analysis is "The Emotional Thermometer." It doesn't read the words as much as it feels the 'heat' (the emotion) behind those words.</blockquote>
+
+        <h3>E.3 NLP Applications</h3>
+        <p>Building chatbots that actually understand context and creating systems that can summarize a 50-page PDF into 3 bullet points.</p>
+        <blockquote class="callout">Analogy: Modern NLP is like "Having a Speed-Reader Assistant." They can read through thousands of customer emails in seconds and tell you exactly what matters.</blockquote>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Transformers & LLM Tools</h2>
+
+        <h3>F.1 Transformers Architecture</h3>
+        <p>The "Attention Mechanism"—the secret sauce that allows models to focus on the *important* words in a 1,000-word sentence.</p>
+        <blockquote class="callout">Analogy: Attention is like "A Spotlight." Instead of trying to see the whole stage at once, the Transformer shines a light on exactly what matters right now to understand the meaning.</blockquote>
+
+        <h3>F.2 Hugging Face</h3>
+        <p>The "GitHub of AI." Learn to navigate the model hub, pull pretrained models, and run them locally or in the cloud.</p>
+        <blockquote class="callout">Analogy: Hugging Face is like "A Supermarket for Brains." You can walk down the aisle and pick out a brain that's a specialist in Medicine, Coding, or Poetry, and take it home for your own use.</blockquote>
+
+        <h3>F.3 LLM Ecosystem</h3>
+        <p>GPT, BERT, Llama, and Mistral. Understanding the trade-offs between closed-source (paid APIs) and open-source (your own server) models.</p>
+        <blockquote class="callout">Analogy: Choosing a model is like "Choosing a Car." GPT-4 is the Ferrari (Powerful but expensive); Mistral is the reliable, open SUV that you can customize and drive yourself.</blockquote>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Building AI Applications</h2>
+
+        <h3>G.1 APIs & Model Integration</h3>
+        <p>Connecting your code to AI services. How to manage keys, handle rate limits, and ensure your app stays online even when the API is slow.</p>
+        <blockquote class="callout">Analogy: API integration is like "Ordering Pizza through an App." You don't make the pizza yourself (Run the model); you just send the order (Request) and wait for the delivery (Response).</blockquote>
+
+        <h3>G.2 LangChain Framework</h3>
+        <p>The industry standard for chaining AI components together. Learn to build complex workflows that remember past conversations and use external tools.</p>
+        <blockquote class="callout">Analogy: LangChain is like "LEGO Connectors." It’s the glue that lets you snap a brain to a database, and then snap that to a search engine to build a super-system.</blockquote>
+
+        <h3>G.3 AI App Development</h3>
+        <p>End-to-end development. Build a real application that takes user input, processes it through an LLM, and returns a rich, useful output.</p>
+        <blockquote class="callout">Analogy: Building an AI App is like "Teaching a Robot to be a Receptionist." You give them a desk (UI), a brain (LLM), and access to the schedule (Data), and then you let them talk to people.</blockquote>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. AI Tech Stack (VERY IMPORTANT 🔥)</h2>
+
+        <h3>H.1 Core Components</h3>
+        <p>The modern AI stack: Python for logic, APIs for intelligence, and Vector Databases (Pinecone, Chroma) for long-term memory.</p>
+        <blockquote class="callout">Analogy: The Tech Stack is "The Anatomy of AI." Python is the Nervous System, LLMs are the Brain, and Vector Databases are the Hippocampus—where long-term memories are stored and searched.</blockquote>
+
+        <h3>H.2 Tools & Ecosystem</h3>
+        <p>Deep dive into LangChain and LangGraph for agentic workflows. How to manage state and complex branching in your AI systems.</p>
+        <blockquote class="callout">Analogy: Agentic tools are like "A GPS for AI." Instead of just giving one answer, they allow the AI to 'recalculate' and try different paths until it reaches the goal.</blockquote>
+
+        <h3>H.3 Evaluation Tools</h3>
+        <p>Measuring AI performance. How do you know if your "new" prompt is actually better than the "old" one? (LLM-as-a-judge, RAGAS).</p>
+        <blockquote class="callout">Analogy: Evaluation is "The Scale for your Diet." You can't just 'feel' like you're losing weight; you need to step on the scale (Run the metrics) to know for sure.</blockquote>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. AI Engineering in Practice</h2>
+
+        <h3>I.1 Real-World Use Cases</h3>
+        <p>Business automation, personalized tutors, and AI-driven data analysis. See how companies are using GenAI to save thousands of man-hours.</p>
+        <blockquote class="callout">Analogy: Real-world AI is like "Adding an Extra Engine to a Plane." The plane was flying fine before, but now it’s twice as fast and half as expensive to fly.</blockquote>
+
+        <h3>I.2 System Integration</h3>
+        <p>How to plug AI into existing web products. Managing the bridge between "Normal Code" and the "Chaos" of LLM-generated text.</p>
+        <blockquote class="callout">Analogy: System integration is like "Plugging a Modern Computer into a 1980s TV." You need the right adapters (Parsers/Types) to make the connection work.</blockquote>
+
+        <h3>I.3 Portfolio Projects</h3>
+        <p>Building high-impact projects that prove you are an AI Engineer. We'll build a "Talk to your PDF" app and a "Custom Coding Assistant."</p>
+        <blockquote class="callout">Analogy: Your Portfolio is your "Trophy Case." Each project is a trophy that tells an employer exactly what you are capable of doing when given a tough problem.</blockquote>
+
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. AI System Challenges</h2>
+
+        <h3>J.1 Limitations of AI</h3>
+        <p>Hallucinations, bias, and the difficulty of getting an AI to follow strict logic. We'll learn the techniques to "tame" the model.</p>
+        <blockquote class="callout">Analogy: Managing AI limitations is like "Herding Cats." They are incredibly smart, but they want to go wherever they want. You need to build fences (Prompts/Guardrails) to keep them in line.</blockquote>
+
+        <h3>J.2 Performance Issues</h3>
+        <p>Latency is the killer of user experience. We'll explore "Streaming" responses and smaller models to make your AI feel instant.</p>
+        <blockquote class="callout">Analogy: Latency is like "A Slow Waiter at a Restaurant." Even if the food is perfect, if it takes 2 hours to arrive, the customer is never coming back.</blockquote>
+
+        <h3>J.3 Cost Optimization</h3>
+        <p>LLM tokens are expensive. Learn about Caching, Model Routing (using cheap models for easy tasks), and token pruning to save your budget.</p>
+        <blockquote class="callout">Analogy: Cost optimization is like "Turning off the Lights when you leave a room." It’s a tiny bit of effort that saves you thousands of dollars in the long run.</blockquote>
+      </section>
+
+      <!-- ==================== BAB K ==================== -->
+      <section class="node section">
+        <h2>BAB K. Career & Industry</h2>
+
+        <h3>K.1 AI Roles</h3>
+        <p>The difference between an AI Researcher (PhD), an AI Engineer (Builder), and an AI Strategist (The Business mind).</p>
+        <blockquote class="callout">Analogy: Career roles are like "The Roles on a Ship." The Researcher is the navigator; the Engineer is the stoker in the engine room; the Strategist is the captain deciding where to go.</blockquote>
+
+        <h3>K.2 Skills Required</h3>
+        <p>What does a senior AI engineer actually look like? Python mastery, system design skills, and the "Mental Flexibility" to learn a new tool every week.</p>
+        <blockquote class="callout">Analogy: AI skills are like "A Survival Knife." You don't need 100 tools; you just need one that is sharp enough to handle any situation you find in the jungle (the Industry).</blockquote>
+
+        <h3>K.3 Interview Preparation</h3>
+        <p>Deconstructing the AI interview. How to explain technical concepts like "Embeddings" or "Tokens" to recruiters and CTOs alike.</p>
+        <blockquote class="callout">Analogy: The interview is "The Final Audition." You've practiced in the studio; now show the directors that you're ready for the big screen.</blockquote>
+      </section>
+
+      <!-- ==================== BAB L ==================== -->
+      <section class="node section">
+        <h2>BAB L. Ethics & Future of AI</h2>
+
+        <h3>L.1 AI Ethics</h3>
+        <p>Responsible AI. Bias, data privacy, and the social impact of automation. We'll learn how to build AI that is safe for the world.</p>
+        <blockquote class="callout">Analogy: AI Ethics is "The Seatbelt in a High-speed Car." You hope you never need it, but you don't build the car without it because safety is the priority.</blockquote>
+
+        <h3>L.2 Future Trends</h3>
+        <p>AI adoption across industries and a look toward AGI (Artificial General Intelligence). How to stay relevant when the tech changes every 6 months.</p>
+        <blockquote class="callout">Analogy: The future of AI is like "A Rising Tide." You can either build a boat (Learn the skills) and rise with it, or you can stand on the beach and get washed away.</blockquote>
+      </section>
+
+      <!-- ==================== BAB M ==================== -->
+      <section class="node section">
+        <h2>BAB M. Capstone & Final Projects</h2>
+
+        <h3>M.1 End-to-End AI Project</h3>
+        <p>Taking everything you've learned to build a massive, integrated AI application from scratch—from data ingestion to deployment.</p>
+        <blockquote class="callout">Analogy: This is "The Graduation Ceremony." You're building your first real-world system that solved a problem you actually care about.</blockquote>
+
+        <h3>M.2 Deployment Concepts</h3>
+        <p>Moving from a local laptop to a production cloud. Production thinking, monitoring, and scaling your AI for thousands of users.</p>
+        <blockquote class="callout">Analogy: Deployment is like "Moving from the Garage to a Professional Office." Now people are watching, and everything needs to work perfectly every single time.</blockquote>
+
+        <h3>M.3 Portfolio Building</h3>
+        <p>Showcasing your work. Build a developer brand that stands out on LinkedIn and GitHub. Become the builder that everyone wants to hire.</p>
+        <blockquote class="callout">Analogy: Portfolio building is like "Putting your Sign in the Window." If you don't tell the world what you can do, nobody is going to walk through the door.</blockquote>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

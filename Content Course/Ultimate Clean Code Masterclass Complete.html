@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ultimate Clean Code Masterclass - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - Software Engineering Excellence</p>
+      <h1>Ultimate Clean Code Masterclass</h1>
+      <p class="subtitle">Elevating your craftsmanship from "writing code that works" to "writing code that lives"—mastering naming, functions, SOLID, and professional refactoring.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Intro to Clean Code, BAB B Naming Foundation, BAB C Functions deep-dive, BAB D Code Formatting, BAB E SOLID Principles, BAB F Static Methods & Deps, BAB G Class Design, BAB H Organization, BAB I Inheritance vs Composition, BAB J Code Smells, BAB K Refactoring Mastery, BAB L Mindset, BAB M Advanced Concepts.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction to Clean Code</h2>
+
+        <h3>A.1 Course Overview</h3>
+        <p>Clean code isn't just a "nice-to-have" aesthetic; it's the difference between a project that scales and a project that becomes a legacy nightmare. We're going from coding for machines to coding for humans.</p>
+        <blockquote class="callout">Analogy: Clean code is like a "Well-Organized Library." Even if there are 10,000 books, you can find exactly what you need in 30 seconds because the library follows a clear, intuitive structure.</blockquote>
+        <ul>
+          <li>Goals: building maintainable, professional systems.</li>
+          <li>Why 80% of our time is spent reading code, not writing it.</li>
+        </ul>
+
+        <h3>A.2 What is Clean Code</h3>
+        <p>Clean code is code that looks like it was written by someone who cares. It's elegant, efficient, and readable enough that any developer can jump in without a 2-hour orientation.</p>
+        <blockquote class="callout">Analogy: Clean code is like "Good Prose." It flows naturally, the intent is clear, and you don't have to keep re-reading the same paragraph to understand what just happened.</blockquote>
+
+        <h3>A.3 Code Quality & Professionalism</h3>
+        <p>A professional engineer manages Technical Debt actively. We'll learn why "moving fast and breaking things" is often a slow way to build long-term value.</p>
+        <blockquote class="callout">Analogy: Ignoring code quality is like "Borrowing from a Loan Shark." You might get the cash (the feature) now, but the interest (tech debt) will eventually ruin your business.</blockquote>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Naming (THE FOUNDATION 🔥)</h2>
+
+        <h3>B.1 Naming Fundamentals</h3>
+        <p>Names are the most powerful tool in your codebase. Learn how to choose meaningful names that reveal intent without needing a comment.</p>
+        <blockquote class="callout">Analogy: Naming is like "Labeling the Spices in your Kitchen." If you label sugar as "White Powder 1" and salt as "White Powder 2," you're eventually going to ruin the cake.</blockquote>
+
+        <h3>B.2 Writing Expressive Names</h3>
+        <p>Move toward self-documenting code by using natural language patterns. Your code should read like a story, not a secret handshake.</p>
+        <blockquote class="callout">Analogy: Expressive naming is like "Giving Directions to a Friend." You don't say "Go to X and then Y." You say "Turn left at the Starbucks and stop at the Blue House." Context is everything.</blockquote>
+
+        <h3>B.3 Naming Best Practices</h3>
+        <p>Consistency, descriptive power, and avoiding abbreviations. Learn why <code>d</code> is a terrible name for a date, but <code>daysSinceCreation</code> is a perfect one.</p>
+        <blockquote class="callout">Analogy: Abbreviations are like "Inside Jokes." They’re funny for the two people who were there, but just confusing for everyone else in the room.</blockquote>
+
+        <h3>B.4 Common Naming Mistakes</h3>
+        <p>Avoiding misleading names, over-specification, and the dreaded "Hungarian Notation" (prefixing types to variable names).</p>
+        <blockquote class="callout">Analogy: Misleading names are like "Putting Dish Soap in a Soda Bottle." It might look fine on the outside, but it's a disaster waiting to happen.</blockquote>
+
+        <h3>B.5 Refactoring Naming</h3>
+        <p>Practice improving bad names in real-time. We'll look at case studies of messy code and watch them transform into readable masterpieces.</p>
+        <blockquote class="callout">Analogy: Refactoring names is like "Updating the Signs in a Mall." If the signs are better, people spend less time being lost and more time getting where they need to go.</blockquote>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Functions (VERY IMPORTANT)</h2>
+
+        <h3>C.1 Function Design</h3>
+        <p>A function should be small. Then it should be smaller than that. Learn the "Goldilocks" size for professional methods.</p>
+        <blockquote class="callout">Analogy: A function is like a "Tool on a Swiss Army Knife." It should do one thing perfectly. If you try to build a tool that slices, saws, and measures at the exact same time, it’s going to be bad at all three.</blockquote>
+
+        <h3>C.2 Parameters & Simplicity</h3>
+        <p>Minimizing parameters and avoiding "Boolean Flags" that change the internal behavior of a function based on a true/false value.</p>
+        <blockquote class="callout">Analogy: Too many parameters is like "Asking someone to hold 5 cups of hot coffee at once." They’re inevitably going to drop something or burn themselves.</blockquote>
+
+        <h3>C.3 Single Responsibility</h3>
+        <p>The "do one thing" rule. If a function has the word "And" in its description, it probably needs to be split.</p>
+        <blockquote class="callout">Analogy: Single responsibility is like "A Specialist Surgeon." The person who operates on your heart shouldn't also be the person delivering your morning mail.</blockquote>
+
+        <h3>C.4 Abstraction Levels</h3>
+        <p>Keep your functions at a consistent level of abstraction. Don't mix high-level business logic with low-level string manipulation in the same block.</p>
+        <blockquote class="callout">Analogy: Abstraction is like "An Atlas." You look at the map of the World (High Level), the Country (Mid Level), or the Street (Low Level). You don't try to see the cracks in the sidewalk on a map of the Earth.</blockquote>
+
+        <h3>C.5 Pure Functions</h3>
+        <p>Learn to write functions that have no "Side Effects"—making them predictable, testable, and reliable.</p>
+        <blockquote class="callout">Analogy: A Pure Function is like a "Calculator." 2 + 2 is always 4. It doesn't randomly change the light color in the room or delete a file on your disk just because you did some math.</blockquote>
+
+        <h3>C.6 Refactoring Functions</h3>
+        <p>We'll take "Monster Functions" (100+ lines) and perform surgery to turn them into a graceful chain of small, readable methods.</p>
+        <blockquote class="callout">Analogy: Refactoring a monster function is like "Untangling a massive knot of Christmas lights." You pull it apart slowly, wire by wire, until every string is straight and works correctly.</blockquote>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Code Formatting</h2>
+
+        <h3>D.1 Formatting Importance</h3>
+        <p>Formatting is a communication tool. A codebase with messy indentation is like a book with missing punctuation and random font sizes.</p>
+        <blockquote class="callout">Analogy: Formatting is the "Clothes" your code wears. Even if the person (the logic) is smart, if they show up to a job interview in a dirty tracksuit, nobody is going to listen to them.</blockquote>
+
+        <h3>D.2 Formatting Rules</h3>
+        <p>Indentation, line breaks, and vertical density. Learn how to use whitespace to "cluster" related concepts and separate different ones.</p>
+        <blockquote class="callout">Analogy: Whitespace is like "The Silence between Notes in Music." Without the silence, the music is just a painful, continuous noise.</blockquote>
+
+        <h3>D.3 Team Consistency</h3>
+        <p>It doesn't matter if you prefer 2 spaces or 4; what matters is that the *whole team* uses the same one. Learn to use automated tools like Prettier.</p>
+        <blockquote class="callout">Analogy: Team consistency is like "Driving on the Left side of the road." It’s not about which side is 'better'; it’s about making sure everyone is going the same way so there are no crashes.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. SOLID Principles (THE CORE 🔥)</h2>
+
+        <h3>E.1 Introduction to SOLID</h3>
+        <p>The 5 pillars of object-oriented design. These principles are the difference between "Code that works" and "Code that resists change."</p>
+        <blockquote class="callout">Analogy: SOLID is like the "Building Codes" for a skyscraper. If you follow them, the building can withstand an earthquake (Requirement change); if you ignore them, the building falls down.</blockquote>
+
+        <h3>E.2 S — Single Responsibility</h3>
+        <p>A class should have only one reason to change. Focus on high cohesion and narrow purpose.</p>
+        <blockquote class="callout">Analogy: The SRP is like "A Coffee Machine." It makes coffee. It doesn't try to also be a microwave and a dishwasher. It has one job, and it does it perfectly.</blockquote>
+
+        <h3>E.3 O — Open/Closed</h3>
+        <p>Software entities should be open for extension but closed for modification. Stop changing existing stable code every time a new feature arrives.</p>
+        <blockquote class="callout">Analogy: The OCP is like "A Wall Socket." You can plug in a lamp, a toaster, or a TV (Extension) without ever having to rip open the wall and change the wiring (Modification).</blockquote>
+
+        <h3>E.4 L — Liskov Substitution</h3>
+        <p>Subtypes must be substitutable for their base types. Never break the "Contract" of the parent class.</p>
+        <blockquote class="callout">Analogy: The LSP is like "Standard Batteries." If your remote takes AA batteries, it shouldn't matter if the brand is Duracell or Energizer; they both must fit and provide the same power.</blockquote>
+
+        <h3>E.5 I — Interface Segregation</h3>
+        <p>Patients shouldn't be forced to depend on methods they don't use. Split large interfaces into smaller, specific ones.</p>
+        <blockquote class="callout">Analogy: The ISP is like "The Remote Control for a TV." You have a simple remote for your grandma with 5 buttons, and a complex one for you with 50. Don't force your grandma to use the 50-button one just to change the volume.</blockquote>
+
+        <h3>E.6 D — Dependency Inversion</h3>
+        <p>Depend on abstractions, not concretions. High-level modules should not depend on low-level modules.</p>
+        <blockquote class="callout">Analogy: The DIP is like "A USB Port." Your computer depends on the *Standard* (The Interface), not the specific mouse or keyboard. As long as the device follows the USB standard, it works.</blockquote>
+
+        <h3>E.7 Refactoring with SOLID</h3>
+        <p>Watch as we take rigid, fragile code and use the SOLID principles to turn it into a flexible, plug-and-play architecture.</p>
+        <blockquote class="callout">Analogy: This is like "Changing the Engine of a Car while it's in the race." Because the parts were SOLID, you can snap out the old one and snap in the new one without stopping.</blockquote>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Static Methods & Dependencies</h2>
+
+        <h3>F.1 Static Methods</h3>
+        <p>When are static methods good? (Utilities) and when are they evil? (Hidden dependencies that make testing impossible).</p>
+        <blockquote class="callout">Analogy: A Static Method is like "A Global Public Phone Booth." Anyone can use it, which is convenient, but you can't control who's inside or what they're saying, which makes it a nightmare for security (Testing).</blockquote>
+
+        <h3>F.2 Dependency Graph</h3>
+        <p>Visualizing how your classes talk to each other. Learn to spot the "Hidden Dependencies" that make your code look like a plate of spaghetti.</p>
+        <blockquote class="callout">Analogy: A dependency graph is like "A Flight Map." If every city (Class) is directly connected to every other city, the sky is too crowded and planes will crash. You need hubs and clear paths.</blockquote>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Classes (Design & Structure)</h2>
+
+        <h3>G.1 Small Classes</h3>
+        <p>Avoid the "God Object"—that one class that knows everything and does everything. Learn to split responsibilities into focused specialists.</p>
+        <blockquote class="callout">Analogy: A God Object is like "A Boss who micromanages every employee." They become the bottleneck for everything. A professional system is a team of specialists who know their own business.</blockquote>
+
+        <h3>G.2 Cohesion & Coupling</h3>
+        <p>The Holy Grail of design: High Cohesion (things inside the class belong together) and Loose Coupling (classes don't depend on each other's secrets).</p>
+        <blockquote class="callout">Analogy: High Cohesion is a "Box of Legos" (all pieces fit together). Loose Coupling is "Two People collaborating via Email"—they help each other but they aren't physically strapped together.</blockquote>
+
+        <h3>G.3 Class Design Principles</h3>
+        <p>Master the fundamental laws: DRY (Don't Repeat Yourself), KISS (Keep It Simple), and YAGNI (You Aren't Gonna Need It).</p>
+        <blockquote class="callout">Analogy: YAGNI is like "Packing for a day at the beach." You don't need a winter coat, a tent, and a bear-trap. You just need a towel and some sunblock. Don't carry behavior you don't need today.</blockquote>
+
+        <h3>G.4 Law of Demeter</h3>
+        <p>The "Principle of Least Knowledge." Your classes should talk to their friends, not their friends' friends.</p>
+        <blockquote class="callout">Analogy: The Law of Demeter is like "Ordering Pizza." You talk to the shop (The Friend). You don't walk into the kitchen and tell the chef exactly how much flour to put in the dough (The Friend's internal secret).</blockquote>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Class Organization & Architecture</h2>
+
+        <h3>H.1 Structure & Organization</h3>
+        <p>One class per file. Clear folder structures. Learn how to organize 1,000 classes so you never have to hunt for the code you need.</p>
+        <blockquote class="callout">Analogy: Organization is like "The Shelving in a Supermarket." You know exactly where the milk is, even in a city you've never visited before, because the system is standardized.</blockquote>
+
+        <h3>H.2 Codebase Consistency</h3>
+        <p>Standards are your team's common language. We'll look at how to maintain clean code patterns across massive projects with 50+ developers.</p>
+        <blockquote class="callout">Analogy: Consistency is like "A Professional Sports Team." Everyone wears the same jersey and follows the same playbook. That's why they win.</blockquote>
+
+        <h3>H.3 Refactoring Classes</h3>
+        <p>Improving architecture without breaking functionality. We'll perform "Open Heart Surgery" on a messy class hierarchy.</p>
+        <blockquote class="callout">Analogy: This is like "Renovating a House While you're living in it." You have to be careful not to knock down the load-bearing walls while you're updating the kitchen.</blockquote>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Inheritance vs Composition</h2>
+
+        <h3>I.1 Problems with Inheritance</h3>
+        <p>Inheritance is often a "Rigid Trap." Learn why tight coupling and the "Fragile Base Class" problem lead to code that breaks in unexpected places.</p>
+        <blockquote class="callout">Analogy: Inheritance is like "A Family Business." You’re stuck with your father’s mistakes and your grandfather’s old debt. You can’t easily change your identity without leaving the whole family.</blockquote>
+
+        <h3>I.2 Composition Over Inheritance</h3>
+        <p>The professional alternative. Build complex behavior by combining simple objects rather than extending rigid hierarchies.</p>
+        <blockquote class="callout">Analogy: Composition is like "Being a Freelancer." You can work with whoever you want, whenever you want. You aren't 'stuck' with anyone; you just collaborate to get the job done.</blockquote>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. Code Smells & Anti-Patterns</h2>
+
+        <h3>J.1 Common Code Smells</h3>
+        <p>Large functions, Duplicate code, and Feature Envy. Learn to "Smell" bad code before it even passes the first test.</p>
+        <blockquote class="callout">Analogy: Code smells are like "A Weird Sound in your Car Engine." It’s running for now, but that sound tells you that something is going to explode very soon if you don't look at it.</blockquote>
+
+        <h3>J.2 Anti-Patterns</h3>
+        <p>God Class, Overengineering, and "Copy-Paste Programming." Understand the traps that even experienced developers fall into.</p>
+        <blockquote class="callout">Analogy: Overengineering is like "Building a Nuclear Power Plant to power a single lightbulb." It’s impressive, but it’s a massive waste of time and dangerous to maintain.</blockquote>
+
+        <h3>J.3 Refactoring Techniques</h3>
+        <p>The "Red-Green-Refactor" cycle. Learn the specific techniques (Extract Method, Inline Variable, Move Method) to clean messy code safely.</p>
+        <blockquote class="callout">Analogy: Refactoring is like "Gardening." You have to pull the weeds (The bad code) every day so the flowers (The business logic) can grow.</blockquote>
+      </section>
+
+      <!-- ==================== BAB K ==================== -->
+      <section class="node section">
+        <h2>BAB K. Refactoring Mastery (PRACTICAL 🔥)</h2>
+
+        <h3>K.1 Refactoring Process</h3>
+        <p>A step-by-step masterclass in improving code. We start with a piece of code that "Works but is Trash" and turn it into a work of art.</p>
+        <blockquote class="callout">Analogy: This is like "Extreme Home Makeover." We aren't just painting the walls; we're fixing the plumbing, the wiring, and the foundation until the house is better than new.</blockquote>
+
+        <h3>K.2 Case Studies</h3>
+        <p>Real-world messy code from production systems. We'll deconstruct exactly what went wrong and how we fixed it using the principles we've learned.</p>
+        <blockquote class="callout">Analogy: Case studies are like "Reviewing the Black Box after a Plane Crash." We look at the data to make sure we never make that same mistake again.</blockquote>
+
+        <h3>K.3 Hands-on Challenges</h3>
+        <p>Your turn. Practice exercises designed to force you to apply Naming, SOLID, and Function design principles under pressure.</p>
+        <blockquote class="callout">Analogy: This is your "Black Belt Test." You've learned the moves; now show us you can use them in a real fight.</blockquote>
+      </section>
+
+      <!-- ==================== BAB L ==================== -->
+      <section class="node section">
+        <h2>BAB L. Clean Code Mindset</h2>
+
+        <h3>L.1 Thinking in Clean Code</h3>
+        <p>Always write code for the *next* person. Develop the empathy required to be a great teammate and a professional engineer.</p>
+        <blockquote class="callout">Analogy: Clean code mindset is like "Leaving a Campsite better than you found it." If everyone does it, the forest stays beautiful forever.</blockquote>
+
+        <h3>L.2 Maintainability First</h3>
+        <p>Build for the long term. Learn to ignore the "Easy Shortcut" that will cause a week of pain two months from now.</p>
+        <blockquote class="callout">Analogy: Maintainability is like "Building with Stone instead of Straw." It takes longer to build, but it lasts for 100 years.</blockquote>
+
+        <h3>L.3 Engineering Discipline</h3>
+        <p>The mark of a pro. Consistency, testing, and documentation. Writing code isn't a hobby; it's a craft that requires discipline.</p>
+        <blockquote class="callout">Analogy: Discipline is like "A Chef washing their hands." You don't do it because someone is watching; you do it because it’s the only legitimate way to work.</blockquote>
+      </section>
+
+      <!-- ==================== BAB M ==================== -->
+      <section class="node section">
+        <h2>BAB M. Advanced Clean Code Concepts</h2>
+
+        <h3>M.1 Scalability of Code</h3>
+        <p>Designing for growth. How to build systems that can expand from 10 classes to 10,000 without losing clarity.</p>
+        <blockquote class="callout">Analogy: Scalability is like "Designing a City's Power Grid." You have to plan the substations and the main lines now so you can add a million houses later without the whole city going dark.</blockquote>
+
+        <h3>M.2 Readability vs Performance</h3>
+        <p>The ultimate trade-off. When should you write "Fast but Ugly" code, and when should you stick to "Clean and Clear"? Hint: Clean is almost always faster at scale.</p>
+        <blockquote class="callout">Analogy: Performance without readability is like "A Car that goes 300mph but has no steering wheel." You're going fast, but you're definitely going to crash.</blockquote>
+
+        <h3>M.3 Clean Code in Real Projects</h3>
+        <p>Team collaboration, code reviews, and production pressure. Learn how to maintain your standards when the deadline is tomorrow.</p>
+        <blockquote class="callout">Analogy: This is the "Grand Finale." You are now a craftsman. Go out there and build something that other developers will enjoy reading!</blockquote>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

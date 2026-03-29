@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React The Complete Guide Masterclass - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - Modern Web Development</p>
+      <h1>React — The Complete Guide (incl. Next.js, Redux)</h1>
+      <p class="subtitle">A masterclass journey through React, from the absolute foundations to advanced patterns, Next.js, Redux, and modern engineering practices.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Introduction & Foundations, BAB B React Fundamentals, BAB C Deep Dive into React, BAB D Styling & Debugging, BAB E Advanced State Management, BAB F Side Effects & Data Fetching, BAB G Routing & Navigation, BAB H Advanced React Concepts, BAB I Next.js & Fullstack React, BAB J Authentication & Security, BAB K Testing & Deployment, BAB L TypeScript & Advanced Tools, BAB M Real-World Projects, BAB N Engineering Best Practices.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction & Foundations</h2>
+
+        <h3>A.1 Introduction to React</h3>
+        <p>React is a JavaScript library for building user interfaces. Instead of manually updating the DOM when data changes, you tell React *how* your UI should look for a given state, and React handles the updates efficiently.</p>
+        <blockquote class="callout">Analogy: Vanilla JS is like cooking a meal by manually adjusting the flame, stirring every second, and checking the temperature yourself. React is like an automated smart-cooker: you put in the ingredients (state), press a button (render), and it ensures the meal comes out perfectly every time.</blockquote>
+        <ul>
+          <li>What is React: Component-based UI library.</li>
+          <li>Why React: Declarative, efficient, and massive ecosystem.</li>
+          <li>React vs. Vanilla JS: Imperative vs. Declarative approach.</li>
+          <li>Basic concept: Virtual DOM and Reconciler.</li>
+        </ul>
+
+        <h3>A.2 Project Setup & Tooling</h3>
+        <p>Before coding, you need a workspace. We've moved past complex manual setups to fast, modern build tools like Vite that make development a breeze.</p>
+        <blockquote class="callout">Analogy: Setting up a project manually is like building your own kitchen from scratch before you can even boil water. Vite is like a fully-equipped professional kitchen that's ready for you the second you walk in.</blockquote>
+        <ul>
+          <li>Vite: The modern standard for fast React setups.</li>
+          <li>Project Structure: Understanding <code>src</code>, <code>public</code>, and <code>node_modules</code>.</li>
+          <li>Development mode vs. Production build.</li>
+        </ul>
+
+        <h3>A.3 JavaScript Refresher (ES6+)</h3>
+        <p>React is "just JavaScript." To master React, you must be comfortable with modern ES6+ features that React relies on heavily every single day.</p>
+        <blockquote class="callout">Analogy: Modern JS features are like power tools. You can build a house with a hand saw (old JS), but a power saw (ES6+) makes the job ten times faster and more precise.</blockquote>
+        <ul>
+          <li>Arrow Functions: Concise function syntax.</li>
+          <li>Destructuring: Extracting data from objects and arrays easily.</li>
+          <li>Spread/Rest Operator: Merging and copying data structures.</li>
+          <li>Modules: <code>import</code> and <code>export</code> for clean code separation.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. React Fundamentals</h2>
+
+        <h3>B.1 Components & JSX</h3>
+        <p>Components are the building blocks of React. JSX allows you to write HTML-like code inside JavaScript, making your UI structure intuitive and readable.</p>
+        <blockquote class="callout">Analogy: Components are like Lego bricks. You build a "Window" brick, a "Door" brick, and a "Roof" brick. Then you combine them to create a "House" component. JSX is the manual that shows you how they fit together.</blockquote>
+        <pre><code>// Example Functional Component
+function Welcome() {
+  return &lt;h1&gt;Hello, React!&lt;/h1&gt;;
+}</code></pre>
+
+        <h3>B.2 Props & Data Flow</h3>
+        <p>Props (short for properties) are how you pass data from a parent component to a child. Data in React flows one-way: from the top down.</p>
+        <blockquote class="callout">Analogy: Props are like passing a note in class. The person sitting in front (Parent) passes a piece of information to the person behind them (Child). The child can read the note but can't change the original paper.</blockquote>
+        <ul>
+          <li>Passing attributes to components.</li>
+          <li><code>props.children</code>: Passing content between tags.</li>
+          <li>Creating reusable component templates.</li>
+        </ul>
+
+        <h3>B.3 State & Events</h3>
+        <p>State is a component's internal memory. When state changes, React automatically re-renders the component to show the updated data. Events like clicks trigger these changes.</p>
+        <blockquote class="callout">Analogy: State is like the "Current Floor" display in an elevator. When someone presses a button (Event), the internal memory updates (State change), and the display updates to show everyone where they are.</blockquote>
+        <pre><code>const [count, setCount] = useState(0);
+
+&lt;button onClick={() =&gt; setCount(count + 1)}&gt;
+  Click count: {count}
+&lt;/button&gt;</code></pre>
+
+        <h3>B.4 Conditional Rendering & Lists</h3>
+        <p>Dynamic UIs require showing different things based on conditions and looping through data to show lists of items.</p>
+        <blockquote class="callout">Analogy: Conditional rendering is like an "Open/Closed" sign at a shop. If it's after 9 PM, show "Closed"; otherwise, show "Open." Rendering lists is like a waiter reading out the entire specials menu from a single list.</blockquote>
+        <ul>
+          <li>Ternary operators and Logical <code>&amp;&amp;</code> in JSX.</li>
+          <li>The <code>map()</code> function for dynamic lists.</li>
+          <li>The <code>key</code> prop: Why React needs it for performance.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Deep Dive into React</h2>
+
+        <h3>C.1 Component Design</h3>
+        <p>Good React code is modular. Learn when to split components and how to use composition patterns to keep your codebase clean and scalable.</p>
+        <blockquote class="callout">Analogy: Component design is like organizing a toolbox. You don't put every tool in one giant tray; you have specific slots for screwdrivers, hammers, and wrenches so you can find them instantly.</blockquote>
+
+        <h3>C.2 State Management Best Practices</h3>
+        <p>Don't over-complicate state. Learn about "Lifting State Up" and avoiding redundant state by deriving values from existing data.</p>
+        <blockquote class="callout">Analogy: Deciding where to store state is like deciding who keeps the keys to a shared car. If only one person uses it, they keep the keys. If the whole family uses it, the keys go in a shared bowl in the living room (lifting state up).</blockquote>
+
+        <h3>C.3 Forms & User Input</h3>
+        <p>Handling forms in React involves "Two-way Binding" where React state is the "Single Source of Truth" for what appears in the input fields.</p>
+        <blockquote class="callout">Analogy: A controlled form is like a digital signature pad. The pad doesn't just record ink; it sends the data to a computer (State) which then displays the perfect digital lines back on the screen for you to see.</blockquote>
+
+        <h3>C.4 Working with Refs & DOM</h3>
+        <p>Sometimes you need to step outside the standard React flow and touch the real DOM. <code>useRef</code> is your escape hatch for focus management, measurements, or animations.</p>
+        <blockquote class="callout">Analogy: Refs are like a "VIP backstage pass." Usually, you follow the crowd (standard React data flow), but sometimes you need to go directly to the source (the DOM) to handle something specific.</blockquote>
+
+        <h3>C.5 Portals & Advanced UI Patterns</h3>
+        <p>Portals allow you to render components (like Modals) outside their parent hierarchy, preventing CSS z-index and overflow issues.</p>
+        <blockquote class="callout">Analogy: A portal is like a "Floating Billboard." Even though the billboard's control office is on the ground floor of a building (Parent), the actual sign is floating high in the sky (Portal) where everyone can see it clearly without obstruction.</blockquote>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Styling & Debugging</h2>
+
+        <h3>D.1 Styling React Apps</h3>
+        <p>From CSS Modules to Tailwind CSS, there are many ways to style. The goal is to keep styles scoped and maintainable.</p>
+        <blockquote class="callout">Analogy: Styling is like choosing an outfit for each component. CSS Modules is like custom-tailored clothes for one person; Tailwind is like a massive closet of pre-styled accessories that you can mix and match at lighting speed.</blockquote>
+
+        <h3>D.2 Debugging React</h3>
+        <p>Bugs are inevitable. Mastering the React DevTools and error handling techniques will save you hours of frustration.</p>
+        <blockquote class="callout">Analogy: Debugging is like being a detective with high-tech goggles. The DevTools let you see the "invisible" state and props flowing through the system so you can catch the culprit.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Advanced State Management</h2>
+
+        <h3>E.1 Context API</h3>
+        <p>Context API solves "Prop Drilling" by allowing you to broadcast data to a whole tree of components without passing props through every level.</p>
+        <blockquote class="callout">Analogy: Context is like a Radio Station. Instead of passing a Walkie-Talkie from person to person (Prop Drilling), you broadcast the signal (Context), and whoever wants to listen just tunes in (Consumes).</blockquote>
+
+        <h3>E.2 useReducer Hook</h3>
+        <p>When state logic gets complex with many sub-values or dependencies, <code>useReducer</code> provides a more structured way to manage updates using a "dispatch" pattern.</p>
+        <blockquote class="callout">Analogy: <code>useReducer</code> is like a dedicated Bank Teller. Instead of you manually changing the balance yourself (useState), you hand a slip (Action) to the teller who knows exactly how to process the transaction correctly.</blockquote>
+
+        <h3>E.3 Redux & Redux Toolkit</h3>
+        <p>For large-scale applications with massive global state, Redux Toolkit provides a predictable and powerful store management system.</p>
+        <blockquote class="callout">Analogy: Redux is like the "Central Server" of a massive multiplayer game. It tracks every player's stats and items in one giant, secure vault so everyone is always in sync, no matter where they are on the map.</blockquote>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Side Effects & Data Fetching</h2>
+
+        <h3>F.1 useEffect Hook</h3>
+        <p>Side effects (API calls, timers, manual DOM changes) are handled by <code>useEffect</code>. It's the multi-tool for syncing your component with external systems.</p>
+        <blockquote class="callout">Analogy: <code>useEffect</code> is like an "Automatic Light Sensor." It doesn't do anything when the sun is out, but as soon as the environment changes (Dependency change), it triggers an action (turns on the lights).</blockquote>
+
+        <h3>F.2 HTTP Requests</h3>
+        <p>Fetching data from the web is a core skill. Learn to handle loading states, success data, and error scenarios gracefully.</p>
+        <blockquote class="callout">Analogy: An HTTP request is like ordering a pizza. You call (Fetch), you wait while it's being made (Loading), and eventually, you either get a delicious pizza (Success) or a phone call saying they're out of dough (Error).</blockquote>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Routing & Navigation</h2>
+
+        <h3>G.1 React Router</h3>
+        <p>Modern web apps feel like single-page applications but need to navigate between "pages." React Router handles the URL changes without refreshing the whole site.</p>
+        <blockquote class="callout">Analogy: React Router is like an "Interactive Mall Map." You stay inside the same building (the App), but the map changes your view and shows you different stores (Routes) based on where you click.</blockquote>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Advanced React Concepts</h2>
+
+        <h3>H.1 Custom Hooks</h3>
+        <p>Extract reusable logic into tiny, focused functions. Custom Hooks are the ultimate way to keep your components dry and your logic testable.</p>
+        <blockquote class="callout">Analogy: A Custom Hook is like a "Pre-packed Travel Kit." Instead of packing your toothbrush, paste, and soap one by one every time (Repeated logic), you just grab the kit and go.</blockquote>
+
+        <h3>H.2 Performance Optimization</h3>
+        <p>Don't let your app slow down. Use <code>memo</code>, <code>useMemo</code>, and <code>useCallback</code> to prevent unnecessary re-renders in heavy components.</p>
+        <blockquote class="callout">Analogy: Optimization is like "Smart Caching." If a math problem is 1+1, don't re-calculate it every time someone asks. Just remember that the answer is 2 (Memoization).</blockquote>
+
+        <h3>H.3 React Internals (Conceptual)</h3>
+        <p>Understand the Virtual DOM, reconciliation, and the batching of updates to truly master how React works under the hood.</p>
+        <blockquote class="callout">Analogy: React Internals are like the "Stage Crew" in a theater. The audience sees the actors (the UI), but the crew is backstage moving props and lights efficiently so the show never stops.</blockquote>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Next.js & Fullstack React</h2>
+
+        <h3>I.1 Introduction to Next.js</h3>
+        <p>Next.js brings Server-Side Rendering (SSR) and routing out of the box, making your React apps SEO-friendly and lightning-fast.</p>
+        <blockquote class="callout">Analogy: React is the engine; Next.js is the "Luxury Sports Car" built around it. It comes with the AC, GPS, and Turbo already installed and optimized.</blockquote>
+
+        <h3>I.2 Fullstack Features</h3>
+        <p>Next.js allows you to build APIs and use Server Components, blurring the line between the frontend and the backend.</p>
+        <blockquote class="callout">Analogy: Fullstack Next.js is like a "Chef who also serves the customers." They know exactly what's happening in the kitchen (Server) and can bring the food straight to your table (Client) instantly.</blockquote>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. Authentication & Security</h2>
+
+        <h3>J.1 Authentication</h3>
+        <p>Secure your app by implementing login systems, handling JWT tokens, and protecting routes from unauthorized access.</p>
+        <blockquote class="callout">Analogy: Authentication is like a "Nightclub Bouncer." No ID and No Name on the list (Token)? You're not getting into the VIP area (Protected Route).</blockquote>
+      </section>
+
+      <!-- ==================== BAB K ==================== -->
+      <section class="node section">
+        <h2>BAB K. Testing & Deployment</h2>
+
+        <h3>K.1 Testing React Apps</h3>
+        <p>Ensure your code works as expected with Unit and Component tests. Good tests are the safety net for your future refactors.</p>
+        <blockquote class="callout">Analogy: Testing is like a "Quality Control Check" in a car factory. Before the car leaves the building, someone checks the brakes, lights, and engine so you don't find out they're broken on the highway.</blockquote>
+
+        <h3>K.2 Deployment</h3>
+        <p>Take your app from local development to the world. Learn about build optimization and hosting on platforms like Vercel or Netlify.</p>
+        <blockquote class="callout">Analogy: Deployment is like "Grand Opening Night." All the preparation is done, the doors are open, and now the whole world can walk in and see what you've built.</blockquote>
+      </section>
+
+      <!-- ==================== BAB L ==================== -->
+      <section class="node section">
+        <h2>BAB L. TypeScript & Advanced Tools</h2>
+
+        <h3>L.1 React + TypeScript</h3>
+        <p>TypeScript adds safety to your React code by catching type-related errors during development before they ever reach a user.</p>
+        <blockquote class="callout">Analogy: TypeScript is like "Pre-checking your Luggage" before a flight. It makes sure you didn't bring any "undefined" items or "illegal" data types before you even get to the airport.</blockquote>
+
+        <h3>L.2 Animations</h3>
+        <p>Bring your app to life with smooth transitions and animations using libraries like Framer Motion.</p>
+        <blockquote class="callout">Analogy: Animations are like the "Smooth Suspension" in a car. You can get from A to B without them, but they make the ride feel premium and enjoyable.</blockquote>
+      </section>
+
+      <!-- ==================== BAB M ==================== -->
+      <section class="node section">
+        <h2>BAB M. Real-World Projects</h2>
+
+        <h3>M.1 Practice Projects</h3>
+        <p>Put your knowledge to the test by building real-world apps: management dashboards, interactive forms, and state-heavy applications.</p>
+        <blockquote class="callout">Analogy: Practice projects are like "Live Rehearsals." You've learned the script; now it's time to perform it in front of a real audience with all the lights and sound.</blockquote>
+
+        <h3>M.2 Fullstack App</h3>
+        <p>Combine everything to build a fullstack application with backend integration, real-world architecture, and complex state management.</p>
+        <blockquote class="callout">Analogy: A Fullstack App is the "Grand Finale." It's the culmination of every single thing you've learned, working together in perfect harmony.</blockquote>
+      </section>
+
+      <!-- ==================== BAB N ==================== -->
+      <section class="node section">
+        <h2>BAB N. Engineering Best Practices</h2>
+
+        <h3>N.1 Best Practices</h3>
+        <p>Clean code, modular structure, and readability are what separate "junior" code from "engineering" excellence.</p>
+        <blockquote class="callout">Analogy: Engineering best practices are like "Kitchen Hygiene." You can cook without it, but eventually, things will get messy and someone will get "sick" (your codebase crashes).</blockquote>
+
+        <h3>N.2 Debugging & Maintenance</h3>
+        <p>Code is read more than it is written. Focus on refactoring and maintaining your codebase so it stays healthy for years.</p>
+        <blockquote class="callout">Analogy: Maintenance is like "Regular Car Servicing." Change the oil and check the tires regularly, and your car (app) will run for 300,000 miles without a problem.</blockquote>
+
+        <h3>N.3 Becoming a React Developer</h3>
+        <p>Finally, build your portfolio, polish your skills, and get ready for the real-world software engineering market.</p>
+        <blockquote class="callout">Analogy: This is your "Graduation Day." You have the tools, the knowledge, and the mindset. Now, go out there and build something incredible.</blockquote>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

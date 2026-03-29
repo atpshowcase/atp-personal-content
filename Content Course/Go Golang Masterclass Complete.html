@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Go (Golang) Masterclass Complete - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - Go Engineering Mastery</p>
+      <h1>Go (Golang) Masterclass Complete</h1>
+      <p class="subtitle">A fast-paced, high-density journey into Go, covering everything from primitive syntax to high-performance concurrency, microservices, and modern cloud deployment.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Environment Setup, BAB B Go Fundamentals, BAB C Data Structures & Memory, BAB D Functions & Error Handling, BAB E OOP in Go, BAB F Composition & Design, BAB G String Processing, BAB H Concurrency (Go's Strength), BAB I Web Development, BAB J Database Integration, BAB K Testing, BAB L DevOps & Deployment, BAB M Microservices & Cloud, BAB N Advanced Engineering, BAB O AI-Ready Systems.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction & Environment Setup</h2>
+
+        <h3>A.1 Course Overview</h3>
+        <p>Go (or Golang) is Google's answer to the complexities of modern software engineering. It's built for speed, simplicity, and massive concurrency. We aren't just learning a language; we're learning to build the backbones of the modern internet.</p>
+        <blockquote class="callout">Analogy: Learning Go is like switching from a heavy, manual transmission truck (C++/Java) to a high-speed, automated electric sports car. It's leaner, faster, and designed for the tracks of today.</blockquote>
+        <ul>
+          <li>Learning path: from basic syntax to cloud-native systems.</li>
+          <li>Goals: building high-performance, real-world backends.</li>
+          <li>Project-based approach: learning by building.</li>
+        </ul>
+
+        <h3>A.2 Installing Go Environment</h3>
+        <p>Go's setup is famous for being effortless. Whether you're on Windows, Mac, or Linux, the toolchain is consistent and gives you everything you need to compile binaries out of the box.</p>
+        <blockquote class="callout">Analogy: Setting up Go is like opening a "Pro Tools Case." Everything—the compiler, the formatter, the tester—is already in the box, precisely where it should be.</blockquote>
+        <ul>
+          <li>Installation: Windows, macOS, and Linux steps.</li>
+          <li>IDEs: Setting up VS Code with the Go extension or GoLand.</li>
+          <li>Toolchain: Understanding <code>go build</code>, <code>go run</code>, and <code>go fmt</code>.</li>
+        </ul>
+
+        <h3>A.3 Development Tools</h3>
+        <p>Being a pro Go dev means mastering the CLI and the surrounding ecosystem, including databases like PostgreSQL and version control with Git.</p>
+        <blockquote class="callout">Analogy: Tools are the "Instruments" of your trade. You need to know your way around the CLI like a pilot knows their cockpit—it's your primary interface for power.</blockquote>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Go Fundamentals</h2>
+
+        <h3>B.1 Basic Syntax</h3>
+        <p>Go syntax is intentionally minimal. There's only one way to do things, which makes Go code incredibly readable across large teams.</p>
+        <blockquote class="callout">Analogy: Go syntax is like a "Minimalist IKEA Instruction Manual." No extra words, no flowery language—just the steps you need to get the job done correctly.</blockquote>
+        <pre><code>package main
+
+import "fmt"
+
+func main() {
+    fmt.WriteLine("Go is for Builders")
+}</code></pre>
+
+        <h3>B.2 Variables & Data Types</h3>
+        <p>Go is statically typed and extremely fast. We'll explore variables, constants, and the unique way Go handles Enums and types.</p>
+        <blockquote class="callout">Analogy: Data types in Go are like "Shipping Containers." You must label exactly what's inside, and once it's labeled, it stays that way. This prevents massive accidents (bugs) during transport.</blockquote>
+
+        <h3>B.3 Control Flow</h3>
+        <p>Go keeps things simple: there is only the <code>for</code> loop. No <code>while</code>, no <code>do-while</code>. Just one loop to rule them all, along with standard <code>if/else</code> and <code>switch</code>.</p>
+        <blockquote class="callout">Analogy: The <code>for</code> loop in Go is like a "Multi-purpose Utility Knife." It can do everything other loops do, but you only have to maintain one tool instead of three.</blockquote>
+
+        <h3>B.4 Mini Project: Sales Order Processor</h3>
+        <p>Let's build a small CLI tool that takes orders, calculates totals, and applies logic. This is where your fundamentals turn into code that actually does work.</p>
+        <blockquote class="callout">Analogy: This project is your "First test drive." You've learned how the engine works; now let's see how it handles on the open road.</blockquote>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Data Structures & Memory</h2>
+
+        <h3>C.1 Core Data Structures</h3>
+        <p>Mastering <code>Arrays</code>, <code>Slices</code> (dynamic arrays), and <code>Maps</code> (key-value stores) is the key to efficient data processing in Go.</p>
+        <blockquote class="callout">Analogy: An Array is like a fixed shelf; a Slice is like a "Magic Accordion Drawer" that grows as you add more things to it. Maps are like a "Locker Room," where every key gives you instant access to exactly what's inside.</blockquote>
+
+        <h3>C.2 Memory Management</h3>
+        <p>Go gives you the power of pointers without the "headache" of manual cleanup. Understand how Value vs. Reference works to keep your apps memory-efficient.</p>
+        <blockquote class="callout">Analogy: Sharing a variable is like giving someone a "Map to a House" (Pointer). Moving a house itself is slow, but giving someone the address is fast and allows both of you to work on the same building.</blockquote>
+
+        <h3>C.3 Mini Project: Contact Management System</h3>
+        <p>A small system to store, search, and manage a list of contacts using Slices and Maps. This project teaches you how to handle data at scale.</p>
+        <blockquote class="callout">Analogy: This is like building a "Digital Rolodex." It needs to be fast to search and easy to update.</blockquote>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Functions & Error Handling</h2>
+
+        <h3>D.1 Functions</h3>
+        <p>Go functions are powerful. They can return multiple values, have variadic parameters, and are "First-Class" elements you can pass to other functions.</p>
+        <blockquote class="callout">Analogy: A Go function is like a "High-End Kitchen Appliance." It can do multiple things at once and even output two different results—like a machine that makes coffee AND grinds the extra beans for later.</blockquote>
+
+        <h3>D.2 Error Handling</h3>
+        <p>Go doesn't use `try-catch`. It uses explicit error returns. This makes your code more predictable and prevents hidden failures from crashing your system.</p>
+        <blockquote class="callout">Analogy: Error handling in Go is like a "Pilot's Checklist." You don't wait for the plane to crash to see what's wrong; you check every single step consciously before you proceed.</blockquote>
+        <pre><code>if err != nil {
+    return fmt.Errorf("Oops: %w", err)
+}</code></pre>
+
+        <h3>D.3 Mini Project: Math Library</h3>
+        <p>Build a robust library that handles complex calculations with custom error handling for edge cases (like dividing by zero or overflow).</p>
+        <blockquote class="callout">Analogy: This library is your "Precision Instrument." It needs to be perfect, or the whole building (your app) will fall down.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Object-Oriented Programming in Go</h2>
+
+        <h3>E.1 Structs & Methods</h3>
+        <p>Go doesn't have "Classes." It has <code>Structs</code>. We'll learn how to attach behavior to data using receiver methods.</p>
+        <blockquote class="callout">Analogy: A Struct is like a "Custom Lego Block." You define its shape, and a Method is like a feature you snap onto it—like a block that can also light up or rotate.</blockquote>
+
+        <h3>E.2 Interfaces</h3>
+        <p>Interfaces in Go are "implicit," making them incredibly flexible. They define *what* a Type can do, not *what* it is. This is the secret to Go's powerful polymorphism.</p>
+        <blockquote class="callout">Analogy: An Interface is like a "Standard Socket." Any device that has the right plug (Implements the methods) can draw power, regardless of whether it's a lamp or a high-end server.</blockquote>
+
+        <h3>E.3 Generics (Modern Go)</h3>
+        <p>Modern Go includes Generics, allowing you to write one piece of logic that works for *any* type while keeping full speed and safety.</p>
+        <blockquote class="callout">Analogy: A Generic is like a "Standardized Shipping Container." It doesn't care if it's carrying cars, TVs, or toys—the container handles the transport in exactly the same way.</blockquote>
+
+        <h3>E.4 Mini Project: Payroll System</h3>
+        <p>Build a system that handles different types of employees (Full-time, Freelance) using Interfaces to calculate their unique pay structures.</p>
+        <blockquote class="callout">Analogy: The HR department doesn't care if you're a designer or an engineer; as long as you have a "CalculatePay" method, you're getting your salary!</blockquote>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Composition & Design</h2>
+
+        <h3>F.1 Composition Over Inheritance</h3>
+        <p>Go rejects complex class hierarchies. Instead, it uses "Composition"—embedding smaller structs inside larger ones to build complex behaviors.</p>
+        <blockquote class="callout">Analogy: Composition is like a "Snap-On Tool System." You don't have a giant "Super-Tool"; you have a handle and you snap on exactly the modules you need for the job.</blockquote>
+
+        <h3>F.2 Design Patterns in Go</h3>
+        <p>Every language has its "Idioms." We'll explore the patterns that make Go code feel native, clean, and professional.</p>
+        <blockquote class="callout">Analogy: Design patterns are the "Shortcuts of a Grandmaster." They are the most efficient ways to solve recurring problems so you don't waste time on the basics.</blockquote>
+
+        <h3>F.3 Mini Project: Bank Account System</h3>
+        <p>Build a multi-layered banking system that uses struct embedding to share common logic (like audit logs) across different account types.</p>
+        <blockquote class="callout">Analogy: Every vault (Account) in the bank is unique, but every single one needs the same "Security Camera System" (Embedded struct) watching it.</blockquote>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. String Processing & Utilities</h2>
+
+        <h3>G.1 Working with Strings</h3>
+        <p>Go was built with the modern web in mind. It has world-class support for string manipulation, formatting, and high-speed text processing.</p>
+        <blockquote class="callout">Analogy: String processing in Go is like a "High-Speed Label Maker." It can cut, join, and format thousands of labels in a split-second with perfect precision.</blockquote>
+
+        <h3>G.2 Unicode & Text Processing</h3>
+        <p>Everything in Go is UTF-8 by default. Learn to handle symbols, emojis, and international text without breaking your system.</p>
+        <blockquote class="callout">Analogy: Go handles Unicode like a "Global Translator." It doesn't matter what language someone speaks; Go understands the characters perfectly without getting confused.</blockquote>
+
+        <h3>G.3 Regex & Templates</h3>
+        <p>Master Regular Expressions for pattern matching and Go Templates for generating HTML or dynamic config files.</p>
+        <blockquote class="callout">Analogy: Regex is like a "Smart Search Filter" that can find a needle in a haystack of text. Templates are like a "Mad Libs Form"—you provide the blanks, and Go fills them in with data.</blockquote>
+
+        <h3>G.4 Mini Project: Config Parser</h3>
+        <p>Build a utility that reads text-based configuration files, validates them with Regex, and transforms them into a structured Go object.</p>
+        <blockquote class="callout">Analogy: This is like a "System Brain." Your app needs to know its settings before it can start thinking.</blockquote>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Concurrency (Core Strength of Go)</h2>
+
+        <h3>H.1 Goroutines</h3>
+        <p>Goroutines are lightweight threads managed by Go, not the OS. You can run millions of them on a single laptop without breaking a sweat.</p>
+        <blockquote class="callout">Analogy: A Goroutine is like a "Junior Assistant." While you're working on the main task, you can hire 1,000 assistants to handle the small details in parallel for almost no cost.</blockquote>
+
+        <h3>H.2 Channels</h3>
+        <p>Don't communicate by sharing memory; share memory by communicating. Channels are the "pipes" through which goroutines send data to each other.</p>
+        <blockquote class="callout">Analogy: A Channel is like a "Secure Pneumatic Tube" between two desks. One side puts in a message, and it stays safe until the other person pulls it out. No mess, no confusion.</blockquote>
+
+        <h3>H.3 Synchronization (Mutex & WaitGroups)</h3>
+        <p>When multiple goroutines need to touch the same data, you need "Locks" (Mutex) and "Counters" (WaitGroups) to keep everyone in sync.</p>
+        <blockquote class="callout">Analogy: A Mutex is like a "Bathroom Key." If you have the key, you're the only one who can use the room (the data). Everyone else has to wait in line until you give the key back.</blockquote>
+
+        <h3>H.4 Real-world Concurrency</h3>
+        <p>Build a high-performance system that processes thousands of tasks concurrently—the bread and butter of modern backend engineering.</p>
+        <blockquote class="callout">Analogy: This is like managing a "Busy Airport Control Tower." You're handling 100 planes (tasks) at once, making sure everything is moving and nothing crashes.</blockquote>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Web Development with Go</h2>
+
+        <h3>I.1 REST API Development</h3>
+        <p>Building a high-speed HTTP server is baked into the Go standard library. We'll build robust, JSON-based APIs from scratch.</p>
+        <blockquote class="callout">Analogy: An API is like a "Waiter" at a restaurant. They take your order (Request), go to the kitchen (The Server), and bring you back a plate of JSON data.</blockquote>
+
+        <h3>I.2 Authentication (JWT)</h3>
+        <p>Secure your systems with JSON Web Tokens. Learn to handle logins, protected routes, and user sessions like a pro.</p>
+        <blockquote class="callout">Analogy: A JWT is like a "High-Security VIP Badge." Once you show it to the bouncer (The Bouncer), you can access all the restricted rooms without having to show your ID again.</blockquote>
+
+        <h3>I.3 GraphQL APIs</h3>
+        <p>Modern apps often need GraphQL's flexibility. We'll integrate it into Go for powerful, client-driven data fetching.</p>
+        <blockquote class="callout">Analogy: GraphQL is like a "Buffet Table." instead of the waiter bringing you a set meal (REST), you just pick exactly what you want on your plate.</blockquote>
+
+        <h3>I.4 Full Project: Bookmarking Web App</h3>
+        <p>Build a complete backend for saving and managing links, complete with user accounts, search, and a beautiful JSON API.</p>
+        <blockquote class="callout">Analogy: This is your "Full System Design Practice." Every piece we've learned comes together here.</blockquote>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. Database Integration</h2>
+
+        <h3>J.1 SQL Databases (PostgreSQL)</h3>
+        <p>Connect Go to the "Gold Standard" of relational databases. Master CRUD operations and relational data modeling.</p>
+        <blockquote class="callout">Analogy: A Database is like a "Reinforced Vault." Go is the "Electronic Keypad" that lets you put things in and pull them out safely.</blockquote>
+
+        <h3>J.2 ORM Usage (GORM)</h3>
+        <p>Sometimes you want speed and convenience. We'll use GORM to map our Go structs directly to database tables.</p>
+        <blockquote class="callout">Analogy: An ORM is like a "Personal Organizer." You give them your items (Structs), and they handle exactly where they go in the filing cabinet (The Database) for you.</blockquote>
+
+        <h3>J.3 Advanced Database Features</h3>
+        <p>Learn to implement Full-text Search for your apps and optimize your queries to handle millions of rows without lagging.</p>
+        <blockquote class="callout">Analogy: Query optimization is like "Tuning a Racing Engine." You're making sure every drop of fuel (Resources) turns into maximum speed (Performance).</blockquote>
+      </section>
+
+      <!-- ==================== BAB K ==================== -->
+      <section class="node section">
+        <h2>BAB K. Testing & Code Quality</h2>
+
+        <h3>K.1 Unit Testing</h3>
+        <p>If it isn't tested, it's probably broken. Learn Go's built-in testing framework to ensure your code works under every condition.</p>
+        <blockquote class="callout">Analogy: A Unit Test is like a "Smoke Alarm." You want it to go off the second something small is wrong so you can fix it before the whole house is on fire.</blockquote>
+
+        <h3>K.2 Integration Testing</h3>
+        <p>Test the "connections." Make sure your API, Database, and Logic work together in perfect harmony before you ship to production.</p>
+        <blockquote class="callout">Analogy: Integration testing is like a "Dress Rehearsal." The individual actors are ready; now let's see how the whole show looks with the lights and sound.</blockquote>
+
+        <h3>K.3 Mocking</h3>
+        <p>Learn to simulate "messy" real-world dependencies (like an external API that's often down) so your tests stay fast and reliable.</p>
+        <blockquote class="callout">Analogy: Mocking is like a "Crash Test Dummy." You don't use real people (Real data/systems) to test a car's safety; you use a perfect simulation.</blockquote>
+      </section>
+
+      <!-- ==================== BAB L ==================== -->
+      <section class="node section">
+        <h2>BAB L. DevOps & Deployment</h2>
+
+        <h3>L.1 Docker Basics</h3>
+        <p>Contain everything your app needs. Docker ensures that if it runs on your machine, it runs perfectly on the server.</p>
+        <blockquote class="callout">Analogy: Docker is like a "Standard Shipping Container." It doesn't matter if you're on a ship (Linux) or a train (Windows); if the box is standard, it fits perfectly.</blockquote>
+
+        <h3>L.2 Docker Compose</h3>
+        <p>Coordinate multiple services (like your Go app and its PostgreSQL database) into one single command start.</p>
+        <blockquote class="callout">Analogy: Docker Compose is like an "Orchestra Conductor." It makes sure the violin (Web) and the drums (Database) start at exactly the right time.</blockquote>
+
+        <h3>L.3 Deployment Strategies</h3>
+        <p>Learn to build "Production-Ready" apps that are secure, logged, and ready for the real-world traffic.</p>
+        <blockquote class="callout">Analogy: This is the "Grand Launch." You've built the rocket; now it's time to actually fly it into orbit.</blockquote>
+      </section>
+
+      <!-- ==================== BAB M ==================== -->
+      <section class="node section">
+        <h2>BAB M. Microservices & Cloud</h2>
+
+        <h3>M.1 Microservices Architecture</h3>
+        <p>Break your "Giant Monolith" into smaller, focused services that talk to each other. This is how platforms like Netflix and Amazon survive at scale.</p>
+        <blockquote class="callout">Analogy: A Microservice is like a "Department in a Large Factory." The paint shop only paints; the engine shop only builds engines. They are separate but work towards one goal.</blockquote>
+
+        <h3>M.2 AWS Integration (S3 & SQS)</h3>
+        <p>Connect your Go apps to the cloud. We'll handle file storage and high-speed message queues using AWS.</p>
+        <blockquote class="callout">Analogy: Using AWS is like "Renting a Massive Cloud Warehouse." instead of building your own, you just pay for exactly the space you use.</blockquote>
+
+        <h3>M.3 Event-driven Systems</h3>
+        <p>Learn to build systems that react to "Events" rather than just waiting for instructions. This is the heart of low-latency architecture.</p>
+        <blockquote class="callout">Analogy: Event-driven is like a "Smart Home." When someone opens the door (The Event), the lights turn on automatically without anyone having to press a switch.</blockquote>
+      </section>
+
+      <!-- ==================== BAB N ==================== -->
+      <section class="node section">
+        <h2>BAB N. Advanced Engineering Concepts</h2>
+
+        <h3>N.1 Clean Architecture</h3>
+        <p>Learn to layer your code so the business logic stays "clean" even if you swap out your database or web framework later.</p>
+        <blockquote class="callout">Analogy: Clean Architecture is like "Standardized Furniture with Swappable Covers." You can change the look (The Framework) without ever changing the structure (The Logic).</blockquote>
+
+        <h3>N.2 Incremental Development</h3>
+        <p>Don't build everything at once. Learn the professional way to build complex systems one solid piece at a time.</p>
+        <blockquote class="callout">Analogy: This is like "Building a Skyscraper floor by floor." If the first floor (The Foundation) isn't perfect, you don't build the second.</blockquote>
+
+        <h3>N.3 System Design Thinking</h3>
+        <p>Design for millions. Understand how to design scalable, concurrent services that don't fall down when the traffic hits.</p>
+        <blockquote class="callout">Analogy: This is our "Grandmaster Level Training." You're not just thinking about the next move (coding); you're thinking about the entire match (architecture).</blockquote>
+      </section>
+
+      <!-- ==================== BAB O ==================== -->
+      <section class="node section">
+        <h2>BAB O. AI-Ready Systems & Future</h2>
+
+        <h3>O.1 MCP Protocol</h3>
+        <p>Build systems that are "AI-Ready." We'll explore the Modern Context Protocol to allow AI agents to interact with your backends seamlessly.</p>
+        <blockquote class="callout">Analogy: MCP is like "Giving your System a Voice." Now, not just humans but AI agents can talk to your backend and get work done.</blockquote>
+
+        <h3>O.2 Modern Backend Trends</h3>
+        <p>A look at the future of engineering: where Go is going and how high-performance systems are evolving.</p>
+        <blockquote class="callout">Analogy: This is your "Look into the Crystal Ball." You're staying ahead of the curve so you're ready for the industry next year, not just today.</blockquote>
+
+        <h3>O.3 Future of Go Engineering</h3>
+        <p>The industry is moving toward highly concurrent, cloud-native systems. Go is the king of this territory.</p>
+        <blockquote class="callout">Analogy: This is your "Graduation Day." You are now an Engineer equipped with the most powerful tools in the modern backend market. Go build something incredible!</blockquote>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

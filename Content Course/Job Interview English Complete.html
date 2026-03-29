@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Interview English Complete - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - Career Mastery & Professional English</p>
+      <h1>Job Interview English Complete</h1>
+      <p class="subtitle">A strategic guide to conquering international job interviews—from core behavioral questions and the STAR method to specialized IT technical communication.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Foundations, BAB B Core Questions, BAB C Communication Skills, BAB D STAR Method, BAB E Difficult Strategies, BAB F IT & Tech English, BAB G simulations, BAB H Preparation, BAB I Advanced Branding, BAB J Real-World Application.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction & Interview Foundations</h2>
+
+        <h3>A.1 Course Overview</h3>
+        <p>An interview isn't an interrogation; it's a high-stakes business meeting. We're going to transform your English from "functional" to "persuasive" so you can win the roles you deserve.</p>
+        <blockquote class="callout">Analogy: An interview is like a "First Date" for your career. You want to show your best side, prove you're compatible, and make sure the other person (the company) actually is who they claim to be.</blockquote>
+        <ul>
+          <li>Learning goals: clarity, confidence, and conversion.</li>
+          <li>How to practice using the provided Answer Library.</li>
+        </ul>
+
+        <h3>A.2 Interview Mindset</h3>
+        <p>Half the battle is in your head. Learn to manage anxiety through preparation and reframe the experience as a peer-to-peer discussion rather than a test.</p>
+        <blockquote class="callout">Analogy: Mindset is like "The Pre-game Warm-up for an Athlete." If your muscles are warm and your focus is sharp, the actual game feels natural instead of terrifying.</blockquote>
+
+        <h3>A.3 Interview Structure</h3>
+        <p>Interviews follow a predictable pattern. They start with the **Recognition Phase** (Are you qualified?) and move to the **Personal Phase** (Do we like you?).</p>
+        <blockquote class="callout">Analogy: The structure is like a "Movie Script." It has an introduction (Tell me about yourself), a rising action (The deep questions), and a conclusion (Do you have any questions for us?).</blockquote>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Core Interview Questions (VERY IMPORTANT 🔥)</h2>
+
+        <h3>B.1 Tell Me About Yourself</h3>
+        <p>The "Pitch." Learn the Past-Present-Future framework to answer this question with energy and focus, avoiding the trap of rambling about your childhood.</p>
+        <blockquote class="callout">Analogy: This answer is your "Movie Trailer." It needs to be short, exciting, and make the viewer (Interviewer) want to see the whole film (Hire you).</blockquote>
+
+        <h3>B.2 Strengths & Weaknesses</h3>
+        <p>The balancing act. Learn how to highlight your strengths with evidence and frame your weaknesses as "areas of growth" with active solutions.</p>
+        <blockquote class="callout">Analogy: Weaknesses are like "Construction Zones" on a highway. They might slow traffic down, but they prove that work is being done to make the road even better in the future.</blockquote>
+
+        <h3>B.3 Motivation Questions</h3>
+        <p>"Why this job?" and "Why our company?" are the tests of your research. Show them you aren't just looking for *any* job, but *this* specific role.</p>
+        <blockquote class="callout">Analogy: Motivation is like "A Custom-Made Suit." A generic answer fits everyone but looks good on no one. A custom answer proves you’re the perfect fit for this specific shape of company.</blockquote>
+
+        <h3>B.4 Career Questions</h3>
+        <p>The 5-year plan. They want to know if you're a "Rent-a-Car" (temporary) or a "Long-Term Investment." Show your ambition while remaining realistic.</p>
+        <blockquote class="callout">Analogy: Career goals are like a "Roadmap." You might not know every turn yet, but the interviewer needs to see that you're driving toward a specific destination, not just drifting with the wind.</blockquote>
+
+        <h3>B.5 Behavioral Basics</h3>
+        <p>How do you handle stress? How do you react to feedback? These questions test your "Emotional Intelligence" (EQ) and fit within the team culture.</p>
+        <blockquote class="callout">Analogy: Behavioral questions are like "Stress Testing a bridge." They want to see how much weight (pressure) you can take before you crack.</blockquote>
+
+        <h3>B.6 Practical Questions</h3>
+        <p>Salary, availability, and background checks. Learn the professional language of negotiation and setting expectations.</p>
+        <blockquote class="callout">Analogy: Practical questions are like "Reading the Contract." It’s not the most romantic part of the deal, but it’s where real life happens.</blockquote>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. English Communication Skills</h2>
+
+        <h3>C.1 Vocabulary for Interviews</h3>
+        <p>Stop saying "I did." Start saying "I spearheaded," "I optimized," or "I implemented." Learn the high-impact action verbs that command respect.</p>
+        <blockquote class="callout">Analogy: Professional vocabulary is like "Wearing a Sharp Suit." You don't *need* it to do the job, but it makes everyone in the room treat you with more respect immediately.</blockquote>
+
+        <h3>C.2 Pronunciation & Fluency</h3>
+        <p>You don't need a native accent, but you do need clarity. Focus on rhythm, intonation, and "Linking" to sound more natural and less like a textbook.</p>
+        <blockquote class="callout">Analogy: Fluency is like "The Suspension on a Car." If the ride is bumpy (stuttering/robotic), it’s hard to focus on the view. If it’s smooth, the passenger (Interviewer) can relax and enjoy the journey.</blockquote>
+
+        <h3>C.3 Grammar in Interviews</h3>
+        <p>The "Professional Filter." Master the Present Perfect for achievements and the Conditional for hypothetical situations without getting bogged down in rules.</p>
+        <blockquote class="callout">Analogy: Grammar is like "The Punctuation in a Sentence." Without it, everything is a mess; with it, each point is clear and lands with impact.</blockquote>
+
+        <h3>C.4 Speaking Naturally</h3>
+        <p>Avoiding robotic, memorized answers. Learn to use "Filler Phrases" (Well, That's a great question, To be honest) to buy time and sound like a human.</p>
+        <blockquote class="callout">Analogy: Natural speaking is like "A Live Jazz Session." You have a theme (your prepared answer), but you riff and flow depending on the energy of the audience.</blockquote>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. STAR Method (CORE 🔥)</h2>
+
+        <h3>D.1 What is STAR Method</h3>
+        <p>Situation, Task, Action, and Result. This is the industry-standard framework for answering any behavioral or "Tell me about a time when..." question.</p>
+        <blockquote class="callout">Analogy: STAR is a "Building Blueprint." It ensures you build a complete house (a full story) for every question, from the foundation (Situation) to the roof (the Result).</blockquote>
+
+        <h3>D.2 Structuring Answers</h3>
+        <p>Learn to spend 80% of your time on the **Action** (What *you* did) and the **Result** (The impact), rather than getting lost in the "Drama" of the situation.</p>
+        <blockquote class="callout">Analogy: Structuring is like "Directing a Movie Scene." Don't spend 20 minutes on the background music; get to the part where the hero (You) saves the day.</blockquote>
+
+        <h3>D.3 Writing STAR Stories</h3>
+        <p>Build a library of 5 versatile stories that you can adapt to almost any question. Quality over quantity is the secret to interview success.</p>
+        <blockquote class="callout">Analogy: A good STAR story is like a "Swiss Army Knife." One story about a conflict can also be used to show leadership, communication, and problem-solving.</blockquote>
+
+        <h3>D.4 Practice Questions</h3>
+        <p>Applying the method to common prompts: Teamwork, Conflict, Achievements, and Failures. This is where your stories meet the real world.</p>
+        <blockquote class="callout">Analogy: Practice is like "A Flight Simulator." You crash a few times in private so that when you're in the real cockpit, you land perfectly.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Difficult Questions & Strategies</h2>
+
+        <h3>E.1 Handling Tough Questions</h3>
+        <p>How to talk about being fired, gaps in your resume, or that one project that failed miserably. Reframing the "Negative" into "Learning."</p>
+        <blockquote class="callout">Analogy: Handling tough questions is like "Judo." You don't fight the interviewer's force (the negative question); you use their momentum to flip the topic toward your growth and resilience.</blockquote>
+
+        <h3>E.2 Avoiding Common Mistakes</h3>
+        <p>Over-explaining, being too general, or bad-mouthing your previous boss. These are the "Instant Rejections" we'll learn to avoid at all costs.</p>
+        <blockquote class="callout">Analogy: These mistakes are like "Self-Inflicted Wounds." You're the one holding the sword; just don't swing it at your own feet.</blockquote>
+
+        <h3>E.3 Answer Frameworks</h3>
+        <p>Advanced techniques like "The Sandwich Method" (Positive-Negative-Positive) to deliver difficult information while keeping the overall impression high.</p>
+        <blockquote class="callout">Analogy: A framework is like "A Safety Net." even if the question catches you off guard, the framework catches your fall and helps you bounce back.</blockquote>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. IT / Technical Interview English (UNIQUE 🔥)</h2>
+
+        <h3>F.1 Talking About Your Experience</h3>
+        <p>Learn to describe complex architectures, tech stacks, and your role in the development lifecycle using professional, high-density IT terms.</p>
+        <blockquote class="callout">Analogy: Technical experience is like "Your Developer Portfolio." If you can't describe the code, the interviewer won't believe you wrote it. Language is the proof of your skill.</blockquote>
+
+        <h3>F.2 Explaining Technical Concepts</h3>
+        <p>The "ELId5" (Explain Like I'm 5) challenge. Can you explain a Microservice or a Closure to a non-technical recruiter? This tests your true understanding.</p>
+        <blockquote class="callout">Analogy: Explaining tech is like "Translating a Foreign Language." You have to take the "Code Language" and translate it into "Value Language" for the business.</blockquote>
+
+        <h3>F.3 Coding Interview Communication</h3>
+        <p>"Thinking out loud." Learn the English phrases to keep a logical narration going while your hands are busy writing code on a whiteboard.</p>
+        <blockquote class="callout">Analogy: Thinking out loud is like "The GPS in a Car." The interviewer is the passenger; if you don't keep talking, they have no idea where you're going or why you took that turn.</blockquote>
+
+        <h3>F.4 Testing & Debugging Language</h3>
+        <p>How to describe a bug hunt, a performance bottleneck, or a production fire without sounding panicked or confused.</p>
+        <blockquote class="callout">Analogy: Debugging language is like "A Medic reporting from the field." You state the problem, the vitals, the operation you performed, and the final state of the patient.</blockquote>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Interview Practice & Simulation</h2>
+
+        <h3>G.1 AI Role Play Practice</h3>
+        <p>Use modern AI tools to simulate an interviewer. It's the most effective way to build "Muscle Memory" for your English answers.</p>
+        <blockquote class="callout">Analogy: AI Role Play is like "Practicing with a Punching Bag." It doesn't hit back exactly like a person, but it gives you the reps you need to make your punches (your answers) powerful.</blockquote>
+
+        <h3>G.2 Mock Interviews</h3>
+        <p>The Full Simulation. Practice under a timer with randomized questions to simulate the "Stress" of a real interview environment.</p>
+        <blockquote class="callout">Analogy: A Mock Interview is "The Dress Rehearsal." Everything is real—the suit, the timer, the screen—so that by the time Opening Night (the Real Interview) arrives, it feels like just another rehearsal.</blockquote>
+
+        <h3>G.3 Audio Practice</h3>
+        <p>Record, listen, and repeat. Hearing yourself is the fastest way to identify "Ums," "Ahs," and awkward pauses that you didn't even notice while speaking.</p>
+        <blockquote class="callout">Analogy: Audio practice is like "Watching Game Tape." You see exactly where your footwork was bad and where you missed the open shot.</blockquote>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Preparation Strategy</h2>
+
+        <h3>H.1 Researching Company</h3>
+        <p>Go beyond the "About Us" page. Learn to look at their engineering blog, their latest funding, and their culture to find the "Hidden Clues" of what they really want.</p>
+        <blockquote class="callout">Analogy: Researching is like "The Detective Work" before a heist. You need to know the layout of the building, the shifts of the guards, and where the vault is hidden.</blockquote>
+
+        <h3>H.2 Building Answer Library</h3>
+        <p>Don't improvise. Build a "Pre-written Answer Library" for the 10 most common questions. This isn't for memorizing; it's for setting your "Baseline."</p>
+        <blockquote class="callout">Analogy: An Answer Library is like "A Toolbelt." You don't know exactly which tool you'll need, but you have all the essentials strapped to your hip and ready to grab.</blockquote>
+
+        <h3>H.3 Interview Readiness</h3>
+        <p>The final checklist: Lighting, Internet speed, your background, and your "Emergency Plan" for when Zoom crashes.</p>
+        <blockquote class="callout">Analogy: Readiness is like "The Pre-flight Checklist for a Pilot." You check the fuel, the wings, and the weather so you don't find out something is wrong while you're 30,000 feet in the air.</blockquote>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Advanced Communication</h2>
+
+        <h3>I.1 Professional Tone</h3>
+        <p>The fine line between "Polite" and "Confident." Learn the English "Softener" phrases to push back without being rude, and the "Clarity" phrases to show leadership.</p>
+        <blockquote class="callout">Analogy: Tone is like "The Seasoning in a Dish." A little bit of salt (Confidence) brings out the flavor; too much makes it inedible (Arrogance).</blockquote>
+
+        <h3>I.2 Personal Branding</h3>
+        <p>What is your "Unique Selling Proposition"? We'll find the one thing that makes you different from 100 other candidates and weave it into every answer.</p>
+        <blockquote class="callout">Analogy: Branding is like "The Logo on a High-End Product." It tells the customer exactly what they can expect in terms of quality and style before they even open the box.</blockquote>
+
+        <h3>I.3 Asking Questions Back</h3>
+        <p>This is where the interview flips. Learn to ask "Power Questions" that show you're a high-level thinker who is also interviewing *them*.</p>
+        <blockquote class="callout">Analogy: Asking questions is like "The Final Sale." You're closing the deal by showing that you're an equal partner in this future success, not just a desperate job seeker.</blockquote>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. Real-World Application</h2>
+
+        <h3>J.1 Full Interview Simulation</h3>
+        <p>The Capstone. A full, end-to-end interview covering everything from "Tell Me About Yourself" to "What is your salary expectation?"</p>
+        <blockquote class="callout">Analogy: This is "The Championship Game." You've trained for months; now it's time to play for the trophy.</blockquote>
+
+        <h3>J.2 Performance Review</h3>
+        <p>Learn how to follow up after an interview and how to ask for feedback that actually helps you improve for the next one.</p>
+        <blockquote class="callout">Analogy: The review is like "The Post-Game Analysis." Even if you win, you look at what you can do better for the next season.</blockquote>
+
+        <h3>J.3 Continuous Improvement</h3>
+        <p>The professional mindset. An interview is just a conversation; the more you have, the better you get. We'll build a habit of regular communication practice.</p>
+        <blockquote class="callout">Analogy: Improvement is like "A Marathon." You don't wake up one day as an athlete; you run every day until you are one.</blockquote>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

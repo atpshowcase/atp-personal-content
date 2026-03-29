@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modern .NET Ecosystem & .NET Core - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - .NET Architecture & Platforms</p>
+      <h1>Modern .NET Ecosystem & .NET Core</h1>
+      <p class="subtitle">A complete guide to navigating the .NET landscape, from classic frameworks to cross-platform .NET Core and the unified future of the ecosystem.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Introduction to .NET Ecosystem, BAB B Modern .NET Technologies, BAB C Working with .NET Core, BAB D .NET Standard & Libraries, BAB E Testing & Development Practices, BAB F Advanced Concepts & Future.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction to .NET Ecosystem</h2>
+
+        <h3>A.1 Overview of .NET Ecosystem</h3>
+        <p>The .NET ecosystem is a vast landscape of tools, libraries, and runtimes that allow you to build for everything—web, desktop, mobile, cloud, and IoT. It's not just one thing; it's a family of technologies working together.</p>
+        <blockquote class="callout">Analogy: The .NET ecosystem is like a "Universal Travel Adapter." Whether you're in the US, Europe, or Japan (Windows, Linux, or Mac), .NET provides the right plug to make your devices work everywhere.</blockquote>
+        <ul>
+          <li>Why so many technologies? Evolution from Windows-only to global cross-platform.</li>
+          <li>The Big Picture: Connecting the runtimes, languages, and frameworks.</li>
+        <li>One platform to rule them all: The unified .NET vision.</li>
+        </ul>
+
+        <h3>A.2 Classic .NET Framework</h3>
+        <p>This is the OG version. Built specifically for Windows, it relies on the Common Language Runtime (CLR) and the Windows API. It's powerful but bound to its Windows roots.</p>
+        <blockquote class="callout">Analogy: .NET Framework is like a "V8 Muscle Car." It's incredibly powerful and reliable, but it only runs on high-octane Windows fuel. You can't take it off-road to Linux-land.</blockquote>
+        <ul>
+          <li>CLR: The heart of the execution environment.</li>
+          <li>Windows-centric development: WPF, WinForms, and classic ASP.NET.</li>
+          <li>Limitations: Weighty installs and zero cross-platform support.</li>
+        </ul>
+
+        <h3>A.3 Mono Platform</h3>
+        <p>Mono was the first serious attempt to take .NET outside the Windows bubble. It allowed C# code to run on Linux, Android, and iOS long before Microsoft officially supported cross-platform.</p>
+        <blockquote class="callout">Analogy: Mono is like a "Custom-built Offroad Kit" for that muscle car. It wasn't always as smooth as the original, but it was the only way to drive through the rugged trails of Linux and Mobile.</blockquote>
+        <ul>
+          <li>The origins: Open-source implementation by Miguel de Icaza.</li>
+          <li>Mono vs. .NET Framework: Sacrificing some Windows features for portability.</li>
+        </ul>
+
+        <h3>A.4 .NET Core Platform</h3>
+        <p>This was the game changer. A brand new, modular, open-source, and high-performance runtime built from the ground up to be cross-platform by default.</p>
+        <blockquote class="callout">Analogy: .NET Core is like a "Modern Electric SUV." It's lightweight, incredibly fast, runs on any power source (OS), and is built for the sustainable technical future.</blockquote>
+        <ul>
+          <li>Core CLR: The lean, mean execution machine.</li>
+          <li>Modular design: Pick only what you need via NuGet.</li>
+          <li>Cross-platform: Native performance on Windows, Linux, and macOS.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Modern .NET Technologies</h2>
+
+        <h3>B.1 .NET Native</h3>
+        <p>.NET Native compiles your code "Ahead-of-Time" (AOT) instead of "Just-in-Time" (JIT). This results in faster startup times and lower memory usage for your apps.</p>
+        <blockquote class="callout">Analogy: AOT compilation is like "Buying a Pre-cooked Meal." Instead of cooking it in the kitchen when the guest arrives (JIT), you have it ready to serve immediately. Faster service, happier customers.</blockquote>
+
+        <h3>B.2 Xamarin & Cross-Platform Apps</h3>
+        <p>Xamarin allows you to write C# code that compiles down to native Android and iOS apps. You share logic while keeping the native performance and look-and-feel.</p>
+        <blockquote class="callout">Analogy: Xamarin is like a "Universal Translator." You speak one language (C#), and it makes sure that locals in Android-city and iOS-town understand you perfectly as if you were one of them.</blockquote>
+
+        <h3>B.3 UWP & WinRT</h3>
+        <p>Universal Windows Platform (UWP) is the modern Windows app model. It's designed to run on PCs, tablets, Xbox, and even HoloLens with a single codebase.</p>
+        <blockquote class="callout">Analogy: UWP is like a "Shape-shifting Suit." Whether you're at a formal dinner (Work PC) or at home on the couch (Xbox), the suit automatically adjusts to fit the occasion and the screen size.</blockquote>
+
+        <h3>B.4 Roslyn Compiler</h3>
+        <p>Roslyn is the ".NET as a Service" compiler. It doesn't just turn code into binaries; it provides deep analysis of your code, enabling powerful IDE features and refactoring tools.</p>
+        <blockquote class="callout">Analogy: Roslyn is like a "Smart Writing Assistant." It doesn't just check your spelling; it understands your grammar, suggests better ways to write your story, and helps you organize your chapters.</blockquote>
+
+        <h3>B.5 NuGet Package Manager</h3>
+        <p>NuGet is the package manager for .NET. Use it to pull in libraries, frameworks, and tools from the massive .NET community into your project instantly.</p>
+        <blockquote class="callout">Analogy: NuGet is like "Apps for your IDE." Instead of building every feature from scratch, you just download a specialized tool from the store and plug it into your project.</blockquote>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Working with .NET Core</h2>
+
+        <h3>C.1 Installing .NET Core</h3>
+        <p>Getting started is easy. You just need the .NET SDK (Software Development Kit) to build apps and the Runtime to run them.</p>
+        <blockquote class="callout">Analogy: The SDK is the "Full Toolbox," while the Runtime is just the "Wrench" you need to keep the machine running. Developers need the whole box; users just need the wrench.</blockquote>
+
+        <h3>C.2 .NET CLI (Command Line Interface)</h3>
+        <p>The <code>dotnet</code> command is your entry point to everything. You can create, build, run, and publish applications using simple terminal commands.</p>
+        <blockquote class="callout">Analogy: The .NET CLI is like a "Remote Control" for your development. You can stay in your cozy terminal and tell .NET exactly what to do without ever taking your hands off the keyboard.</blockquote>
+        <pre><code>dotnet new console -n MyFirstApp
+dotnet build
+dotnet run</code></pre>
+
+        <h3>C.3 Creating Applications</h3>
+        <p>From simple command-line tools (Console) to heavy-duty web APIs, .NET Core provides templates to get you started in seconds.</p>
+        <blockquote class="callout">Analogy: Project templates are like "Instant Noodles." All the ingredients and the container are ready—you just add your specific logic (hot water) and you're ready to serve.</blockquote>
+
+        <h3>C.4 Deployment</h3>
+        <p>You can deploy apps as "Framework-dependent" (needs .NET installed on target) or "Self-contained" (brings everything with it, even the runtime).</p>
+        <blockquote class="callout">Analogy: FDD is like "Renting a Furnished Apartment"—the basics are already there. SCD is like "Building your own Bunker"—you bring your own electricity, water, and food so you're not dependent on anyone else.</blockquote>
+
+        <h3>C.5 Cross-Platform Development</h3>
+        <p>A true .NET Core app runs exactly the same on Windows, Linux, and macOS. You can even "Cross-compile" on Windows for a Linux target.</p>
+        <blockquote class="callout">Analogy: Cross-platform dev is like "Standard Shipping Shipping Containers." It doesn't matter if the ship is a cargo vessel or a train; if it's a standard size, it fits and delivers the goods perfectly.</blockquote>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. .NET Standard & Libraries</h2>
+
+        <h3>D.1 Portable Class Library (PCL)</h3>
+        <p>PCL was the old way to share code between platforms like Windows Phone and Desktop, but it was complex and limited by the "intersection" of supported APIs.</p>
+        <blockquote class="callout">Analogy: PCL is like trying to find "Common Ground" between friends. You can only talk about things *everyone* knows, which leaves out a lot of interesting stories.</blockquote>
+
+        <h3>D.2 .NET Standard</h3>
+        <p>.NET Standard fixed this by providing a unified specification of APIs that all .NET platforms *must* implement. It's the "contract" for code sharing.</p>
+        <blockquote class="callout">Analogy: .NET Standard is like a "Universal Measurement System." As long as everyone agrees on what a "Kilogram" is, you can trade goods across any border without confusion.</blockquote>
+
+        <h3>D.3 Use Cases of .NET Standard</h3>
+        <p>If you're building a library that needs to work for both a Xamarin mobile app and a .NET Core web API, .NET Standard is your best friend.</p>
+        <blockquote class="callout">Analogy: .NET Standard is like a "Swiss Army Knife Module." You build the tool once, and it snaps perfectly into any .NET-branded handle, whether it's the Mobile handle or the Server handle.</blockquote>
+
+        <h3>D.4 Portability Analyzer</h3>
+        <p>Moving from old .NET to modern? The Portability Analyzer tool tells you exactly which parts of your code won't work in the new world.</p>
+        <blockquote class="callout">Analogy: The Portability Analyzer is like a "Home Inspection" before you sell your house. It tells you which pipes are leaky and which walls need to be knocked down before you move in.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Testing & Development Practices</h2>
+
+        <h3>E.1 Unit Testing in .NET Core</h3>
+        <p>Testing in the modern era is built-in. Use tools like xUnit, NUnit, or MSTest to ensure your cross-platform logic stays solid across every environment.</p>
+        <blockquote class="callout">Analogy: Unit testing is like a "Fire Marshal Inspection." You test every sensor and extinguisher individually so you know the building won't burn down during a real emergency.</blockquote>
+
+        <h3>E.2 Development Workflow</h3>
+        <p>The modern .NET workflow is fast and iterative. Build, test, and deploy pipelines (CI/CD) are standard practice for every professional team.</p>
+        <blockquote class="callout">Analogy: A modern workflow is like a "Sushi Conveyor Belt." Code goes through prep, assembly, and quality check, and arrives ready for the customer (Production) without ever stopping the line.</blockquote>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Advanced Concepts & Future</h2>
+
+        <h3>F.1 Cross-Compilation Challenges</h3>
+        <p>While .NET is cross-platform, some things like file paths and specific OS features still differ. An architect must know how to handle these "Platform Gaps" cleanly.</p>
+        <blockquote class="callout">Analogy: Crossing platforms is like "Driving in different countries." The car (Code) is the same, but you have to know which side of the road to drive on and what the local signs mean.</blockquote>
+
+        <h3>F.2 Future of .NET</h3>
+        <p>.NET is evolving towards a "Unified Platform" where the boundaries between Framework, Core, and Xamarin vanish into just one ".NET."</p>
+        <blockquote class="callout">Analogy: The future of .NET is like "Global Citizenship." Your ID works in every country, and you have all the rights and tools you need, no matter where you currently stand.</blockquote>
+
+        <h3>F.3 Understanding the Big Picture</h3>
+        <p>Becoming an ecosystem expert means knowing when to use which tool. Don't use a hammer when you need a surgical scalpel.</p>
+        <blockquote class="callout">Analogy: Being an expert is like being a "Grand Chef." You know exactly which knife to pick for the fish and which heat to use for the sauce—it's not just about cooking; it's about the mastery of the entire kitchen.</blockquote>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

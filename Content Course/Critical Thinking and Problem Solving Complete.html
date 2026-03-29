@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Critical Thinking & Problem Solving Complete - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - Cognitive Mastery & Problem Solving</p>
+      <h1>Critical Thinking & Problem Solving Complete</h1>
+      <p class="subtitle">A masterclass in intellectual engineering—from understanding problem frameworks and logical reasoning to avoiding cognitive fallacies and mastering decision systems.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Introduction to Thinking, BAB B Problem Solving Fundamentals, BAB C Practical Methods, BAB D Critical Thinking, BAB E Logic & Reasoning, BAB F Logical Fallacies (Critical), BAB G Creativity, BAB H Mindset & Psychology, BAB I Decision Making, BAB J Real-World Applications, BAB K Advanced Skills.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction to Thinking & Problem Solving</h2>
+
+        <h3>A.1 Course Overview</h3>
+        <p>Thinking is a skill that can be upgraded like software. In this course, we stop "reacting" to life and start "designing" our responses. We explore the mental tools used by high performers to navigate complexity.</p>
+        <blockquote class="callout">Analogy: Critical thinking is like "Updating your OS." You can't run a 2026 app (complex life problems) on a 1995 operating system (basic instinct). We're installing the modern firmware of reasoning.</blockquote>
+        <ul>
+          <li>Learning goals: clarity of thought and efficiency of action.</li>
+          <li>Why critical thinking is the ultimate "meta-skill."</li>
+        </ul>
+
+        <h3>A.2 What is Problem Solving</h3>
+        <p>Problem-solving isn't just about finding an answer; it's about the process of moving from a current stale state to a desired goal state effectively.</p>
+        <blockquote class="callout">Analogy: Problem-solving is like "Navigation." It doesn't mean the road is easy; it means you have a map and a compass so you don't waste fuel driving in circles.</blockquote>
+
+        <h3>A.3 Thinking Framework</h3>
+        <p>Learn the difference between System 1 (Fast/Instinctive) and System 2 (Slow/Deliberate) thinking. We'll build a structured framework to engage the right "mode" for the right task.</p>
+        <blockquote class="callout">Analogy: Your brain is like a "Sports Car with Two Gears." First gear is fast for city driving (instinct); Second gear is slow and powerful for heavy loads (logic). Professional thinkers know when to shift.</blockquote>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Problem Solving Fundamentals</h2>
+
+        <h3>B.1 Understanding Problems</h3>
+        <p>The most common mistake is solving the wrong problem. We'll learn techniques to clearly define the "Gap" before we start building bridges.</p>
+        <blockquote class="callout">Analogy: Defining a problem is like "Zeroing a Rifle Scope." If you're 1 degree off at the start, you'll miss the target by miles at the end. Take your time with the aim.</blockquote>
+
+        <h3>B.2 Problem Solving Process</h3>
+        <p>A step-by-step methodology to deconstruct complex situations. Learn how to break a "Mountain" of a problem into "Mound" sized chunks.</p>
+        <blockquote class="callout">Analogy: Problem-solving is like "Eating an Elephant." You do it one bite at a time. If you try to swallow it whole, you'll choke. Deconstruction is the key.</blockquote>
+
+        <h3>B.3 Prioritization</h3>
+        <p>Not all problems deserve your energy. Learn to use the Eisenhower Matrix and Pareto Principle to focus on the 20% of problems that cause 80% of the pain.</p>
+        <blockquote class="callout">Analogy: Prioritization is like "Triage in an ER." You help the guy who can't breathe (Critical) before you fix the guy with the broken finger (Minor). You only have two hands; use them wisely.</blockquote>
+
+        <h3>B.4 Engineering Trade-offs</h3>
+        <p>In the real world, there are no "perfect" solutions—only trade-offs. Learn to evaluate Cost vs. Benefit and Speed vs. Quality like a senior engineer.</p>
+        <blockquote class="callout">Analogy: Trade-offs are like "Customizing a Character in a Game." If you put all your points into Speed, you lose Armor. You can't have maxed stats in everything; choose what matters for the current level.</blockquote>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Practical Problem Solving Methods</h2>
+
+        <h3>C.1 Pseudocode Thinking</h3>
+        <p>Translate abstract ideas into concrete steps. This isn't just for coders; it's for anyone who wants to turn a "vague wish" into a "working plan."</p>
+        <blockquote class="callout">Analogy: Pseudocode is like "Drawing a Sketch" before you paint the mural. You don't need the colors yet; you just need to know where the lines go.</blockquote>
+
+        <h3>C.2 Root Cause Analysis</h3>
+        <p>Stop fixing the symptoms and start fixing the source. Use the "5 Whys" and "Ishikawa" diagrams to find the real culprit behind the chaos.</p>
+        <blockquote class="callout">Analogy: Root cause analysis is like "Finding a Leak in the Roof." You can keep mopping the floor (Symptom), but until you find the hole in the shingles (Root Cause), the floor will always be wet.</blockquote>
+
+        <h3>C.3 Iterative Problem Solving</h3>
+        <p>The first solution is rarely the best. Learn the cycle of Build -> Test -> Learn to refine your answers until they are bulletproof.</p>
+        <blockquote class="callout">Analogy: Iteration is like "Sculpting." You start with a rough block of marble, and with every pass of the chisel, the finished statue becomes clearer and clearer.</blockquote>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Critical Thinking Fundamentals</h2>
+
+        <h3>D.1 What is Critical Thinking</h3>
+        <p>Critical thinking is the art of being a "Skeptical Researcher" of your own beliefs. It's about evaluating evidence rather than just following feelings.</p>
+        <blockquote class="callout">Analogy: Critical thinking is like "Fact-checking a News Feed." Just because it's on your screen doesn't mean it's true. You're the editor of your own mind.</blockquote>
+
+        <h3>D.2 Asking Better Questions</h3>
+        <p>The quality of your life is determined by the quality of your questions. Learn to challenge assumptions and dive deeper into the "Why" and "How."</p>
+        <blockquote class="callout">Analogy: Questions are "Keys." Basic questions open basic doors. Deep, targeted questions open the vaults where the real truth is stored.</blockquote>
+
+        <h3>D.3 Evaluating Truth</h3>
+        <p>How do you know what to trust? Learn to separate evidence-based facts from misleading narratives and anecdotal "evidence."</p>
+        <blockquote class="callout">Analogy: Evaluating truth is like "Testing Gold." You can't just look at it; you have to use the acid test (Logic) and the weight test (Evidence) to see if it's real or just painted lead.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Logic & Reasoning</h2>
+
+        <h3>E.1 Types of Reasoning</h3>
+        <p>Master the tools of logic: **Deductive** (top-down), **Inductive** (bottom-up), and **Ampliative** reasoning. Know which tool to use for which argument.</p>
+        <blockquote class="callout">Analogy: Reasoning types are like "Diagnostic Tools." Deductive is the X-ray (certainty); Inductive is the Blood Test (high probability). You need both for a full checkup.</blockquote>
+
+        <h3>E.2 Argument Analysis</h3>
+        <p>Deconstruct any argument into its Premise and Conclusion. Learn to spot the weak links in any chain of reasoning.</p>
+        <blockquote class="callout">Analogy: An argument is like a "Suspension Bridge." If one cable (Premise) snaps, the whole bridge (Conclusion) falls into the river. Check the cables before you cross.</blockquote>
+
+        <h3>E.3 Logical Thinking Skills</h3>
+        <p>Build the habit of rational evaluation. We'll train our brains to look past emotions and focus on the analytical structure of any situation.</p>
+        <blockquote class="callout">Analogy: Logical thinking is like "Developing Muscles in the Gym." It feels heavy at first, but after a month of training, you can lift heavy problems that used to crush you.</blockquote>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Logical Fallacies (VERY IMPORTANT)</h2>
+
+        <h3>F.1 Common Fallacies</h3>
+        <p>Learn to spot the Ad Hominem, Straw Man, Red Herring, and Slippery Slope. These are the tools of bad arguments and manipulation.</p>
+        <blockquote class="callout">Analogy: Fallacies are "Invisible Traps" in a conversation. Once you know where the traps are buried, you can walk through the forest without ever getting caught.</blockquote>
+
+        <h3>F.2 Bias & Misleading Thinking</h3>
+        <p>Understand Correlation vs. Causation. Just because two things happen together doesn't mean one caused the other.</p>
+        <blockquote class="callout">Analogy: Correlation vs Causation is like "Roosters and the Sun." The rooster crows every morning when the sun comes up. If you kill the rooster, the sun still rises. The crowing didn't cause the sunrise.</blockquote>
+
+        <h3>F.3 Avoiding Thinking Errors</h3>
+        <p>Build an alarm system for your own biases. Recognize when your brain is trying to "take a shortcut" that leads to a wrong conclusion.</p>
+        <blockquote class="callout">Analogy: Thinking errors are like "Glitches in a Video Game." You have to know they exist so you don't jump into a hole that looked like solid ground.</blockquote>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Creativity in Problem Solving</h2>
+
+        <h3>G.1 What is Creativity</h3>
+        <p>Creativity isn't just for artists. In problem-solving, it's the ability to forge new connections between seemingly unrelated concepts.</p>
+        <blockquote class="callout">Analogy: Creativity is like "Playing with LEGO." You have a thousand different pieces; the magic happens when you build something that wasn't on the box.</blockquote>
+
+        <h3>G.2 Creative Techniques</h3>
+        <p>Learn "SCAMPER" and "First Principles" thinking. Force your brain to look at the same old problem through a brand-new lens.</p>
+        <blockquote class="callout">Analogy: Creative techniques are like "Changing the Camera Angle" in a movie. Same actors, same set, but suddenly you see a hidden door you never noticed before.</blockquote>
+
+        <h3>G.3 Metacognition</h3>
+        <p>The highest level of thinking: "Thinking about how you think." Monitor your own mental process and adjust it in real-time.</p>
+        <blockquote class="callout">Analogy: Metacognition is like "A Coach Watching the Game Film." You're in the game, but you're also in the press box watching yourself—correcting your stance and your strategy while you play.</blockquote>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Mindset & Psychology</h2>
+
+        <h3>H.1 Growth Mindset</h3>
+        <p>If you believe your intelligence is fixed, you won't try to upgrade it. We'll dismantle the "Fixed" mindset and install a "Growth" engine.</p>
+        <blockquote class="callout">Analogy: A Fixed Mindset is like "A Rock"—it's hard and unchanging. A Growth Mindset is like "A Tree"—it's solid, but it grows larger and stronger every single year if you water it.</blockquote>
+
+        <h3>H.2 Mental State & Performance</h3>
+        <p>Stress makes you stupid. Learn how cortisol shuts down your prefrontal cortex and how to bring your "High Performance" brain back online.</p>
+        <blockquote class="callout">Analogy: Thinking while stressed is like "Trying to Solve a Puzzle in a House Fire." You can't think because your brain is only focused on survival. You have to put out the fire (calm down) before you can solve the puzzle.</blockquote>
+
+        <h3>H.3 Cognitive Effects</h3>
+        <p>Explore the Placebo and Nocebo effects and how your beliefs can literally change the physical results of your problem-solving efforts.</p>
+        <blockquote class="callout">Analogy: Belief is the "Fuel" of the engine. If you put water in the tank (Self-doubt), even the best engine won't start. If you put high-octane fuel (Belief), the engine runs at peak performance.</blockquote>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Confidence & Decision Making</h2>
+
+        <h3>I.1 Confidence Building</h3>
+        <p>Confidence comes from evidence of competence. We'll start with small wins to build the "Mental Bank Account" required for big decisions.</p>
+        <blockquote class="callout">Analogy: Confidence is like "A Trust Score." You wouldn't lend $1M to a stranger. You have to prove to yourself through small actions that you are trustworthy with big problems.</blockquote>
+
+        <h3>I.2 Decision Making</h3>
+        <p>Decisions are made in the face of uncertainty. Learn to use probabilistic thinking to choose the best solution based on the odds, not just hopes.</p>
+        <blockquote class="callout">Analogy: Decision-making is like "Poker." You can play a hand perfectly and still lose, but if you keep making the right percentage calls, you will be a winner in the long run.</blockquote>
+
+        <h3>I.3 Mental Models</h3>
+        <p>Build a "Toolbox of Models" (like Inversion, Occam's Razor, and Second-Order Thinking) to analyze any life situation in seconds.</p>
+        <blockquote class="callout">Analogy: Mental models are like "App Filters" on your phone. One filter shows you the heat Map (Risks); another shows you the blueprint (Structure). You use the one that reveals the truth.</blockquote>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. Real-World Applications</h2>
+
+        <h3>J.1 Prioritization Project</h3>
+        <p>Apply your skills to a messy, real-life scenario. Filter 50 conflicting tasks into a 3-step action plan using strict prioritization logic.</p>
+        <blockquote class="callout">Analogy: This project is your "First Flying Lesson." You've read the manual; now take the controls and see if you can keep the plane level in a crosswind.</blockquote>
+
+        <h3>J.2 Business Thinking</h3>
+        <p>Strategic thinking for professional growth. Learn how to map a business problem and suggest a "Decision Package" that a CEO would approve.</p>
+        <blockquote class="callout">Analogy: Business thinking is like "Chess for Money." Every move has a cost, and every capture has a profit. You have to think 5 moves ahead of the competition.</blockquote>
+
+        <h3>J.3 Daily Life Application</h3>
+        <p>Use critical thinking for personal growth, health, and relationship decisions. Stop the "Auto-pilot" and start the "Captain's Log."</p>
+        <blockquote class="callout">Analogy: Life application is like "Installing a Better GPS" in your car. You're going to the same places, but you're getting there faster, with less stress, and no more accidents.</blockquote>
+      </section>
+
+      <!-- ==================== BAB K ==================== -->
+      <section class="node section">
+        <h2>BAB K. Advanced Thinking Skills</h2>
+
+        <h3>K.1 Thinking Like High Performers</h3>
+        <p>What separates a junior from a principal engineer? We deconstruct the "Thinking Speed" and "Clarity" of industry leaders.</p>
+        <blockquote class="callout">Analogy: High performers aren't smarter; they just have "Clearer Windows." While everyone else is looking through dirty glass, they see the path perfectly and just walk forward.</blockquote>
+
+        <h3>K.2 Better Decision Systems</h3>
+        <p>Moving from intuition to rational evaluation systems. Build your own "Personal Framework" for making major life and career pivots.</p>
+        <blockquote class="callout">Analogy: A decision system is like "An Automated Pilot." It cross-checks all the sensors and keeps you on the right path even when you're tired or emotional.</blockquote>
+
+        <h3>K.3 Long-Term Thinking</h3>
+        <p>The "10-Year Test." Learn to evaluate decisions based on their future value rather than just their current convenience.</p>
+        <blockquote class="callout">Analogy: Long-term thinking is "Planting a Forest." While others are focused on cutting a single blade of grass today, you're building an ecosystem that will sustain you for a decade.</blockquote>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

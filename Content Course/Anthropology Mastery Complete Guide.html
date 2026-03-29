@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anthropology Mastery Complete Guide - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - Social Science & Cultural Heritage</p>
+      <h1>Anthropology Mastery Complete Guide</h1>
+      <p class="subtitle">A comprehensive exploration of humanity—from our evolutionary origins and archaeological mysteries to the complex webs of culture, language, and modern global society.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Foundations, BAB B Biological (Evolution & Genetics), BAB C Cultural CORE (Kinship & Ritual), BAB D Archaeology (Material Life), BAB E Linguistic (Language Identity), BAB F Social Dynamics (Politics & Gender), BAB G Applied Anthropology, BAB H Contemporary Global Issues, BAB I Capstone Project.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction to Anthropology</h2>
+
+        <h3>A.1 What is Anthropology</h3>
+        <p>Anthropology is the study of humans in the broadest possible sense. It asks: "What does it mean to be human?" across all times and all places.</p>
+        <blockquote class="callout">Analogy: Anthropology is like "The Master Mirror of Humanity." While other sciences look at one piece of the body or one type of behavior, Anthropology tries to reflect the whole human image—past, present, and future.</blockquote>
+        <ul>
+          <li>Scope: Biological, Cultural, Linguistic, and Archaeological.</li>
+          <li>The holistic approach to social science.</li>
+        </ul>
+
+        <h3>A.2 History of Anthropology</h3>
+        <p>The field evolved from early curiosity about "the other" into a rigorous scientific and humanistic discipline. We’ll look at key figures and the shift from "armchair" theorizing to real-world engagement.</p>
+        <blockquote class="callout">Analogy: The history of Anthropology is like "Going from a Tourist to a Resident." Early explorers just looked at things; modern anthropologists live them to understand the true meaning.</blockquote>
+
+        <h3>A.3 Research Methods</h3>
+        <p>Master the tools of the trade: Participant Observation (living the life) and Qualitative Data Collection. Anthropology isn't just about reading; it's about being on the ground.</p>
+        <blockquote class="callout">Analogy: Anthropological research is like "A POV Video Game." You don't just watch the character; you wear the headset and walk in their shoes to see exactly how they live.</blockquote>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Biological Anthropology</h2>
+
+        <h3>B.1 Human Evolution</h3>
+        <p>Tracing our lineage back millions of years. Understanding how environmental pressures shaped our bodies, our brains, and our ability to walk on two legs.</p>
+        <blockquote class="callout">Analogy: Human evolution is like "Updating the Software of a Computer." Every million years, a new version (Species) came out that was slightly better at processing the environment than the last one.</blockquote>
+
+        <h3>B.2 Genetics & Human Variation</h3>
+        <p>DNA is the book of life. Learn how migration and mutation created the beautiful diversity of humans while proving that "Race" is a cultural construct, not a biological one.</p>
+        <blockquote class="callout">Analogy: Human genetics is like "A World-Wide Remix of the Same Song." The beat is identical (99.9% DNA), but every culture and environment adds its own unique instruments and tempo.</blockquote>
+
+        <h3>B.3 Primatology</h3>
+        <p>By studying our closest relatives (apes, monkeys, lemurs), we see a mirror of our own social and biological traits.</p>
+        <blockquote class="callout">Analogy: Primatology is like "Looking at an Older Version of your Family Tree." You see your own traits, but in a simpler, raw form before civilization modified them.</blockquote>
+
+        <h3>B.4 Human Adaptation</h3>
+        <p>How we survive in the frozen Arctic, the thin air of the Himalayas, or the tropical heat. Biology and culture working together as a survival kit.</p>
+        <blockquote class="callout">Analogy: Adaptation is like "A Global Wardrobe." Depending on where you live, your DNA and your tools cooperate to help you thrive in that specific climate.</blockquote>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Cultural Anthropology (THE CORE 🔥)</h2>
+
+        <h3>C.1 Culture & Society</h3>
+        <p>Culture is the "invisible invisible" system of norms and values that tells us how to eat, how to talk, and how to think. It's the blueprint of our lives.</p>
+        <blockquote class="callout">Analogy: Culture is like "The Operating System (OS) of your Mind." You don't see it running, but it determines how every 'App' (Behavior) works and interacts with others.</blockquote>
+
+        <h3>C.2 Kinship & Family</h3>
+        <p>Who counts as family? Family structures vary wildly across the globe—from nuclear families to complex clans that span thousands of people.</p>
+        <blockquote class="callout">Analogy: Kinship is like "The Wiring Diagram of a City." It shows who is connected to whom and who is responsible for providing power (Support) to whom.</blockquote>
+
+        <h3>C.3 Religion & Beliefs</h3>
+        <p>Rituals, myths, and spiritual systems. Explore how humans use religion to make sense of the unknown and create social cohesion.</p>
+        <blockquote class="callout">Analogy: Religion is like "The Social Glue of a Community." It keeps thousands of different people stuck together through shared stories and sacred moments.</blockquote>
+
+        <h3>C.4 Language & Communication</h3>
+        <p>Not just words, but meaning-making. How the way we speak literally shapes the way we perceive reality (the Sapir-Whorf hypothesis).</p>
+        <blockquote class="callout">Analogy: Language is like "The Lens of a Camera." Different languages focus on different parts of the world, making some things look clear and others blurry.</blockquote>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Archaeology</h2>
+
+        <h3>D.1 Introduction to Archaeology</h3>
+        <p>The study of material remains. An archaeologist is a detective of history, reconstructuring lives from broken pottery and foundations of stone.</p>
+        <blockquote class="callout">Analogy: Archaeology is like "Solving a 10,000-piece Puzzle with 9,000 pieces missing." You have to use logic and science to fill in the gaps of history.</blockquote>
+
+        <h3>D.2 Prehistoric Societies</h3>
+        <p>Life before writing. How early humans organized their camps, hunted for food, and created the first "Communities" that paved the way for cities.</p>
+        <blockquote class="callout">Analogy: Prehistory is "The Blueprint Phase" of humanity. They were testing the ideas of fire, tools, and social groups that we still use today.</blockquote>
+
+        <h3>D.3 Rise of Civilizations</h3>
+        <p>Why did humans stop moving and build cities? The transition to agriculture and the development of power, hierarchy, and monumental architecture.</p>
+        <blockquote class="callout">Analogy: The rise of civilization is like "Upgrading from a Tent to a Skyscraper." It’s much more complex, much more powerful, and much harder to maintain.</blockquote>
+
+        <h3>D.4 Death & Burial</h3>
+        <p>What we do with our dead tells us everything about how we lived. Explore burial rituals as a window into an ancient society's values and fears.</p>
+        <blockquote class="callout">Analogy: A Burial Site is like "A Time Capsule." It’s a deliberate message left by the living to tell the future exactly what mattered to them most.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Linguistic Anthropology</h2>
+
+        <h3>E.1 Evolution of Language</h3>
+        <p>How did a series of grunts become a complex system of poetry and physics? Tracing the biological and social origins of human speech.</p>
+        <blockquote class="callout">Analogy: The evolution of language is like "Going from Morse Code to Fiber Optics." It started as simple signals and became an incredibly fast way to transmit complex data.</blockquote>
+
+        <h3>E.2 Language & Identity</h3>
+        <p>We use language to mark who we are (and who we aren't). Dialects, slang, and formal speech as markers of status and belonging.</p>
+        <blockquote class="callout">Analogy: Language is like "A Digital Badge." The moment you speak, everyone around you can 'scan' your badge to see where you’re from and what group you belong to.</blockquote>
+
+        <h3>E.3 Language Endangerment</h3>
+        <p>When a language dies, a whole way of understanding the world disappears. Why preserving linguistic diversity is as important as biological diversity.</p>
+        <blockquote class="callout">Analogy: A dying language is like "A Library Burning Down." Every book in that library was a unique way of seeing the world that can never be replaced.</blockquote>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Social Anthropology</h2>
+
+        <h3>F.1 Political Systems</h3>
+        <p>From bands and tribes to kingdoms and modern nations. How humans manage power, resolve conflicts, and organize large groups of people.</p>
+        <blockquote class="callout">Analogy: Political systems are like "The Rulebook of a Game." Without rules, it’s just a crowd of people; with rules, it’s a society moving toward a goal.</blockquote>
+
+        <h3>F.2 Economic Systems</h3>
+        <p>It's not just about money; it's about production, consumption, and exchange. Learn how gift-giving (The Potlatch) can be more powerful than selling.</p>
+        <blockquote class="callout">Analogy: Primitive economy is like "A Peer-to-Peer Network." Instead of a central bank, power flows through the relationships and the 'Favors' you owe each other.</blockquote>
+
+        <h3>F.3 Gender & Sexuality</h3>
+        <p>How different cultures define what it means to be "Masculine" or "Feminine." Understanding the fluidity and the social construction of social roles.</p>
+        <blockquote class="callout">Analogy: Gender roles are like "The Costumes in a Play." Each culture has its own script for what each character should wear and how they should act on stage.</blockquote>
+
+        <h3>F.4 Social Change (Globalization)</h3>
+        <p>What happens when local cultures meet global technology? Modernization and the dynamic way humans adapt to a boundary-free world.</p>
+        <blockquote class="callout">Analogy: Globalization is like "A Giant Social Blender." It takes apart local ingredients and mixes them into a global flavor that is both new and familiar.</blockquote>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Applied Anthropology</h2>
+
+        <h3>G.1 What is Applied Anthropology</h3>
+        <p>Anthropology isn't just for museums. It's used in the real world to solve actual problems—from corporate design to government policy.</p>
+        <blockquote class="callout">Analogy: Applied Anthropology is "The Consultant for Human Nature." When a project fails because people 'aren't using it right,' the Anthropologist tells you *why* based on cultural reality.</blockquote>
+
+        <h3>G.2 Medical Anthropology</h3>
+        <p>Why do some people trust doctors and others trust shamans? Understanding how culture affects health, healing, and our perception of "Wellness."</p>
+        <blockquote class="callout">Analogy: Medical Anthropology is like "Checking the Patient's Biography, not just their Biology." You can't heal the body if the mind believes the cure is a curse.</blockquote>
+
+        <h3>G.3 Environmental Anthropology</h3>
+        <p>The relationship between humans and the earth. How traditional indigenous knowledge can help us solve the modern climate crisis.</p>
+        <blockquote class="callout">Analogy: Environmental Anthropology is like "A Masterclass in Ancient Sustainability." They’ve lived on the same land for 10,000 years without destroying it; we have a lot to learn.</blockquote>
+
+        <h3>G.4 Development Anthropology</h3>
+        <p>Working on social development projects. Making sure that "Help" from the outside actually fits the needs of the people on the inside.</p>
+        <blockquote class="callout">Analogy: Development Anthropology is like "A Translator for International Aid." It makes sure the 'Help' doesn't accidentally do more damage to the culture than the original problem did.</blockquote>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Contemporary Issues</h2>
+
+        <h3>H.1 Ethics in Anthropology</h3>
+        <p>The power dynamic between the researcher and the searched. Learn the strict ethical codes that ensure respect and protection for all human subjects.</p>
+        <blockquote class="callout">Analogy: Ethics in research is "The First Aid Kit of Knowledge." You don't enter a community without it because your priority is always to 'Do No Harm.'</blockquote>
+
+        <h3>H.2 Human Rights</h3>
+        <p>Social justice through an anthro lens. Understanding universal human rights versus cultural relativism.</p>
+        <blockquote class="callout">Analogy: Human rights are "The Moral Compass of the World." Even if we all live in different lands, the compass tells us which way is 'Just' for every human being.</blockquote>
+
+        <h3>H.3 Migration & Diaspora</h3>
+        <p>A world on the move. How populations carry their culture across borders and create new "Hybrid" identities in their new homes.</p>
+        <blockquote class="callout">Analogy: Migration is like "Transplanting a Tree." The roots (Culture) are same, but the soil and air (Environment) are different, so the tree grows in a new, unique way.</blockquote>
+
+        <h3>H.4 Future of Anthropology</h3>
+        <p>Emerging challenges: Digital Anthropology (Internet culture), AI ethics, and the role of humans in an increasingly automated world.</p>
+        <blockquote class="callout">Analogy: The future of Anthropology is like "Expanding the Mirror." We aren't just looking at tribes in the jungle anymore; we're looking at tribes on Reddit and Discord.</blockquote>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Capstone Project</h2>
+
+        <h3>I.1 Research Design</h3>
+        <p>Planning your first mini-fieldwork. Defining your "Research Question" and choosing the right community to observe.</p>
+        <blockquote class="callout">Analogy: Research design is "The Flight Plan." If you don't know where you're landing, you're just burning fuel in the clouds.</blockquote>
+
+        <h3>I.2 Fieldwork</h3>
+        <p>The hands-on phase. Submerging yourself in a sub-culture to gather data and experience the "Inside Perspective" (The Emic view).</p>
+        <blockquote class="callout">Analogy: Fieldwork is "The Real Game." You've read the rules; now step on the field and play for real for the first time.</blockquote>
+
+        <h3>I.3 Data Analysis</h3>
+        <p>Turning a mountain of notes into meaningful patterns. The "Aha!" moment when the cultural blueprint reveals itself.</p>
+        <blockquote class="callout">Analogy: Analysis is like "Developing Film in a Darkroom." Slowly but surely, the blurry shapes start to look like a clear, meaningful picture.</blockquote>
+
+        <h3>I.4 Presentation</h3>
+        <p>Communicating your findings to the world. Learn to tell the human story behind your data so others can share your understanding.</p>
+        <blockquote class="callout">Analogy: Presentation is "The Final Exhibition." You're showing the world the masterpiece you built from the stories and lives of others.</blockquote>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Complete JavaScript Course Professional - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - Web Programming Mastery</p>
+      <h1>The Complete JavaScript Course Professional</h1>
+      <p class="subtitle">A masterclass journey through JavaScript, from basic variables to advanced engine internals, async programming, OOP, and professional application architecture.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Introduction & Setup, BAB B Fundamentals (Part 1), BAB C Fundamentals (Part 2), BAB D DOM & Events, BAB E How JS Works (Deep Dive), BAB F Data Structures & Modern JS, BAB G Functions Deep Dive, BAB H Object-Oriented Programming, BAB I Asynchronous JavaScript, BAB J Modern Development, BAB K Real-World Projects, BAB L Mindset & Best Practices, BAB M Advanced Topics.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction & Setup</h2>
+
+        <h3>A.1 Course Overview</h3>
+        <p>JavaScript is the soul of the modern web. In this course, we're not just learning syntax; we're building the mental models and engineering habits required to succeed as a professional developer.</p>
+        <blockquote class="callout">Analogy: Learning JavaScript is like learning to pilot a plane. You don't just push buttons; you need to understand the physics of flight, the navigation systems, and how to handle a storm. This course is your flight school.</blockquote>
+        <ul>
+          <li>Comprehensive learning path from zero to hero.</li>
+          <li>Real-world project-based methodology.</li>
+          <li>Focus on "Why" it works, not just "How" to type it.</li>
+        </ul>
+
+        <h3>A.2 Development Setup</h3>
+        <p>Your environment is your cockpit. We'll set up VS Code, Node.js, and the essential extensions that make coding fast, fun, and error-free.</p>
+        <blockquote class="callout">Analogy: Setting up your environment is like organizing a professional kitchen. If your knives are sharp and your ingredients are within reach, you can cook a five-star meal without breaking a sweat.</blockquote>
+        <ul>
+          <li>VS Code: The industry-standard code editor.</li>
+          <li>Node.js: The runtime that allows JS to live outside the browser.</li>
+          <li>Prettier & ESLint: Your automated code police.</li>
+        </ul>
+
+        <h3>A.3 Developer Skills</h3>
+        <p>Coding is 20% typing and 80% problem-solving. We'll learn how to search for answers effectively and develop a "Debugging First" mindset.</p>
+        <blockquote class="callout">Analogy: Being a developer is like being a modern-day detective. You have a massive library of clues (Google/StackOverflow), and your job is to connect the dots to solve the mystery of the "missing semicolon."</blockquote>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. JavaScript Fundamentals (Part 1)</h2>
+
+        <h3>B.1 Basics & Syntax</h3>
+        <p>Every language starts with literals and variables. JavaScript is flexible but has strict rules about how you link your scripts to the HTML page.</p>
+        <blockquote class="callout">Analogy: JS syntax is the "grammar" of the web. Just like you need a subject and a verb to form a sentence, you need the right operators and values to form a valid program.</blockquote>
+        <pre><code>console.log("Hello, World!");
+let message = "Let's code!";</code></pre>
+
+        <h3>B.2 Data Types & Variables</h3>
+        <p>JavaScript has primitives and objects. Understanding the difference between <code>let</code>, <code>const</code>, and the legacy <code>var</code> is your first step to writing safe code.</p>
+        <blockquote class="callout">Analogy: Variables are like labeled moving boxes. <code>const</code> is a box you tape shut immediately; <code>let</code> is a box you leave open because you know you'll add more things later.</blockquote>
+        <ul>
+          <li>Primitives: String, Number, Boolean, Undefined, Null, Symbol, BigInt.</li>
+          <li>Naming conventions: camelCase and descriptive naming.</li>
+          <li>Dynamic typing: Variables can change types on the fly.</li>
+        </ul>
+
+        <h3>B.3 Operators & Expressions</h3>
+        <p>Operators allow you to transform data. From basic math to complex logical comparisons, operators are the workhorses of your code.</p>
+        <blockquote class="callout">Analogy: Operators are like the basic tools in a toolbox. A hammer (Arithmetic) changes the shape of things; a level (Comparison) checks if two things are equal.</blockquote>
+
+        <h3>B.4 Control Flow</h3>
+        <p>Your code isn't a straight line; it has forks in the road. <code>if/else</code>, <code>switch</code>, and the <code>ternary operator</code> allow your program to react to different situations.</p>
+        <blockquote class="callout">Analogy: Control flow is like a "GPS system" for your code. If the road is blocked (Condition False), take the detour (Else block).</blockquote>
+
+        <h3>B.5 Boolean Logic</h3>
+        <p>Everything in JS eventually boils down to true or false. Understanding "Truthy" and "Falsy" values is key to writing concise and powerful conditions.</p>
+        <blockquote class="callout">Analogy: Boolean logic is like the "ID Check" at a concert. "Strict Equality" (<code>===</code>) checks for the name AND the face; "Loose Equality" (<code>==</code>) just checks if you look like the guy in the picture.</blockquote>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. JavaScript Fundamentals (Part 2)</h2>
+
+        <h3>C.1 Functions</h3>
+        <p>Functions are reusable blocks of logic. We'll explore declarations, expressions, and the modern, sleek arrow functions.</p>
+        <blockquote class="callout">Analogy: A function is like a "Customized Stamp." You carve the design once, and then you can press it onto as many pages as you want, exactly the same every time.</blockquote>
+        <pre><code>const calcAge = birthYear => 2026 - birthYear;</code></pre>
+
+        <h3>C.2 Arrays</h3>
+        <p>Arrays are ordered lists of data. They come with a massive library of built-in methods that make processing data collections incredibly efficient.</p>
+        <blockquote class="callout">Analogy: An array is like a "Train." Each car (index) carries some cargo. You can add cars to the end (Push), remove them from the front (Shift), or find exactly what's inside a specific car.</blockquote>
+
+        <h3>C.3 Objects</h3>
+        <p>Objects are the "nouns" of JS. They allow you to group related data and functionality (methods) into a single, structured package.</p>
+        <blockquote class="callout">Analogy: An object is like a "Profile Page." It has attributes (Name, Age, City) and actions (Post, Like, Share) all bundled together in one place.</blockquote>
+
+        <h3>C.4 Loops</h3>
+        <p>Loops are for doing the boring work. <code>for</code> and <code>while</code> loops allow you to iterate through millions of pieces of data in milliseconds.</p>
+        <blockquote class="callout">Analogy: A loop is like a "Security Guard" walking their rounds. They visit every room (Index) in order, check the status, and only stop when they've finished the entire building.</blockquote>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. JavaScript in the Browser (DOM & Events)</h2>
+
+        <h3>D.1 DOM Basics</h3>
+        <p>The Document Object Model (DOM) is the bridge between JavaScript and your HTML. Learn to select and manipulate elements to bring your static pages to life.</p>
+        <blockquote class="callout">Analogy: The DOM is like a "Remote Control" for a house. Instead of walking up to the lights to switch them, you use a central interface to change the colors, move furniture, or open curtains.</blockquote>
+
+        <h3>D.2 Event Handling</h3>
+        <p>Events enable interactivity. From mouse clicks to keyboard presses, event listeners are how your app "hears" what the user is doing.</p>
+        <blockquote class="callout">Analogy: An event listener is like a "Motion Sensor." It sits quietly in the dark until someone walks by (an Event), then it triggers an action (turns on the light).</blockquote>
+
+        <h3>D.3 DOM Manipulation</h3>
+        <p>Changing content, updating styles, and creating new elements on the fly—this is where the "magic" of dynamic web apps happens.</p>
+        <blockquote class="callout">Analogy: DOM manipulation is like being a "Stage Director." You can move the actors, change the backdrop, and swap the script in the middle of a live performance.</blockquote>
+
+        <h3>D.4 Mini Projects</h3>
+        <p>Put it all together by building "Guess My Number," a professional "Modal Window," and the interactive "Pig Game" to solidify your skills.</p>
+        <blockquote class="callout">Analogy: Mini projects are like "Flight Simulators." It's safe, but it's real. You get to test your maneuvers before taking the big jet (a real app) into the sky.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. How JavaScript Works (Deep Dive)</h2>
+
+        <h3>E.1 JavaScript Engine & Runtime</h3>
+        <p>Go under the hood to understand the Call Stack and Execution Context. This is what separates "coders" from "engineers."</p>
+        <blockquote class="callout">Analogy: The JS Engine is like a "Master Chef's Brain." They keep track of multiple orders, know exactly which pot is boiling (Call Stack), and where every ingredient is stored (Context).</blockquote>
+
+        <h3>E.2 Scope & Hoisting</h3>
+        <p>Understand how variables are found and why "Hoisting" can lead to confusing results if you don't know the rules of the game.</p>
+        <blockquote class="callout">Analogy: Scope is like "Clearance Levels" in a building. Levels 5 can see what's on Levels 1, but Level 1 is blocked from seeing the secrets on Level 5.</blockquote>
+
+        <h3>E.3 <code>this</code> Keyword</h3>
+        <p>The most misunderstood part of JS. Learn exactly what <code>this</code> refers to in different contexts—functions, objects, and arrow functions.</p>
+        <blockquote class="callout">Analogy: The <code>this</code> keyword is like the word "Me." Who "Me" is depends entirely on who is speaking. If I say it, it's me; if you say it, it's you. It's relative.</blockquote>
+
+        <h3>E.4 Memory Management</h3>
+        <p>Learn the difference between Primitives (stored on the stack) and Objects (stored on the heap), and how the Garbage Collector keeps your app lean.</p>
+        <blockquote class="callout">Analogy: Memory management is like "Housekeeping." When you're done with a toy (an object), the housekeeper (Garbage Collector) waits until no one is touching it, then puts it back in the toy box to save space.</blockquote>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Data Structures & Modern JavaScript</h2>
+
+        <h3>F.1 Destructuring</h3>
+        <p>Professional JS code uses destructuring to "unpack" data from arrays and objects in a single, clean line of code.</p>
+        <blockquote class="callout">Analogy: Destructuring is like "Unboxing a Subscription Box." Instead of taking items out one by one, you just flip the box over and everything lands exactly where it belongs on your table.</blockquote>
+
+        <h3>F.2 Modern Operators</h3>
+        <p>The Spread (<code>...</code>) and Rest (<code>...</code>) operators, Optional Chaining (<code>?.</code>), and Nullish Coalescing (<code>??</code>) are the hallmarks of modern, concise JS.</p>
+        <blockquote class="callout">Analogy: Modern operators are like "Keyboard Shortcuts." You don't need them to write code, but everything moves much faster and looks much cleaner once you master them.</blockquote>
+
+        <h3>F.3 Data Structures</h3>
+        <p>Sometimes an Array isn't enough. Learn when to use <code>Sets</code> for unique items and <code>Maps</code> for faster, more flexible key/value lookups.</p>
+        <blockquote class="callout">Analogy: A <code>Map</code> is like a "Custom Dictionary" where the word can be anything—even an object. A <code>Set</code> is like a "VIP Guest List" where no one can be added twice.</blockquote>
+
+        <h3>F.4 Strings</h3>
+        <p>Master string manipulation, slicing, and modern template literals to handle user input and dynamic content like a pro.</p>
+        <blockquote class="callout">Analogy: String manipulation is like "Duct Tape for Data." You can cut it, join it, and wrap it around anything to make your raw data look exactly how you want.</blockquote>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Functions Deep Dive</h2>
+
+        <h3>G.1 Advanced Functions</h3>
+        <p>In JS, functions are "First-Class Citizens." They can be passed around like variables, allowing for powerful "Higher-Order Functions."</p>
+        <blockquote class="callout">Analogy: A Higher-Order function is like a "Machine that builds other machines." It's incredibly powerful because it generalizes logic into reusable templates.</blockquote>
+
+        <h3>G.2 Closures</h3>
+        <p>Closures allow a function to "remember" the variables of its parent scope even after the parent has finished execution.</p>
+        <blockquote class="callout">Analogy: A closure is like a "Backpack." Every function carries one, and it keeps all the important stuff from home (Parent Scope) inside, no matter where in the world the function goes.</blockquote>
+
+        <h3>G.3 Function Methods</h3>
+        <p>Use <code>call</code>, <code>apply</code>, and <code>bind</code> to manually set the value of <code>this</code> and create "partial applications" of your functions.</p>
+        <blockquote class="callout">Analogy: <code>bind</code> is like "Pre-programming a destination into a GPS." Now, no matter who starts the car, the destination is already settled.</blockquote>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Object-Oriented Programming (OOP)</h2>
+
+        <h3>H.1 OOP Fundamentals</h3>
+        <p>JavaScript uses "Prototypal Inheritance." We'll explore ES6 Classes, Constructors, and the concept of Abstraction.</p>
+        <blockquote class="callout">Analogy: OOP is like "Biological Classification." A Mammal (Class) has certain traits; a Dog (Instance) inherits those traits but has its own unique bark.</blockquote>
+
+        <h3>H.2 Prototypal Inheritance</h3>
+        <p>Understand the "Prototype Chain." This is the secret path JS uses to find methods and properties across your hierarchy.</p>
+        <blockquote class="callout">Analogy: The prototype chain is like "Asking your Parents for Money." If you don't have it (Local Property), you ask your parents (Prototype). If they don't have it, they ask their parents. Eventually, it reaches the Grandfather of all objects.</blockquote>
+
+        <h3>H.3 Encapsulation & Abstraction</h3>
+        <p>Learn to design clean APIs by hiding internal data and only exposing what's necessary to the outside world.</p>
+        <blockquote class="callout">Analogy: Abstraction is like "Driving a Car." You use a steering wheel and pedals. You don't need to know how the fuel injection or the pistons work to get to your destination.</blockquote>
+
+        <h3>H.4 Polymorphism</h3>
+        <p>Polymorphism allows different objects to share the same method names but act differently based on their specific type.</p>
+        <blockquote class="callout">Analogy: It's like the command "Move." A bird flies, a fish swims, and a horse runs. Same command, different action. That's polymorphism.</blockquote>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Asynchronous JavaScript</h2>
+
+        <h3>I.1 Event Loop</h3>
+        <p>Learn how JavaScript handles "multi-tasking" using a single thread. It's all about the Call Stack, Callback Queue, and the Microtask Queue.</p>
+        <blockquote class="callout">Analogy: The Event Loop is like a "Fairground Ticket Booth." The booth person (Single thread) only handles one person at a time, but they have a line (Queue) that moves perfectly without anyone getting skipped.</blockquote>
+
+        <h3>I.2 Promises</h3>
+        <p>Promises are the modern way to handle future data. Say goodbye to "Callback Hell" and hello to clean, chainable logic.</p>
+        <blockquote class="callout">Analogy: A promise is like a "Buzzer" at a burger joint. You pay for your food (Request), you get a buzzer (Promise), and eventually it goes off (Resolved) when your meal is ready.</blockquote>
+
+        <h3>I.3 Async/Await</h3>
+        <p>Syntactic sugar over promises that makes asynchronous code look and feel like synchronous code. Clear, readable, and professional.</p>
+        <blockquote class="callout">Analogy: Async/Await is like "Recording a Live Stream." You don't have to wait for the scene to finish manually; you just press Pause (Await) until the next scene starts automatically.</blockquote>
+
+        <h3>I.4 AJAX & APIs</h3>
+        <p>Connect your app to the world. Use the Fetch API to pull data from external servers and handle loading and error states like a pro.</p>
+        <blockquote class="callout">Analogy: Using an API is like "Ordering from a Warehouse." You send a list (Request), and they send back a box of goodies (Data). You just need to know how to open the box.</blockquote>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. Modern JavaScript Development</h2>
+
+        <h3>J.1 Modules</h3>
+        <p>Split your code into independent, manageable modules using ES6 <code>import</code> and <code>export</code>. Maintain a clean and scalable codebase.</p>
+        <blockquote class="callout">Analogy: Modules are like "Compartments on a Ship." If one room floods (a bug), you seal the door (the module) so the whole ship (the app) doesn't sink.</blockquote>
+
+        <h3>J.2 Tooling</h3>
+        <p>Master the modern toolchain. We'll explore NPM for package management, Parcel for bundling, and Babel for transpiling your future-code into browser-code.</p>
+        <blockquote class="callout">Analogy: Modern tooling is like a "Power Suit." You provide the muscles (the code), and the suit provides the speed, strength, and flight (the build system).</blockquote>
+
+        <h3>J.3 Code Architecture</h3>
+        <p>Learn to plan your applications using flowcharts and architecture patterns (like MVC) before you type a single line of code.</p>
+        <blockquote class="callout">Analogy: Architecture is like a "Building Blueprint." You don't group carpenters and plumbers at random; you give them a plan so they don't trip over each other while building the skyscraper.</blockquote>
+      </section>
+
+      <!-- ==================== BAB K ==================== -->
+      <section class="node section">
+        <h2>BAB K. Real-World Projects</h2>
+
+        <h3>K.1 Project-Based Learning</h3>
+        <p>Apply everything you've learned to build full-scale applications. This is where concepts turn into skills.</p>
+        <blockquote class="callout">Analogy: Building a real project is like "Graduating from Flight School." You're in a real plane now, and you're actually taking people across the ocean.</blockquote>
+
+        <h3>K.2 Portfolio Projects</h3>
+        <p>Build applications that impress employers. Focus on clean architecture, performance, and modern features.</p>
+        <blockquote class="callout">Analogy: Your portfolio is your "Highlight Reel." You're showing the world that you're not just a player; you're an MVP.</blockquote>
+      </section>
+
+      <!-- ==================== BAB L ==================== -->
+      <section class="node section">
+        <h2>BAB L. Developer Mindset & Best Practices</h2>
+
+        <h3>L.1 Debugging & Problem Solving</h3>
+        <p>Learn to think like a debugger. Master the Chrome DevTools and the art of "Rubber Ducking" to solve even the most stubborn bugs.</p>
+        <blockquote class="callout">Analogy: Debugging is like "Clearing a Jammed Printer." You go through it systematically—paper tray, ink, rollers—until you find the one tiny thing stopping the whole machine.</blockquote>
+
+        <h3>L.2 Clean Code</h3>
+        <p>Follow the DRY (Don't Repeat Yourself) principle and write code that other humans (and your future self) can actually read and maintain.</p>
+        <blockquote class="callout">Analogy: Clean code is like a "Well-written Recipe." Anyone can cook with it because the steps are clear, the portions are exact, and the labels are legible.</blockquote>
+
+        <h3>L.3 Thinking Like a Developer</h3>
+        <p>Stop looking at "blocks of code" and start looking at "solutions to problems." Learn the engineering mindset that wins at big-tech interviews.</p>
+        <blockquote class="callout">Analogy: Thinking like a developer is like "Playing 3D Chess." You're not just moving a piece; you're anticipating the whole board and five moves ahead.</blockquote>
+      </section>
+
+      <!-- ==================== BAB M ==================== -->
+      <section class="node section">
+        <h2>BAB M. Advanced Topics & Next Steps</h2>
+
+        <h3>M.1 Advanced Topics</h3>
+        <p>A look at the "dark magic" of JS: complex closure behaviors, memory leaks, and high-performance optimizations.</p>
+        <blockquote class="callout">Analogy: Advanced topics are like "Special Effects in Movies." You don't need them for every scene, but when you need to make a dragon fly (or a complex app run fast), they are indispensable.</blockquote>
+
+        <h3>M.2 Career Preparation</h3>
+        <p>You've mastered the language. Now, we'll talk about preparing for React, Vue, or Angular, and how to conquer the coding interview.</p>
+        <blockquote class="callout">Analogy: This is your "Black Belt Ceremony." You've mastered the kata; now, go out there and build something that changes the world.</blockquote>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

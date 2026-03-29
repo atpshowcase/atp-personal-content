@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Becoming a Software Architect Complete - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - Software Architecture Journey</p>
+      <h1>The Complete Guide to Becoming a Software Architect</h1>
+      <p class="subtitle">A complete roadmap to transition from a developer to a software architect, focusing on mindset, process, patterns, and real-world execution.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Introduction, BAB B Mindset, BAB C Process, BAB D Requirements, BAB E Application Types, BAB F Tech Stack, BAB G Quality Attributes, BAB H Component Design, BAB I Design Patterns, BAB J System Design, BAB K Documentation, BAB L Advanced Patterns, BAB M Soft Skills, BAB N Real-World Case, BAB O Career Growth, BAB P Architect Thinking.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction to Software Architecture</h2>
+
+        <h3>A.1 Introduction</h3>
+        <p>Software architecture isn't just about high-level diagrams; it's about making the high-stakes decisions that define a system's lifespan. This course is your roadmap for moving beyond just "writing features" to "shaping systems."</p>
+        <blockquote class="callout">Analogy: Being a developer is like being a skilled carpenter who knows how to build great cabinets. Being an architect is like being the person who designs the entire house, ensuring the cabinets fit the kitchen and the kitchen fits the lifestyle of the family.</blockquote>
+        <ul>
+          <li>Course overview: from code to systems.</li>
+          <li>Why shift to architecture: impact, career longevity, and problem-solving at scale.</li>
+          <li>Learning roadmap: technical depth vs. architectural breadth.</li>
+        </ul>
+
+        <h3>A.2 What is a Software Architect</h3>
+        <p>An architect is the bridge between business goals and technical execution. You aren't just "the best coder"; you are the person who understands how technical choices impact the company's bottom line and the team's productivity.</p>
+        <blockquote class="callout">Analogy: Think of an architect as a bridge engineer. They don't just pick the strongest steel; they calculate wind speeds, soil stability, and traffic flow to ensure the bridge carries people safely for decades.</blockquote>
+        <ul>
+          <li>Types of architects: Solution, Enterprise, Infrastructure, and Application.</li>
+          <li>Responsibilities: Decision making, standard setting, and technical leadership.</li>
+          <li>Position in the org: Navigating between PMs, stakeholders, and dev teams.</li>
+          <li>Career path: Senior Dev -> Lead -> Architect.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Architect Mindset</h2>
+
+        <h3>B.1 The Architect’s Mindset</h3>
+        <p>Transitioning to architecture requires a mental shift from "How do I implement this?" to "Why should we build this this way, and what happens if I'm wrong?" It's about thinking in systems, not lines of code.</p>
+        <blockquote class="callout">Analogy: A driver focuses on the road ahead and the immediate turns. A navigator focuses on the entire route, the fuel consumption, the terrain, and the final destination. An architect is the navigator.</blockquote>
+        <ul>
+          <li>Thinking in systems: Understanding side effects and dependencies.</li>
+          <li>Business alignment: Technical choices that serve the product goal.</li>
+          <li>Communication: Translating "tech-speak" for stakeholders and "business-speak" for devs.</li>
+          <li>User-centric design: Always keeping the end-user's experience in the architecture.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Architecture Process</h2>
+
+        <h3>C.1 Architecture Workflow</h3>
+        <p>Architecture doesn't happen by accident. It follows a structured workflow that starts with a problem and ends with a validated, documented system design that supports the dev team.</p>
+        <blockquote class="callout">Analogy: Like a chef creating a new signature dish. They don't just start cooking; they understand the guest's palate, source ingredients, test small portions (POCs), write the recipe (documentation), and train the kitchen staff.</blockquote>
+        <ol>
+          <li>Understand requirements: What problem are we really solving?</li>
+          <li>Define NFRs: Speed, scale, and security constraints.</li>
+          <li>Component mapping: Grouping logic into meaningful blocks.</li>
+          <li>Technology selection: Choosing the right tools for the job.</li>
+          <li>System design: Connecting the blocks (HLD).</li>
+          <li>Documentation & Support: Being the guide for the developers.</li>
+        </ol>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Requirements Engineering</h2>
+
+        <h3>D.1 System Requirements</h3>
+        <p>Requirements are the "Laws of Physics" for your system. If you don't define them correctly, your architecture will fail, no matter how clean your code is.</p>
+        <blockquote class="callout">Analogy: A client asking for a "fast car." To an architect, that's useless. Does "fast" mean zero-to-sixty speed (low latency), or the ability to carry 50 tons at sixty mph (high throughput)? You need specifics before you design the engine.</blockquote>
+        <ul>
+          <li><strong>Functional:</strong> Features user can interact with (e.g., checkout).</li>
+          <li><strong>Non-functional (NFRs):</strong> The "-ilities" (Scalability, Reliability, Security).</li>
+          <li>Collaboration: Working with PMs and stakeholders to narrow down the "must-haves."</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Application Types</h2>
+
+        <h3>E.1 Types of Software Systems</h3>
+        <p>Different systems require different architectural mindsets. A high-frequency trading backend is designed differently than a consumer-facing mobile app or a distributed logging system.</p>
+        <blockquote class="callout">Analogy: Designing a kitchen for a family home is different from designing a kitchen for a five-star hotel. The tools are similar, but the scale, speed, and durability requirements are worlds apart.</blockquote>
+        <ul>
+          <li>Web apps: High concurrency, SEO, and visual performance.</li>
+          <li>Backend/APIs: Throughput, data integrity, and internal consistency.</li>
+          <li>Mobile apps: Offline capability, limited battery/data, and UX.</li>
+          <li>Distributed systems: Dealing with network partitions and latency.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Technology Stack</h2>
+
+        <h3>F.1 Selecting Technology Stack</h3>
+        <p>Don't pick tech because it's "trending." Pick it because it solves your specific constraints. Every architectural choice is a trade-off between speed, cost, and developer experience.</p>
+        <blockquote class="callout">Analogy: Picking a vehicle for a road trip. A sports car is fast but expensive and small (High performance, High cost). A van is slow and thirsty but carries the whole family (High capacity, High operational cost). Pick the one that fits the trip.</blockquote>
+        <ul>
+          <li>Backend: Language features, ecosystem, and performance.</li>
+          <li>Database: SQL for consistency vs NoSQL for scale/flexibility.</li>
+          <li>Frontend: Framework longevity and team skills.</li>
+          <li>Decision logs: Why we picked X over Y.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Quality Attributes (*-ilities)</h2>
+
+        <h3>G.1 System Qualities</h3>
+        <p>The "-ilities" are what separate a "coding project" from "production-grade software." As an architect, your main job is to ensure these qualities are baked into the core design.</p>
+        <blockquote class="callout">Analogy: A car's "coolness" is a feature, but its "safety rating" and "mileage" are quality attributes. Users enjoy the features, but they rely on the quality attributes for the long haul.</blockquote>
+        <ul>
+          <li><strong>Scalability:</strong> Handling more load.</li>
+          <li><strong>Maintainability:</strong> How easy it is to change or fix.</li>
+          <li><strong>Modularity:</strong> Swapping parts without breaking the whole.</li>
+          <li><strong>Testability:</strong> Design for automated validation.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Component-Level Architecture</h2>
+
+        <h3>H.1 Component Design</h3>
+        <p>Even at the component level, an architect's influence is felt. Good component design uses abstraction, interfaces, and patterns to isolate complexity and make systems resilient to change.</p>
+        <blockquote class="callout">Analogy: Standardized plumbing. Every faucet (component) uses the same thread size (interface). You can swap a cheap faucet for a luxury one without rewriting the entire house's plumbing system.</blockquote>
+        <ul>
+          <li>Layered Architecture: Separating UI, Logic, and Data.</li>
+          <li>DI & SOLID: The core principles for flexible, decoupled code.</li>
+          <li>Exception handling: Designing how errors propagate through the system.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Design Patterns</h2>
+
+        <h3>I.1 Design Patterns Fundamentals</h3>
+        <p>Patterns are proven solutions to recurring problems. They give teams a common vocabulary and prevent "reinventing the wheel" for every new feature.</p>
+        <blockquote class="callout">Analogy: A recipe book. You don't guess how to make bread every time; you follow a pattern. You can tweak it (customization), but the core steps stay the same to ensure success.</blockquote>
+        <ul>
+          <li>Factory: Abstracting object creation.</li>
+          <li>Repository: Decoupling business logic from data storage.</li>
+          <li>Facade: Simplifying complex subsystem interactions.</li>
+          <li>Command: Encapsulating actions for undo, redo, or logging.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. System Architecture Design</h2>
+
+        <h3>J.1 High-Level System Design</h3>
+        <p>This is where all the pieces come together. High-level design focuses on the interactions between systems, boundaries, and overall data flow.</p>
+        <blockquote class="callout">Analogy: Designing an airport. You need to map out how passengers move from the entrance to security, then to the gate, while also mapping how luggage moves in parallel. If the paths cross wrongly, you get a bottleneck.</blockquote>
+        <ul>
+          <li>Component interaction: Sync vs Async communication.</li>
+          <li>System boundaries: Where one service ends and another begins.</li>
+          <li>Integration: APIs, Queues, and Webhooks.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB K ==================== -->
+      <section class="node section">
+        <h2>BAB K. Architecture Documentation</h2>
+
+        <h3>K.1 Architecture Documentation</h3>
+        <p>If it's not documented, it doesn't exist. Good documentation ensures that the "Why" behind the architecture is preserved long after you've moved on to the next project.</p>
+        <blockquote class="callout">Analogy: Like blueprints for a building. Future maintenance crews need to know where the pipes and wires are behind the walls. Documentation is the X-ray vision for future engineers.</blockquote>
+        <ul>
+          <li>ADR (Architecture Decision Records): Log of "Why" we did something.</li>
+          <li>Diagrams: C4 model, sequence diagrams, and flowcharts.</li>
+          <li>Best practices: Keeping it concise and up to date.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB L ==================== -->
+      <section class="node section">
+        <h2>BAB L. Advanced Architecture Concepts</h2>
+
+        <h3>L.1 Advanced Architecture Patterns</h3>
+        <p>As systems grow, they face unique challenges like partial failure, eventual consistency, and global latency. Advanced patterns help manage this complexity at scale.</p>
+        <blockquote class="callout">Analogy: Managing a local diner vs. managing a global fast-food chain. In the chain, you can't have every manager call the CEO for every burger sold. You need distributed decision-making and eventual inventory updates.</blockquote>
+        <ul>
+          <li>Distributed systems: Dealing with the CAP theorem.</li>
+          <li>Scalable systems: Sharding, replication, and caching strategies.</li>
+          <li>Resilience: Circuit breakers, retries, and fallback mechanisms.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB M ==================== -->
+      <section class="node section">
+        <h2>BAB M. Soft Skills for Architects</h2>
+
+        <h3>M.1 Communication & Leadership</h3>
+        <p>Being an architect is 50% technical and 50% social. You have to sell your ideas to stakeholders and lead developers toward a common vision without being "the boss."</p>
+        <blockquote class="callout">Analogy: A conductor of an orchestra. They don't play the instruments, but they make sure every musician plays in sync to create a masterpiece. Without the conductor, you just have a loud noise.</blockquote>
+        <ul>
+          <li>Technical communication: Explaining complex ideas simply.</li>
+          <li>Stakeholder management: Aligning tech with business ROI.</li>
+          <li>Influencing: Getting buy-in on architectural changes.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB N ==================== -->
+      <section class="node section">
+        <h2>BAB N. Real-World Application</h2>
+
+        <h3>N.1 Case Study (Real System Design)</h3>
+        <p>Theory is nothing without application. In this section, we take a real set of requirements and go through the entire architect workflow to produce a viable design.</p>
+        <blockquote class="callout">Analogy: A pilot using a simulator before flying a real jumbo jet. This case study is your simulator to test your architectural judgment in a safe but realistic environment.</blockquote>
+        <ul>
+          <li>Requirement Analysis: Parsing the "messy" user feedback.</li>
+          <li>Designing HLD: Drawing the primary components.</li>
+          <li>Review & Iteration: Finding the holes before the code starts.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB O ==================== -->
+      <section class="node section">
+        <h2>BAB O. Becoming a Software Architect</h2>
+
+        <h3>O.1 Career Growth</h3>
+        <p>The journey from developer to architect is a marathon. It requires constant curiosity, a willingness to fail, and a focus on long-term value over short-term "hacks."</p>
+        <blockquote class="callout">Analogy: Like a student martial artist moving towards a black belt. You don't just learn more moves; you learn when *not* to use them and how to teach others.</blockquote>
+        <ul>
+          <li>Skill roadmap: T-shaped knowledge.</li>
+          <li>Continuous learning: Engineering blogs, papers, and POCs.</li>
+          <li>Mentorship: Growing the next generation of architects.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB P ==================== -->
+      <section class="node section">
+        <h2>BAB P. Engineering Mindset</h2>
+
+        <h3>P.1 Architect Thinking Framework</h3>
+        <p>Finally, we distill everything into a repeatable framework for architectural decision-making. High-level vs. Low-level thinking, and the art of the trade-off.</p>
+        <blockquote class="callout">Analogy: A chess master. They aren't just thinking about the current move (code); they are thinking about the end game and three potential counter-strategies (architecture).</blockquote>
+        <ul>
+          <li>Trade-off analysis: Cost vs. Performance vs. Simplicity.</li>
+          <li>Decision making under uncertainty.</li>
+          <li>Focusing on the "Long Game" of the software lifecycle.</li>
+        </ul>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>
