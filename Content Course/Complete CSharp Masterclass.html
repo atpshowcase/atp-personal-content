@@ -244,41 +244,98 @@
         <h2>BAB A. Introduction & Fundamentals</h2>
 
         <h3>A.1 Introduction to C#</h3>
-        <p>C# is a modern, object-oriented language developed by Microsoft as part of the .NET initiative. It's powerful, safe, and can be used to build almost anything: from high-performance web backends to stunning 3D games.</p>
-        <blockquote class="callout">Analogy: C# is like a "Swiss Army Knife" for high-tech engineers. It's sturdy, incredibly well-designed, and has a dedicated tool for almost every job you'll face in the field.</blockquote>
+        <p>C# (pronounced "C Sharp") is a modern, object-oriented, and type-safe programming language developed by Microsoft as part of the .NET initiative. It is designed to be simple yet powerful, enabling developers to build a vast range of applications on the .NET ecosystem.</p>
+        <blockquote class="callout">Analogy: C# is like a "Swiss Army Knife" for high-tech engineers. It's sturdy, incredibly well-designed, and has a dedicated tool for almost every job you'll face—whether you're carving a wooden toy (simple script) or building a skyscraper (enterprise system).</blockquote>
         <ul>
-          <li>C# and .NET: The language vs. the execution platform.</li>
-          <li>Use cases: Web (ASP.NET), Desktop (WPF/WinForms), Mobile (MAUI), and Games (Unity).</li>
-          <li>Setup: Getting started with Visual Studio or VS Code + .NET SDK.</li>
+          <li><strong>C# vs. .NET:</strong> C# is the language you write, while .NET is the "engine" (runtime and libraries) that runs it.</li>
+          <li><strong>Versatility:</strong> Used for Web (ASP.NET), Desktop (WPF/WinForms), Mobile (MAUI), and Games (Unity).</li>
+          <li><strong>Modern Features:</strong> Includes Garbage Collection (automatic memory management), strong typing, and async/await support.</li>
+          <li><strong>Setup:</strong> Most developers use "Visual Studio" (heavyweight) or "VS Code" (lightweight) combined with the .NET SDK.</li>
         </ul>
 
         <h3>A.2 First Program & Basics</h3>
-        <p>Every journey starts with a single line of code. Understanding the structure of a C# program—from namespaces to the <code>Main</code> method—is crucial for everything that follows.</p>
-        <blockquote class="callout">Analogy: Writing your first program is like learning to say "Hello" in a new language. It's simple, but it's the first bridge between your mind and the machine.</blockquote>
-        <pre><code>using System;
+        <p>Every journey starts with a single line of code. In C#, even a simple "Hello World" requires a bit of structure, which helps keep larger programs organized as they grow.</p>
+        <blockquote class="callout">Analogy: Writing your first program is like learning to say "Hello" in a new language. It's simple, but it represents the first successful bridge between your mind and the machine's logic.</blockquote>
+        <pre><code>using System; // Import the System namespace
 
-class Program {
-  static void Main() {
-    Console.WriteLine("Hello, C# World!");
+namespace MyFirstApp {
+  class Program {
+    // The Main method is the starting point of every C# program
+    static void Main(string[] args) {
+      Console.WriteLine("Hello, C# World!");
+    }
   }
 }</code></pre>
+        <ul>
+          <li><strong>Namespaces:</strong> Used to organize code and prevent naming conflicts.</li>
+          <li><strong>Classes:</strong> The basic building block of C# applications (everything lives in a class).</li>
+          <li><strong>Main Method:</strong> Where the execution begins.</li>
+        </ul>
 
         <h3>A.3 Variables & Data Types</h3>
-        <p>Variables are named storage locations in memory. C# is a strongly-typed language, meaning you must be explicit about what kind of data you're storing.</p>
-        <blockquote class="callout">Analogy: Data types are like different containers in a kitchen. You don't put soup in a colander, and you don't store flour in a glass—choosing the right container (type) prevents a mess (bugs).</blockquote>
+        <p>Variables are named storage locations in memory. C# is a **strongly-typed** language, meaning you must be explicit (or let the compiler infer) what kind of data you are storing to prevent errors and optimize memory usage.</p>
+        <blockquote class="callout">Analogy: Data types are like different containers in a kitchen. You don't put soup in a colander, and you don't store flour in a drinking glass—choosing the right container (type) prevents a mess (bugs).</blockquote>
+
+        <h4>Integral (Whole Number) Types</h4>
         <ul>
-          <li>Primitive types: <code>int</code>, <code>string</code>, <code>double</code>, <code>bool</code>.</li>
-          <li>Value Types (Stack) vs. Reference Types (Heap).</li>
-          <li>Type conversion: Implicit casting and explicit parsing.</li>
+          <li><strong>byte/sbyte:</strong> 8-bit integers (Range: 0 to 255 or -128 to 127). Used for raw data or very small counters.</li>
+          <li><strong>short/ushort:</strong> 16-bit integers. Useful for saving memory in large arrays of small numbers.</li>
+          <li><strong>int/uint:</strong> 32-bit integers. The standard choice for whole numbers (up to 2.1 billion).</li>
+          <li><strong>long/ulong:</strong> 64-bit integers. Use this for massive numbers (e.g., world population or high-precision timestamps).</li>
+        </ul>
+
+        <h4>Floating-Point (Decimal) Types</h4>
+        <ul>
+          <li><strong>float:</strong> 32-bit (7 digits precision). Fast, but can have rounding errors. Used in graphics/physics.</li>
+          <li><strong>double:</strong> 64-bit (15-17 digits precision). The default for general decimal math.</li>
+          <li><strong>decimal:</strong> 128-bit (28-29 digits precision). **Crucial for Financial Apps** because it eliminates rounding errors found in float/double.</li>
+        </ul>
+
+        <h4>Text, Character & Logical Types</h4>
+        <ul>
+          <li><strong>char:</strong> A single 16-bit Unicode character (e.g., <code>'A'</code>). Must use single quotes.</li>
+          <li><strong>string:</strong> A sequence of Unicode characters (e.g., <code>"Hello World"</code>). Must use double quotes.</li>
+          <li><strong>bool:</strong> Can only be <code>true</code> or <code>false</code>. Essential for control flow logic.</li>
+        </ul>
+
+        <h4>Advanced Type Concepts</h4>
+        <ul>
+          <li><strong>var (Type Inference):</strong> You write <code>var name = "Alice";</code> and the compiler *figures out* it's a string. It's still strongly typed but makes code cleaner.</li>
+          <li><strong>nullable (int?):</strong> Allows a value type to hold a <code>null</code> value, useful for database data.</li>
+        </ul>
+
+        <h4>Special & Omnipresent Types</h4>
+        <ul>
+          <li><strong>object:</strong> The "Parent of All Types." Every single type in C# (even `int`) inherits from <code>object</code>. You can store anything here, but you'll need to cast it back later.</li>
+          <li><strong>dynamic:</strong> Tells the compiler to skip type checking until the program is actually running. Powerful for COM interop or JSON parsing, but dangerous if not used carefully.</li>
+          <li><strong>void:</strong> Used only as a return type for methods to indicate that the method **returns no value**.</li>
+        </ul>
+
+        <p><strong>Memory Architecture: Stack vs. Heap</strong></p>
+        <ul>
+          <li><strong>Value Types (Stack):</strong> `int`, `char`, `bool`, `struct`. Stored in a fast, small part of memory. When they leave a method, they are cleared instantly.</li>
+          <li><strong>Reference Types (Heap):</strong> `string`, `class`, `array`. Stored in a larger, dynamic part of memory. Only a "pointer" (address) stays on the stack. They are cleaned up by the **Garbage Collector (GC)**.</li>
         </ul>
 
         <h3>A.4 Operators & Expressions</h3>
-        <p>Operators are symbols used to perform calculations, compare values, or execute logical operations. They are the "verbs" of your programming sentences.</p>
+        <p>Operators are symbols used to perform calculations, compare values, or execute logical operations. They are the "verbs" that allow your program to actually *do* things with data.</p>
         <blockquote class="callout">Analogy: Operators are like the basic controls on a calculator. Plus, minus, bigger than, and "and/or" logic allow you to process raw numbers into meaningful results.</blockquote>
+        <ul>
+          <li><strong>Arithmetic:</strong> <code>+</code> (add), <code>-</code> (sub), <code>*</code> (mul), <code>/</code> (div), <code>%</code> (modulus/remainder).</li>
+          <li><strong>Relational:</strong> <code>==</code> (equal), <code>!=</code> (not equal), <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>.</li>
+          <li><strong>Logical:</strong> <code>&amp;&amp;</code> (AND), <code>||</code> (OR), <code>!</code> (NOT).</li>
+          <li><strong>Assignment:</strong> <code>=</code>, <code>+=</code>, <code>-=</code> (shorthand for updating variables).</li>
+        </ul>
 
         <h3>A.5 Debugging Basics</h3>
-        <p>Bugs are a natural part of coding. Learning to distinguish between syntax errors (compile-time) and logic errors (runtime) using breakpoints is a superpower.</p>
-        <blockquote class="callout">Analogy: Debugging with breakpoints is like having a "Pause Button" for time. You can stop the world, look at exactly what's in every variable, and see exactly where things went sideways.</blockquote>
+        <p>Bugs are a natural part of coding. Professional developers don't write "perfect" code on the first try; they use powerful tools to find and fix errors systematically.</p>
+        <blockquote class="callout">Analogy: Debugging with breakpoints is like having a "Pause Button" for time. You can stop the world, look at exactly what's in every variable, and see exactly where things went sideways before the crash.</blockquote>
+        <ul>
+          <li><strong>Syntax Errors:</strong> Typos or grammar mistakes in code (highlighted in red, program won't run).</li>
+          <li><strong>Runtime Errors:</strong> Logic mistakes that happen while the app is running (e.g., dividing by zero).</li>
+          <li><strong>Breakpoints:</strong> Red dots you place to "freeze" the code at a specific line.</li>
+          <li><strong>Stepping:</strong> Moving through code line-by-line using "Step Over" or "Step Into".</li>
+        </ul>
       </section>
 
       <!-- ==================== BAB B ==================== -->
@@ -286,25 +343,80 @@ class Program {
         <h2>BAB B. Control Flow</h2>
 
         <h3>B.1 Conditional Statements</h3>
-        <p>Control flow allows your program to make decisions. <code>if/else</code> and <code>switch</code> statements are the primary ways to branch your logic.</p>
+        <p>Control flow allows your program to make decisions. In C#, we use `if/else`, `else if`, and the `switch` statement to branch logic based on specific conditions.</p>
         <blockquote class="callout">Analogy: Conditional statements are like a "Choose Your Own Adventure" book. If you walk through the door, go to page 20; otherwise, go to page 25.</blockquote>
-        <pre><code>if (age >= 18) {
-  Console.WriteLine("Welcome!");
+        
+        <h4>Deciding with IF/ELSE</h4>
+        <pre><code>if (hour < 12) {
+  Console.WriteLine("Good Morning!");
+} else if (hour < 18) {
+  Console.WriteLine("Good Afternoon!");
 } else {
-  Console.WriteLine("Access Denied.");
+  Console.WriteLine("Good Evening!");
 }</code></pre>
 
+        <h4>Using the Switch Statement</h4>
+        <p>When comparing a single variable against many potential values, a `switch` statement is often cleaner than a long chain of `if/else if` blocks.</p>
+        <pre><code>string day = "Monday";
+switch (day) {
+  case "Monday":
+    Console.WriteLine("Busy day ahead!");
+    break;
+  case "Friday":
+    Console.WriteLine("Weekend is near!");
+    break;
+  default:
+    Console.WriteLine("Just another day.");
+    break;
+}</code></pre>
+
+        <h4>Ternary Operator (Shorthand)</h4>
+        <p>You can write a simple if/else in a single line using <code>condition ? truePart : falsePart;</code>.</p>
+        <pre><code>string status = (age >= 18) ? "Adult" : "Minor";</code></pre>
+
         <h3>B.2 Boolean Logic</h3>
-        <p>Combining conditions requires logical operators like AND (<code>&amp;&amp;</code>), OR (<code>||</code>), and NOT (<code>!</code>). Mastery of logic prevents complex bugs in branching paths.</p>
+        <p>Combining conditions requires logical operators. Understanding these "gates" is critical for writing precise logic.</p>
         <blockquote class="callout">Analogy: Boolean logic is like a strict club entrance rule. "You can enter IF you have a ticket AND you are wearing shoes"—if either one is false, you're staying outside.</blockquote>
+        <ul>
+          <li><strong>AND (<code>&amp;&amp;</code>):</strong> Returns true ONLY if both sides are true.</li>
+          <li><strong>OR (<code>||</code>):</strong> Returns true if at least ONE side is true.</li>
+          <li><strong>NOT (<code>!</code>):</strong> Reverses the boolean value (true becomes false).</li>
+        </ul>
 
         <h3>B.3 Loops</h3>
-        <p>Loops allow you to execute a block of code repeatedly. <code>for</code>, <code>while</code>, and <code>foreach</code> are essential for processing lists, grids, or waiting for conditions.</p>
+        <p>Loops allow you to execute a block of code repeatedly. Selecting the right loop depends on whether you know the iteration count beforehand.</p>
         <blockquote class="callout">Analogy: A loop is like a gym instructor telling you to do 10 pushups. Instead of them saying "Do a pushup" ten times manually, they just say "Do this 10 times."</blockquote>
+        
+        <h4>The "For" Loop (Fixed Count)</h4>
+        <p>Best used when you know exactly how many times you need to repeat.</p>
+        <pre><code>for (int i = 0; i < 5; i++) {
+  Console.WriteLine("Iteration: " + i);
+}</code></pre>
+
+        <h4>The "While" Loop (Condition-Based)</h4>
+        <p>Repeats as long as a condition is true. Be careful of "Infinite Loops" if the condition never becomes false!</p>
+        <pre><code>while (health > 0) {
+  Console.WriteLine("Still Fighting...");
+  health -= 10;
+}</code></pre>
+
+        <h4>The "Foreach" Loop (Collection-Based)</h4>
+        <p>The standard way to iterate through lists and arrays in C#. It handles the indexing for you automatically.</p>
+        <pre><code>string[] names = {"Alice", "Bob", "Charlie"};
+foreach (string name in names) {
+  Console.WriteLine("Hello, " + name);
+}</code></pre>
 
         <h3>B.4 Loop Control</h3>
-        <p>The <code>break</code> and <code>continue</code> keywords give you fine-grained control over when a loop should stop early or skip a specific turn.</p>
+        <p>Keywords that modify the normal flow of a loop execution.</p>
         <blockquote class="callout">Analogy: <code>break</code> is like an E-stop on a treadmill—you stop everything immediately. <code>continue</code> is like a runner jumping over a single puddle—you skip one step and keep going.</blockquote>
+        
+        <pre><code>for (int i = 1; i <= 10; i++) {
+  if (i == 3) continue; // Skip number 3
+  if (i == 7) break;    // Stop the loop completely at 7
+  Console.WriteLine(i); 
+}
+// Output: 1, 2, 4, 5, 6</code></pre>
       </section>
 
       <!-- ==================== BAB C ==================== -->
@@ -312,19 +424,78 @@ class Program {
         <h2>BAB C. Methods & Functions</h2>
 
         <h3>C.1 Methods Basics</h3>
-        <p>Methods allow you to group code into reusable blocks. They can take inputs (parameters) and return a specific output (return value).</p>
-        <blockquote class="callout">Analogy: A method is like a "Kitchen Appliance." You put in raw bread (Parameters), press start (Execution), and it gives you back toast (Return value). You don't care about the internal wiring, just that it works.</blockquote>
-        <pre><code>int Add(int a, int b) {
+        <p>Methods are blocks of code that perform a specific task and can be "called" whenever needed. They promote the **DRY (Don't Repeat Yourself)** principle by grouping logic into reusable units.</p>
+        <blockquote class="callout">Analogy: A method is like a "Kitchen Appliance." You put in raw ingredients (Parameters), press a button (Execution), and it gives you back a finished dish (Return value). You don't need to know how the gears turn, just how to use the interface.</blockquote>
+        
+        <h4>Structure of a Method</h4>
+        <ul>
+          <li><strong>Return Type:</strong> What the method sends back (e.g., <code>int</code>, <code>string</code>, or <code>void</code> if it returns nothing).</li>
+          <li><strong>Parameters:</strong> The values you "pass into" the method so it can do its job.</li>
+          <li><strong>Body:</strong> The actual code that runs inside the curly braces <code>{}</code>.</li>
+        </ul>
+        <pre><code>// A method that returns a value
+int Add(int a, int b) {
   return a + b;
+}
+
+// A method that just performs an action (void)
+void Greet(string name) {
+  Console.WriteLine("Hello, " + name);
 }</code></pre>
 
         <h3>C.2 Advanced Methods</h3>
-        <p>C# offers powerful features like method overloading, where you can have multiple methods with the same name but different parameters, and special keywords like <code>ref</code> and <code>out</code>.</p>
-        <blockquote class="callout">Analogy: Overloading is like a coffee machine with different sized cups. Whether you want a Small, Medium, or Large, the button says "Coffee," but the machine knows exactly how much water to use for each.</blockquote>
+        <p>C# offers powerful ways to make methods more flexible, allowing them to handle different data types or return multiple values.</p>
+        <blockquote class="callout">Analogy: Overloading is like a coffee machine with different sized cups. Whether you want a Small, Medium, or Large, the button says "Coffee," but the machine knows exactly how much water and beans to use for each based on the "input" (the cup size).</blockquote>
+
+        <h4>Method Overloading</h4>
+        <p>Defining multiple methods with the same name but different parameters (different "signatures").</p>
+        <pre><code>int Multiply(int a, int b) => a * b;
+double Multiply(double a, double b) => a * b; // Overloaded!</code></pre>
+
+        <h4>Ref & Out Keywords</h4>
+        <ul>
+          <li><strong>ref:</strong> Passes a variable by reference. The value must be initialized before passing.</li>
+          <li><strong>out:</strong> Used to return multiple values from a single method. The variable must be assigned a value *inside* the method.</li>
+        </ul>
+
+        <h4>Optional Parameters</h4>
+        <p>You can provide default values for parameters, making them optional when the method is called.</p>
+        <pre><code>void Log(string message, bool isError = false) { /* logic */ }
+Log("Success"); // isError is false by default
+Log("Failed", true); // explicitly set to true</code></pre>
 
         <h3>C.3 Scope & Variables</h3>
-        <p>Variables only exist within the "curly braces" where they were defined. Understanding local vs. global scope prevents variable name collisions and memory issues.</p>
-        <blockquote class="callout">Analogy: Scope is like a "Private Conversation." If you whisper a secret inside a small room (Local scope), people in the hallway (Global scope) can't hear you.</blockquote>
+        <p>Scope determines where a variable is "visible" and accessible. In C#, scope is defined by the level of indentation and curly braces <code>{}</code>. Understanding scope prevents variable name collisions and unintended side effects.</p>
+        <blockquote class="callout">Analogy: Scope is like a "Private Conversation." If you whisper a secret inside a small room (Local scope), people in the hallway (Global/Class scope) can't hear you. However, you can hear someone shouting from the hallway while you are in the room.</blockquote>
+        
+        <h4>Scope Types in C#</h4>
+        <ul>
+          <li><strong>Local Scope:</strong> Variables declared inside a method. They are "Short-lived" and disappear when the method finishes.</li>
+          <li><strong>Block Scope:</strong> Variables declared within an <code>if</code>, <code>for</code>, or <code>while</code> block. They only exist inside those specific braces.</li>
+          <li><strong>Class Level (Fields):</strong> Variables declared inside the <code>class</code> but outside any method. They are "Long-lived" and accessible to all methods in the class.</li>
+        </ul>
+
+        <h4>Example: Visualizing Scope & Shadowing</h4>
+        <pre><code>class Player {
+  // Class Level Scope (Field)
+  int score = 100; 
+
+  void UpdateScore(int score) { // Local Scope (Parameter)
+    // SHADOWING: The local 'score' hides the class field 'score'
+    Console.WriteLine(score); // Prints the local parameter value
+    
+    // Use 'this' keyword to access the class level field
+    Console.WriteLine(this.score); // Prints 100
+    
+    if (true) {
+        int bonus = 50; // BLOCK SCOPE
+        Console.WriteLine(bonus); // Works here
+    }
+    // Console.WriteLine(bonus); // ERROR: bonus doesn't exist here!
+  }
+}</code></pre>
+        
+        <p><strong>Pro Tip:</strong> To avoid confusion, C# naming conventions suggest using an underscore for private fields (e.g., <code>_score</code>) to clearly distinguish them from local variables.</p>
       </section>
 
       <!-- ==================== BAB D ==================== -->
@@ -332,21 +503,51 @@ class Program {
         <h2>BAB D. Data Structures</h2>
 
         <h3>D.1 Arrays</h3>
-        <p>Arrays are fixed-size collections of elements of the same type. They are the most basic and efficient way to store multiple items.</p>
-        <blockquote class="callout">Analogy: An array is like a physical egg carton. It has a fixed number of slots, and once you buy a 12-slot carton, you can't magically make it fit 13 eggs—you need a bigger carton.</blockquote>
+        <p>Arrays are fixed-size collections that store multiple elements of the same type in contiguous memory. Once created, their size cannot be changed.</p>
+        <blockquote class="callout">Analogy: An array is like a physical egg carton. It has a fixed number of slots, and once you buy a 12-slot carton, you can't magically make it fit 13 eggs—you need an entirely new, bigger carton.</blockquote>
+        
+        <h4>Working with Arrays</h4>
+        <pre><code>// Declaration and Initialization
+int[] numbers = new int[5]; // Empty array of size 5
+string[] fruits = {"Apple", "Banana", "Cherry"}; // Initialized array
+
+// Accessing elements (Zero-based indexing)
+Console.WriteLine(fruits[0]); // Output: Apple
+
+// Multi-dimensional Arrays
+int[,] matrix = new int[3, 3]; // 3x3 Grid</code></pre>
 
         <h3>D.2 Collections</h3>
-        <p>C# provides dynamic collections like <code>List&lt;T&gt;</code> and <code>Dictionary&lt;Key, Value&gt;</code> that can grow and shrink as needed, offering much more flexibility than raw arrays.</p>
-        <blockquote class="callout">Analogy: A <code>List</code> is like a digital shopping list on your phone. You can add items as you think of them and delete them once they're in the cart—it grows and shrinks with your needs.</blockquote>
+        <p>C# provides the <code>System.Collections.Generic</code> namespace, which contains dynamic structures that can grow or shrink as your program runs.</p>
+        <blockquote class="callout">Analogy: A <code>List</code> is like a digital shopping list on your phone. You can add items as you think of them and delete them once they're in the cart—it grows and shrinks with your needs, unlike a piece of paper with fixed space.</blockquote>
+
         <ul>
-          <li><code>List&lt;T&gt;</code>: Ordered collection with dynamic sizing.</li>
-          <li><code>Dictionary&lt;K, V&gt;</code>: Fast lookup using unique keys.</li>
-          <li>ArrayList & Hashtable: Legacy non-generic collections.</li>
+          <li><strong>List&lt;T&gt;:</strong> The most common collection. Ideal for ordered items that change frequently. (e.g., <code>List&lt;string&gt; users = new List&lt;string&gt;();</code>).</li>
+          <li><strong>Dictionary&lt;K, V&gt;:</strong> Stores data in key-value pairs. Optimized for lightning-fast lookups using the Key.</li>
+          <li><strong>Legacy Collections:</strong> Avoid <code>ArrayList</code> and <code>Hashtable</code> in modern C# development; they are not type-safe and cause performance issues due to "Boxing/Unboxing."</li>
         </ul>
 
+        <pre><code>List&lt;int&gt; scores = new List&lt;int&gt; { 90, 85, 100 };
+scores.Add(95); // Dynamic growth!
+
+Dictionary&lt;int, string&gt; studentIdMap = new Dictionary&lt;int, string&gt;();
+studentIdMap.Add(101, "John Doe");</code></pre>
+
         <h3>D.3 LINQ Basics</h3>
-        <p>LINQ (Language Integrated Query) allows you to filter, sort, and transform data from collections using a syntax that stays consistent across databases, XML, and local lists.</p>
-        <blockquote class="callout">Analogy: LINQ is like a "Baggage Scanner" at an airport. You don't open every bag manually; you just set a filter (e.g., "Find all bags over 30kg") and LINQ gives you the results instantly.</blockquote>
+        <p>LINQ (Language Integrated Query) allows you to process and filter data from any collection using a expressive, readable syntax.</p>
+        <blockquote class="callout">Analogy: LINQ is like a "Baggage Scanner" at an airport. You don't open every bag manually to check its weight; you just set a filter (e.g., "Find all bags over 30kg") and the scanner gives you the results instantly.</blockquote>
+
+        <h4>Common LINQ Methods</h4>
+        <ul>
+          <li><strong>Where:</strong> Filters data based on a condition.</li>
+          <li><strong>Select:</strong> Transforms each element (e.g., getting just the names from objects).</li>
+          <li><strong>OrderBy / OrderByDescending:</strong> Sorts the results.</li>
+        </ul>
+
+        <pre><code>using System.Linq;
+
+var highScores = scores.Where(s => s > 90).OrderByDescending(s => s).ToList();
+// Finds scores over 90 and sorts them from highest to lowest.</code></pre>
       </section>
 
       <!-- ==================== BAB E ==================== -->
@@ -354,30 +555,108 @@ class Program {
         <h2>BAB E. Object-Oriented Programming (OOP)</h2>
 
         <h3>E.1 Classes & Objects</h3>
-        <p>C# is an OOP language at its core. Classes are blueprints, and Objects are the actual instances you work with in your code.</p>
+        <p>C# is an OOP language at its core. Classes are blueprints that define structure and behavior, while Objects are the memory-allocated instances of those blueprints.</p>
         <blockquote class="callout">Analogy: A <code>Class</code> is a blueprint for a car. It says a car has wheels and can drive. An <code>Object</code> is the specific red car sitting in your driveway right now.</blockquote>
-        <pre><code>class Car {
-  public string Model { get; set; }
-  public void Drive() { /* ... */ }
+        
+        <pre><code>class Player {
+  public string Name { get; set; } // Property
+  public int Health { get; private set; } // Encapsulated property
+
+  // Constructor: Initializes the object
+  public Player(string name) {
+    Name = name;
+    Health = 100;
+  }
 }
 
-Car myCar = new Car();</code></pre>
+Player hero = new Player("Arthur"); // Instantiating an object</code></pre>
 
         <h3>E.2 Encapsulation</h3>
-        <p>Encapsulation is about hiding internal complexity and protecting data integrity using access modifiers (<code>public</code>, <code>private</code>) and properties.</p>
-        <blockquote class="callout">Analogy: Encapsulation is like the "Vending Machine" interface. You press a button (Public method), and it gives you a soda. You can't see the gears or reach in and grab the money (Private data)—the machine protects itself.</blockquote>
+        <p>Encapsulation is the core of "Information Hiding." It involves wrapping data (Fields) and code (Methods) into a single unit and strictly controlling access to that unit. This ensures **Data Integrity**—meaning your object's internal state cannot be corrupted by outside code.</p>
+        <blockquote class="callout">Analogy: Encapsulation is like the "Vending Machine" interface. You press a button (Public method), and it gives you a soda. You can't reach in and grab the money or gears (Private data)—the machine protects itself through a strict, predefined interface.</blockquote>
+        
+        <h4>Access Modifier Comparison</h4>
+        <p>If you're still confused by the differences, use the <strong>House Analogy</strong> to see who is allowed access to various areas:</p>
+        
+        <ul>
+          <li><strong>public (The Street):</strong> Anyone in the world can walk in. Accessible from any project in your solution.</li>
+          <li><strong>private (Your Bedroom):</strong> Only YOU (the class creator) can enter. Accessible only within the same class.</li>
+          <li><strong>protected (The Living Room):</strong> Only you and your children (Inheritance) can enter. Accessible to the class and its derived classes.</li>
+          <li><strong>internal (Gated Community):</strong> Only neighbors in your assembly/project can enter. Accessible to anyone in the same project.</li>
+        </ul>
+
+        <h4>Technical Implementation</h4>
+        <pre><code>class BaseUnit {
+    public int health = 100;      // Accessible to everyone (The Street)
+    private int _id = 007;        // Only in BaseUnit (Your Bedroom)
+    protected string team = "A";  // To BaseUnit and Medic (Living Room)
+    internal string region = "HK";// To anyone in this project (Gated Community)
+}
+
+class Medic : BaseUnit {
+    void Heal() {
+        health = 120; // OK (Public)
+        team = "B";   // OK (Protected)
+        // _id = 1;   // ERROR: Private to BaseUnit!
+    }
+}</code></pre>
+
+        <h4>Why Use Properties Over Fields?</h4>
+        <p>In C#, we keep our variables <code>private</code> (Fields) and expose them through <code>public</code> wrappers (Properties). This allows us to intercept the data and apply "Validation Logic" before it's saved.</p>
+
+        <h4>Example: Protecting a Bank Account</h4>
+        <pre><code>class BankAccount {
+  // Private field (The "Money" inside the safe)
+  private decimal _balance; 
+
+  // Public property (The "ATM" interface)
+  public decimal Balance {
+    get { return _balance; } // You can check the balance
+    // NO SETTER: Outside code cannot "Force" a new balance directly!
+  }
+
+  public void Deposit(decimal amount) {
+    if (amount > 0) _balance += amount; // Logic check
+  }
+}</code></pre>
+        
+        <p><strong>Goal:</strong> By making the setter private (or removing it entirely), we prevent bugs where a developer accidentally sets your bank balance to a negative number.</p>
 
         <h3>E.3 Inheritance</h3>
-        <p>Inheritance allows a child class to reuse code from a parent class, promoting code reuse and forming logical "is-a" relationships.</p>
-        <blockquote class="callout">Analogy: Inheritance is like "Family Genes." A child inherits their parents' height (Base behavior), but they can also learn new skills like playing the piano (Extended behavior).</blockquote>
+        <p>Inheritance allows a "Derived" class to reuse and extend the functionality of a "Base" class. It enables the DRY principle across your object hierarchy.</p>
+        <blockquote class="callout">Analogy: Inheritance is like "Family Genes." A child inherits their parents' height (Base behavior), but they can also learn new skills like playing the piano (Extended behavior) that their parents didn't have.</blockquote>
+
+        <pre><code>class Animal {
+  public void Eat() => Console.WriteLine("Eating...");
+}
+
+class Dog : Animal { // Dog inherits from Animal
+  public void Bark() => Console.WriteLine("Woof!");
+}</code></pre>
 
         <h3>E.4 Polymorphism</h3>
-        <p>Polymorphism allows objects of different types to be treated as a common parent type. The most common form is method overriding.</p>
-        <blockquote class="callout">Analogy: Polymorphism is like the word "Play." You can "Play" a guitar, "Play" a movie, or "Play" a sport. The action changes based on what you're interacting with, but the command is the same.</blockquote>
+        <p>Polymorphism allows objects of different types to be treated as a common parent type. This is achieved through Method Overriding using <code>virtual</code> and <code>override</code>.</p>
+        <blockquote class="callout">Analogy: Polymorphism is like the word "Play." You can "Play" a guitar, "Play" a movie, or "Play" a sport. The command is the same, but the result changes based on the object you are interacting with.</blockquote>
+
+        <pre><code>class Shape {
+  public virtual void Draw() => Console.WriteLine("Drawing Shape");
+}
+
+class Circle : Shape {
+  public override void Draw() => Console.WriteLine("Drawing Circle");
+}</code></pre>
 
         <h3>E.5 Interfaces</h3>
-        <p>An interface is a contract. Any class that implements an interface *must* provide the logic for the methods defined in that interface.</p>
+        <p>Interfaces define a contract that implementing classes *must* follow. Unlike inheritance, a class can implement multiple interfaces, allowing for highly flexible and decoupled code.</p>
         <blockquote class="callout">Analogy: An interface is like a "USB Port." As long as you have a USB plug (Implementation), you can connect to any computer (System), regardless of whether you're a mouse, keyboard, or hard drive.</blockquote>
+
+        <pre><code>interface IKillable {
+  void Die();
+}
+
+class Enemy : IKillable {
+  public void Die() { /* play death animation */ }
+}</code></pre>
       </section>
 
       <!-- ==================== BAB F ==================== -->
@@ -385,20 +664,66 @@ Car myCar = new Car();</code></pre>
         <h2>BAB F. Advanced C# Concepts</h2>
 
         <h3>F.1 Error Handling</h3>
-        <p>Professional code must handle failures gracefully. The <code>try-catch-finally</code> block ensures your app doesn't just vanish when an error occurs.</p>
-        <blockquote class="callout">Analogy: Error handling is like the "Airbags" in a car. You hope you never need them, but if something goes wrong, they deploy to prevent total destruction.</blockquote>
+        <p>Professional code must handle failures gracefully. The <code>try-catch-finally</code> block ensures your app doesn't just vanish when an error occurs, providing a safe way to recover or shut down.</p>
+        <blockquote class="callout">Analogy: Error handling is like the "Airbags" in a car. You hope you never need them, but if something goes wrong, they deploy to prevent total destruction and keep the passengers (users) safe.</blockquote>
+        
+        <pre><code>try {
+  int result = 10 / 0; // Will cause exception
+} catch (DivideByZeroException ex) {
+  // Specific catch for math errors
+  Console.WriteLine("Cannot divide by zero!");
+} catch (Exception ex) {
+  // 'Exception' is the base class; catches everything else
+  Console.WriteLine($"Unexpected error: {ex.Message}");
+} finally {
+  // Always runs (Cleanup code like closing databases)
+  Console.WriteLine("Cleanup process complete.");
+}</code></pre>
 
         <h3>F.2 File Handling</h3>
-        <p>Reading from and writing to files is essential for data persistence, logging, and configuration management.</p>
+        <p>Reading from and writing to files is essential for data persistence. Modern C# uses the <strong>using</strong> statement or declaration to ensure resources are disposed of immediately after use.</p>
         <blockquote class="callout">Analogy: File handling is like a "Locker Room." You can put data inside a locker (Write), lock the door (Close stream), and come back a week later to retrieve it (Read).</blockquote>
 
+        <pre><code>using System.IO;
+
+string path = "data.txt";
+// Modern 'using' declaration: automatically closes file at end of method
+using var writer = new StreamWriter(path);
+writer.WriteLine("Hello, Persistence!");
+
+// Simple one-liners for quick tasks:
+File.WriteAllText("log.txt", "Event Logged");
+string content = File.ReadAllText("log.txt");</code></pre>
+
         <h3>F.3 Delegates & Events</h3>
-        <p>Delegates are type-safe function pointers, and Events are the backbone of reactive and UI-driven programming in C#.</p>
-        <blockquote class="callout">Analogy: An Event is like a "Fire Alarm." The alarm doesn't know who is in the building; it just broadcasts a signal. Whoever is interested (Subscribers) decides how to react.</blockquote>
+        <p>Delegates are type-safe function pointers, and Events are the backbone of reactive and UI-driven programming. They allow objects to communicate without being tightly coupled.</p>
+        <blockquote class="callout">Analogy: An Event is like a "Fire Alarm." The alarm doesn't know who is in the building; it just broadcasts a signal. Whoever is interested (Subscribers) decides how to react (Run, Call 911, etc.).</blockquote>
+
+        <ul>
+          <li><strong>Action:</strong> A built-in delegate for methods that return nothing (<code>void</code>).</li>
+          <li><strong>Func&lt;T&gt;:</strong> A delegate that <strong>returns</strong> a value of type T.</li>
+          <li><strong>Event:</strong> A protective wrapper around a delegate that prevents external classes from clearing the subscriber list.</li>
+        </ul>
 
         <h3>F.4 Generics</h3>
-        <p>Generics allow you to write classes and methods that work with *any* data type while maintaining full type safety and performance.</p>
+        <p>Generics allow you to write classes and methods that work with any data type while maintaining full type safety and performance, avoiding "Boxing" (expensive conversions).</p>
         <blockquote class="callout">Analogy: A Generic is like a "Shipping Container." It doesn't care if you're shipping cars, TVs, or toys—the container handles the transport in exactly the same safe, standardized way.</blockquote>
+
+        <pre><code>// Generic Method: 'T' can be anything
+public void LogData<T>(T item) {
+  Console.WriteLine($"Logging: {item}");
+}
+
+LogData<int>(404);      // Works for integers
+LogData<string>("Pass");// Works for strings</code></pre>
+
+        <pre><code>// Generic Method
+public void Display&lt;T&gt;(T item) {
+  Console.WriteLine(item);
+}
+
+Display&lt;int&gt;(123);
+Display&lt;string&gt;("Hello");</code></pre>
       </section>
 
       <!-- ==================== BAB G ==================== -->
@@ -406,16 +731,36 @@ Car myCar = new Car();</code></pre>
         <h2>BAB G. Multithreading & Async</h2>
 
         <h3>G.1 Threading Basics</h3>
-        <p>Multithreading allows your app to perform multiple tasks at the same time by utilizing several CPU cores simultaneously.</p>
+        <p>Multithreading is the ability of the CPU to manage several "work threads" at once, utilizing multiple cores to process data in parallel.</p>
         <blockquote class="callout">Analogy: Threading is like a "Busy Kitchen." Instead of one chef doing everything, you have one chef dedicated to sauces, one for meat, and one for plating—results come out much faster.</blockquote>
+        
+        <ul>
+          <li><strong>Parallelism:</strong> Doing two things at the exact same physical moment on different cores.</li>
+          <li><strong>System.Threading:</strong> The historical namespace for managing raw threads.</li>
+          <li><strong>Race Conditions:</strong> A danger where two threads try to update the same piece of data at once, leading to corruption.</li>
+        </ul>
 
-        <h3>G.2 Asynchronous Programming</h3>
-        <p><code>async</code> and <code>await</code> allow your app to stay responsive while performing long-running tasks like network requests or database queries.</p>
-        <blockquote class="callout">Analogy: Async is like "Ordering Coffee." You don't stand at the counter staring at the machine until it's done. You take a pager (Task), go sit down, and the pager buzzes (Await) when the coffee is ready.</blockquote>
-        <pre><code>public async Task&lt;string&gt; FetchDataAsync() {
-  var data = await _httpClient.GetStringAsync("https://...");
-  return data;
+        <h3>G.2 Asynchronous Programming (TAP)</h3>
+        <p>The Task-based Asynchronous Pattern (TAP) uses <code>async</code> and <code>await</code> to keep your app "alive" and responsive during long operations like network downloads or database queries.</p>
+        <blockquote class="callout">Analogy: Async is like "Ordering Coffee." You don't stand at the counter staring at the machine until it's done (Blocking). You take a pager (Task), go sit down and continue reading (Non-blocking), and the pager buzzes (Await) when the coffee is ready.</blockquote>
+
+        <h4>Why Asynchrony Matters?</h4>
+        <p>In desktop and mobile apps, if you run a heavy task "synchronously" on the <strong>Main Thread</strong>, the entire UI freezes. Users can't click buttons or scroll. Async prevents this freeze.</p>
+
+        <pre><code>using System.Net.Http;
+using System.Threading.Tasks;
+
+public async Task&lt;string&gt; DownloadWebPageAsync(string url) {
+  HttpClient client = new HttpClient();
+  
+  // The 'await' keyword releases the thread to do other work 
+  // until the download is finished.
+  string content = await client.GetStringAsync(url);
+  
+  return content;
 }</code></pre>
+
+        <p><strong>Key Concept:</strong> <code>await</code> is NOT "Wait". It is an instruction to "Pause this method here, free up the thread to handle other UI events, and come back when this Task is done."</p>
       </section>
 
       <!-- ==================== BAB H ==================== -->
@@ -423,12 +768,36 @@ Car myCar = new Car();</code></pre>
         <h2>BAB H. Working with Databases</h2>
 
         <h3>H.1 Database Basics</h3>
-        <p>Enterprise applications live and die by their data. Understanding SQL Server and CRUD operations is vital for any C# professional.</p>
+        <p>Enterprise applications live and die by their data. Most C# apps use Relational Databases (RDBMS) like SQL Server, PostgreSQL, or SQLite to store structured information.</p>
         <blockquote class="callout">Analogy: A database is like an "organized warehouse." SQL is the language you use to tell the warehouse robot exactly which box to bring you.</blockquote>
+        
+        <h4>Core Concepts:</h4>
+        <ul>
+          <li><strong>Tables:</strong> Containers for data (e.g., "Users" table).</li>
+          <li><strong>CRUD:</strong> The four basic operations: <b>C</b>reate, <b>R</b>ead, <b>U</b>pdate, and <b>D</b>elete.</li>
+          <li><strong>Primary Key:</strong> A unique ID for every row (like a Social Security number).</li>
+          <li><strong>Relationships:</strong> Connecting data between tables (e.g., an Order "belongs to" a User).</li>
+        </ul>
 
         <h3>H.2 Connecting C# with Database</h3>
-        <p>Learn how to use ADO.NET or Entity Framework to bridge your C# code with persistent database storage.</p>
+        <p>To talk to a database, C# provides two main paths: the low-level mechanical way (ADO.NET) and the modern automatic way (Entity Framework).</p>
         <blockquote class="callout">Analogy: Database integration is like "Pipe Fitting." You're connecting the clean water (Your Data) from the source (Database) to the tap (Your UI) using reliable connectors.</blockquote>
+
+        <h4>ADO.NET vs. Entity Framework (EF)</h4>
+        <ul>
+          <li><strong>ADO.NET:</strong> Fast and lightweight, but requires writing manual SQL strings and handling connections manually.</li>
+          <li><strong>Entity Framework Core (ORM):</strong> An "Object-Relational Mapper." It lets you treat database tables like C# classes. You write C# code (LINQ), and EF Core generates the SQL for you.</li>
+        </ul>
+
+        <pre><code>// Example using Entity Framework Core
+public class AppDbContext : DbContext {
+  public DbSet&lt;Product&gt; Products { get; set; }
+}
+
+// Querying with EF Core (No SQL strings!)
+var expensiveProducts = context.Products
+                               .Where(p => p.Price > 100)
+                               .ToList();</code></pre>
       </section>
 
       <!-- ==================== BAB I ==================== -->
@@ -436,12 +805,24 @@ Car myCar = new Car();</code></pre>
         <h2>BAB I. Desktop Development (WPF)</h2>
 
         <h3>I.1 Introduction to WPF</h3>
-        <p>Windows Presentation Foundation (WPF) uses XAML to create rich, modern desktop applications with separation of concerns between UI and logic.</p>
+        <p>Windows Presentation Foundation (WPF) is the modern standard for building Windows desktop apps. It utilizes **XAML** (an XML-based language) for design and C# for logic.</p>
         <blockquote class="callout">Analogy: WPF is like building a "Stage Set." XAML is the scenery and lighting (UI), and the C# code-behind is the actor moving between the sets (Logic).</blockquote>
+        
+        <h4>The MVVM Pattern</h4>
+        <p>Professional WPF development almost always uses the <strong>Model-View-ViewModel (MVVM)</strong> pattern. This separates the UI (View) from the data (Model) through a middle-man (ViewModel), making the app much easier to test and maintain.</p>
 
         <h3>I.2 Building GUI Applications</h3>
-        <p>Mastering layouts, controls, and data binding allows you to create enterprise-grade desktop tools that people actually enjoy using.</p>
-        <blockquote class="callout">Analogy: Building a GUI is like "Cockpit Design." You need to place the buttons where the pilot (user) can reach them easily and make surely the indicators (data binding) update instantly.</blockquote>
+        <p>Mastering layouts, controls, and data binding allows you to create enterprise-grade desktop tools with dynamic, responsive interfaces.</p>
+        <blockquote class="callout">Analogy: Building a GUI is like "Cockpit Design." You need to place the buttons where the pilot (user) can reach them easily and ensure the indicators (Data Binding) update instantly as the plane's status changes.</blockquote>
+
+        <pre><code>&lt;!-- Simplified XAML Data Binding --&gt;
+&lt;TextBlock Text="{Binding UserName}" /&gt;
+&lt;Button Content="Submit" Command="{Binding SaveCommand}" /&gt;</code></pre>
+
+        <ul>
+          <li><strong>Data Binding:</strong> Automatically syncs the UI with your C# data variables.</li>
+          <li><strong>Layouts:</strong> Use <code>Grid</code> and <code>StackPanel</code> instead of fixed pixel coordinates to support resizing.</li>
+        </ul>
       </section>
 
       <!-- ==================== BAB J ==================== -->
@@ -449,12 +830,23 @@ Car myCar = new Car();</code></pre>
         <h2>BAB J. Game Development (Unity)</h2>
 
         <h3>J.1 Unity Basics</h3>
-        <p>Unity uses C# as its primary scripting language. Understanding the Unity lifecycle and GameObjects is the first step toward game dev mastery.</p>
-        <blockquote class="callout">Analogy: Unity is like a "Virtual Toybox." You have props (GameObjects) and properties (Components), and C# is the "Magic Spell" that brings them all to life.</blockquote>
+        <p>Unity is the world's most popular game engine, and it uses C# as its engine for behavior. Everything in Unity is a <strong>GameObject</strong> made up of various <strong>Components</strong>.</p>
+        <blockquote class="callout">Analogy: Unity is like a "Virtual Toybox." You have props (GameObjects) and properties (Components like 'RigidBody' or 'Mesh'), and C# is the "Magic Spell" that brings them all to life.</blockquote>
+        
+        <h4>The LifeCycle</h4>
+        <ul>
+          <li><strong>Start():</strong> Runs once when the game object is created.</li>
+          <li><strong>Update():</strong> Runs once per frame (60+ times per second). This is where movement and input logic live.</li>
+        </ul>
 
         <h3>J.2 C# in Unity</h3>
-        <p>Learn how to translate your C# knowledge into game logic—handling input, physics, and gameplay mechanics.</p>
-        <blockquote class="callout">Analogy: Scripting in games is like being a "Director." You write the script (Code), and when you press play, the actors follow your commands exactly—gravity works, bullets fly, and players win.</blockquote>
+        <p>C# scripts in Unity inherit from <code>MonoBehaviour</code>, allowing them to hook into the engine's physics and input systems.</p>
+        <blockquote class="callout">Analogy: Scripting in games is like being a "Director." You write the script (Code), and when you press play, the actors (GameObjects) follow your commands exactly—gravity works, bullets fly, and players win or lose.</blockquote>
+
+        <pre><code>void Update() {
+  float move = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+  transform.Translate(move, 0, 0); // Basic player movement
+}</code></pre>
       </section>
 
       <!-- ==================== BAB K ==================== -->
@@ -462,16 +854,29 @@ Car myCar = new Car();</code></pre>
         <h2>BAB K. Clean Code & Best Practices</h2>
 
         <h3>K.1 Clean Code Principles</h3>
-        <p>Readable code is a gift to your future self. Follow naming conventions and keep your methods small and focused.</p>
-        <blockquote class="callout">Analogy: Clean code is like a "Well-organized Library." Even if you haven't been there in years, you can find exactly what you need because the labels make sense and everything is in its place.</blockquote>
+        <p>Write code for humans first, and computers second. Clean code is about clarity, simplicity, and reducing the "cognitive load" for the next developer.</p>
+        <blockquote class="callout">Analogy: Clean code is like a "Well-organized Library." Even if you haven't been there in years, you can find exactly what you need because the labels make sense and everything is in its logical place.</blockquote>
+        
+        <ul>
+          <li><strong>Naming:</strong> Use <code>PascalCase</code> for classes/methods and <code>camelCase</code> for variables.</li>
+          <li><strong>KISS:</strong> "Keep It Simple, Stupid"—don't over-engineer simple features.</li>
+          <li><strong>DRY:</strong> "Don't Repeat Yourself"—extract repeating logic into methods.</li>
+        </ul>
 
         <h3>K.2 SOLID Principles</h3>
-        <p>SOLID is the gold standard for object-oriented design. Mastering these five principles ensures your software is easy to extend and hard to break.</p>
-        <blockquote class="callout">Analogy: SOLID principles are like "Modular Furniture." Each piece has one function, they fit together perfectly, and you can add a new shelf without rebuilding the entire desk.</blockquote>
+        <p>SOLID is a set of five design principles that make software designs more understandable, flexible, and maintainable.</p>
+        <blockquote class="callout">Analogy: SOLID principles are like "Modular Furniture." Each piece has one specific function, they fit together perfectly, and you can add a new shelf without rebuilding the entire desk.</blockquote>
+        <ul>
+          <li><strong>S</strong>ingle Responsibility: Each class should do only ONE thing.</li>
+          <li><strong>O</strong>pen/Closed: Open for extension, closed for modification.</li>
+          <li><strong>L</strong>iskov Substitution: Child classes should be replaceable for their parents.</li>
+          <li><strong>I</strong>nterface Segregation: Smaller, specific interfaces are better than one huge one.</li>
+          <li><strong>D</strong>ependency Inversion: Depend on abstractions, not concrete classes.</li>
+        </ul>
 
         <h3>K.3 Code Maintainability</h3>
-        <p>Refactoring isn't just "cleaning up"—it's an essential part of the engineering process that keeps your project from becoming technical debt.</p>
-        <blockquote class="callout">Analogy: Maintenance is like "Regular Dental Checks." A small cleaning today prevents an expensive and painful "root canal" (system failure) next year.</blockquote>
+        <p>Refactoring is the process of improving internal code structure without changing its external behavior. It's the primary tool for fighting **Technical Debt**.</p>
+        <blockquote class="callout">Analogy: Maintenance is like "Regular Dental Checks." A small cleaning today (Refactoring) prevents an expensive and painful "root canal" (major system failure) next year.</blockquote>
       </section>
 
       <!-- ==================== BAB L ==================== -->
@@ -479,16 +884,22 @@ Car myCar = new Car();</code></pre>
         <h2>BAB L. Testing & Professional Development</h2>
 
         <h3>L.1 Unit Testing</h3>
-        <p>Automated tests give you the confidence to refactor and release. If it isn't tested, it's probably broken.</p>
+        <p>Automated testing with frameworks like <strong>xUnit</strong> or <strong>NUnit</strong> ensures that when you add new features, you don't accidentally break old ones.</p>
         <blockquote class="callout">Analogy: A Unit Test is like a "Smoke Alarm" for a specific room. If you change a wire in the kitchen and start a fire, the alarm tells you immediately before the whole house (App) burns down.</blockquote>
 
+        <pre><code>[Fact]
+public void Add_ShouldReturnSum() {
+  var result = Math.Add(2, 2);
+  Assert.Equal(4, result); // The "Assert" step
+}</code></pre>
+
         <h3>L.2 Debugging & Optimization</h3>
-        <p>Go beyond simple fixes. Learn to use profilers to find performance bottlenecks and memory leaks in production code.</p>
-        <blockquote class="callout">Analogy: Optimization is like "Tuning a Racing Engine." You're not just making it run; you're adjusting every valve to squeeze out every drop of power and efficiency.</blockquote>
+        <p>Go beyond simple bug fixes. Professional developers use <strong>Profilers</strong> to find memory leaks and identify "Hot Paths" where the code is running slowly.</p>
+        <blockquote class="callout">Analogy: Optimization is like "Tuning a Racing Engine." You're not just making it run; you're adjusting every valve to squeeze out every drop of power and efficiency for production scale.</blockquote>
 
         <h3>L.3 Becoming a C# Developer</h3>
-        <p>Finally, build your portfolio with real-world projects, understand the career paths in the .NET ecosystem, and commit to continuous learning.</p>
-        <blockquote class="callout">Analogy: This is your "Black Belt Ceremony." You've mastered the kata; now it's time to step out into the real world and build systems that change lives.</blockquote>
+        <p>Learning the syntax is just the start. To become professional, you must build a portfolio, understand the **NuGet** ecosystem, and stay updated with the yearly .NET release cycle.</p>
+        <blockquote class="callout">Analogy: This is your "Black Belt Ceremony." You've mastered the kata (Syntax); now it's time to step out into the real world and build systems that change lives.</blockquote>
 
       <section class="node">
         <h1>🚀 Tips</h1>
