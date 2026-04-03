@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Complete C# Masterclass - Tiptap Style</title>
+  <title>Complete C# Masterclass | The Professional Guide to .NET Development</title>
+  <meta name="description" content="A comprehensive masterclass for C# development, covering everything from core fundamentals and OOP to advanced multithreading, database integration (EF Core, Dapper), and Game Development with Unity.">
+  <meta name="keywords" content="C#, .NET, Multithreading, Async, SQL, Entity Framework, Unity, WPF, Clean Code, SOLID">
   <style>
     :root {
       --page-bg: #f2efe8;
@@ -234,9 +236,22 @@
       <p class="subtitle">A comprehensive roadmap to mastering C# and the .NET ecosystem, from basic syntax to enterprise patterns, desktop GUI, and game development.</p>
 
       <div class="summary">
-        <strong>Quick Map Section:</strong>
-        <p>BAB A Introduction & Fundamentals, BAB B Control Flow, BAB C Methods & Functions, BAB D Data Structures, BAB E Object-Oriented Programming (OOP), BAB F Advanced C# Concepts, BAB G Multithreading & Async, BAB H Working with Databases, BAB I Desktop Development (WPF), BAB J Game Development (Unity), BAB K Clean Code & Best Practices, BAB L Testing & Professional Development.</p>
-        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+        <strong>Course Syllabus Map:</strong>
+        <ul>
+          <li><strong>BAB A:</strong> Introduction, Basics, Variables, Operators, Debugging.</li>
+          <li><strong>BAB B:</strong> If/Else, Switch, Boolean Logic, Loops (For, While, Foreach).</li>
+          <li><strong>BAB C:</strong> Methods, Overloading, Ref/Out, Scope & Variables.</li>
+          <li><strong>BAB D:</strong> Arrays, Lists, Dictionaries, LINQ Basics.</li>
+          <li><strong>BAB E:</strong> OOP: Encapsulation, Inheritance, Polymorphism, Interfaces.</li>
+          <li><strong>BAB F:</strong> Try-Catch, File I/O, Delegates/Events, Generics.</li>
+          <li><strong>BAB G:</strong> Multithreading, Tasks (Async/Await), Thread Safety (Lock).</li>
+          <li><strong>BAB H:</strong> Databases: SQL Basics, Entity Framework Core, Dapper & Micro-ORMs.</li>
+          <li><strong>BAB I:</strong> Desktop Apps: WPF, XAML, and the MVVM Pattern.</li>
+          <li><strong>BAB J:</strong> Game Dev: Unity Engine, MonoBehaviours, Physics/Input.</li>
+          <li><strong>BAB K:</strong> Clean Code, SOLID Principles, Technical Debt.</li>
+          <li><strong>BAB L:</strong> Unit Testing (xUnit), Profiling, and NuGet Ecosystem.</li>
+        </ul>
+        <p><em>Note: Sub-chapters use hierarchical numbering (e.g., G.1, H.2) for modular learning.</em></p>
       </div>
 
       <!-- ==================== BAB A ==================== -->
@@ -731,14 +746,63 @@ Display&lt;string&gt;("Hello");</code></pre>
         <h2>BAB G. Multithreading & Async</h2>
 
         <h3>G.1 Threading Basics</h3>
-        <p>Multithreading is the ability of the CPU to manage several "work threads" at once, utilizing multiple cores to process data in parallel.</p>
-        <blockquote class="callout">Analogy: Threading is like a "Busy Kitchen." Instead of one chef doing everything, you have one chef dedicated to sauces, one for meat, and one for plating—results come out much faster.</blockquote>
+        <p>Multithreading is the ability of the CPU to manage several "work threads" at once. Instead of your program running in a single straight line, it can "split" into multiple paths that run at the same time. This is essential for keeping your apps responsive and taking full advantage of modern multi-core processors.</p>
+        <blockquote class="callout">Analogy: Threading is like a "Busy Kitchen." If you only have one chef, they have to boil the pasta, then wait, then chop the onions, then wait. In a multithreaded kitchen, you have one chef for pasta and one for onions—both work at the same time, and dinner is ready in half the time.</blockquote>
         
         <ul>
-          <li><strong>Parallelism:</strong> Doing two things at the exact same physical moment on different cores.</li>
-          <li><strong>System.Threading:</strong> The historical namespace for managing raw threads.</li>
-          <li><strong>Race Conditions:</strong> A danger where two threads try to update the same piece of data at once, leading to corruption.</li>
+          <li><strong>Parallelism:</strong> Doing two things at the exact same physical moment on different CPU cores.</li>
+          <li><strong>System.Threading:</strong> The original .NET namespace used to create and control raw threads manually.</li>
+          <li><strong>Main Thread:</strong> The "Boss" thread that starts your app. In UI apps, if this thread gets stuck doing heavy work, the whole window freezes (Not Responding).</li>
+          <li><strong>Worker Threads:</strong> Extra "hands" you hire to do heavy lifting in the background without disturbing the boss.</li>
         </ul>
+
+        <h4>Working with Raw Threads</h4>
+        <p>Even though modern C# uses Tasks (see G.2), understanding raw threads helps you grasp how the OS actually handles concurrency. You create an instance of <code>Thread</code>, give it a method to run, and call <code>Start()</code>.</p>
+
+        <pre><code>using System;
+using System.Threading;
+
+class Program {
+    static void Main() {
+        // Create a new thread and tell it which method to run
+        Thread worker = new Thread(DoHeavyWork);
+        worker.Start(); // Starts the background work
+
+        // Meanwhile, the Main thread keeps going
+        for (int i = 0; i < 3; i++) {
+            Console.WriteLine("Main thread is working...");
+            Thread.Sleep(500); 
+        }
+
+        worker.Join(); // Wait here until the worker finishes
+        Console.WriteLine("All work complete!");
+    }
+
+    static void DoHeavyWork() {
+        Console.WriteLine("Worker: Starting 3s task...");
+        Thread.Sleep(3000); 
+        Console.WriteLine("Worker: Task finished!");
+    }
+}</code></pre>
+
+        <h4>The Danger: Race Conditions</h4>
+        <p>A <strong>Race Condition</strong> happens when two threads try to change the same variable at the exact same time. It's like two people trying to write on the same piece of paper at once—the result is corrupted data.</p>
+        
+        <blockquote class="callout">Analogy: Imagine a "Joint Bank Account." If two people withdraw $100 at the exact same millisecond, and the system isn't careful, it might process BOTH withdrawals before updating the balance, leaving you with less money than the bank thinks you have.</blockquote>
+
+        <p>To fix this, we use <strong>Locking</strong>. A <code>lock</code> ensures only one thread can touch a piece of code at a time.</p>
+
+        <pre><code>private static readonly object _locker = new object();
+private static int _balance = 1000;
+
+static void Withdraw(int amount) {
+    lock (_locker) { // Only one thread enters at a time
+        if (_balance >= amount) {
+            _balance -= amount;
+            Console.WriteLine($"Withdrawn: {amount}. New Balance: {_balance}");
+        }
+    }
+}</code></pre>
 
         <h3>G.2 Asynchronous Programming (TAP)</h3>
         <p>The Task-based Asynchronous Pattern (TAP) uses <code>async</code> and <code>await</code> to keep your app "alive" and responsive during long operations like network downloads or database queries.</p>
@@ -780,24 +844,76 @@ public async Task&lt;string&gt; DownloadWebPageAsync(string url) {
         </ul>
 
         <h3>H.2 Connecting C# with Database</h3>
-        <p>To talk to a database, C# provides two main paths: the low-level mechanical way (ADO.NET) and the modern automatic way (Entity Framework).</p>
-        <blockquote class="callout">Analogy: Database integration is like "Pipe Fitting." You're connecting the clean water (Your Data) from the source (Database) to the tap (Your UI) using reliable connectors.</blockquote>
+        <p>To talk to a database from C#, you generally have two choices: the low-level "mechanical" way or the high-level "automatic" way. Understanding both is key to building professional applications.</p>
+        <blockquote class="callout">Analogy: Database integration is like "Pipe Fitting." ADO.NET is like building the plumbing manually with individual pipes and wrenches—it takes more work, but you know exactly where every drop of water goes. Entity Framework is like hiring a professional plumbing service—they handle the complexity, and you just turn the tap.</blockquote>
 
-        <h4>ADO.NET vs. Entity Framework (EF)</h4>
+        <h4>1. ADO.NET: The Manual Transmission</h4>
+        <p>ADO.NET is the foundation. It is incredibly fast and lightweight because it has no "translation layer"—you write the SQL yourself. However, it requires a lot of "Boilerplate" code (repetitive setup for connections, commands, and readers).</p>
+        
+        <pre><code>using System.Data.SqlClient;
+
+string connString = "Server=myServer;Database=myDB;User Id=myUser;Password=myPassword;";
+using (SqlConnection conn = new SqlConnection(connString)) {
+    conn.Open();
+    string sql = "SELECT Name FROM Students WHERE GPA > 3.5";
+    SqlCommand cmd = new SqlCommand(sql, conn);
+    
+    using (SqlDataReader reader = cmd.ExecuteReader()) {
+        while (reader.Read()) {
+            Console.WriteLine(reader["Name"]);
+        }
+    }
+}</code></pre>
+
+        <h4>2. Entity Framework Core (EF Core): The Auto-Pilot</h4>
+        <p>EF Core is an <strong>ORM (Object-Relational Mapper)</strong>. It maps your C# classes directly to database tables. You don't write SQL strings; you write <strong>LINQ</strong>, and EF Core translates it into SQL for you automatically.</p>
+        
         <ul>
-          <li><strong>ADO.NET:</strong> Fast and lightweight, but requires writing manual SQL strings and handling connections manually.</li>
-          <li><strong>Entity Framework Core (ORM):</strong> An "Object-Relational Mapper." It lets you treat database tables like C# classes. You write C# code (LINQ), and EF Core generates the SQL for you.</li>
+          <li><strong>Productivity:</strong> You focus on C# logic instead of string-based SQL queries.</li>
+          <li><strong>Migrations:</strong> Automatically synchronizes your C# class changes to the actual database schema.</li>
+          <li><strong>Type Safety:</strong> Catch query errors at compile-time instead of waiting for a crash at runtime.</li>
         </ul>
 
-        <pre><code>// Example using Entity Framework Core
+        <pre><code>// 1. Define your data model
+public class Product {
+  public int Id { get; set; }
+  public string Name { get; set; }
+  public decimal Price { get; set; }
+}
+
+// 2. Setup the Database Context (The Bridge)
 public class AppDbContext : DbContext {
   public DbSet&lt;Product&gt; Products { get; set; }
 }
 
-// Querying with EF Core (No SQL strings!)
-var expensiveProducts = context.Products
-                               .Where(p => p.Price > 100)
-                               .ToList();</code></pre>
+// 3. Querying with LINQ (Calculated behind the scenes)
+using var db = new AppDbContext();
+var expensiveProducts = db.Products
+                          .Where(p => p.Price > 100)
+                          .OrderBy(p => p.Name)
+                          .ToList();</code></pre>
+
+        <p><strong>Pro Tip:</strong> Most modern enterprise apps use <strong>Entity Framework</strong> for standard work, and only drop down to <strong>ADO.NET</strong> (or Dapper) for high-performance "hot paths" where every millisecond counts.</p>
+
+        <h3>H.3 Popular .NET ORMs</h3>
+        <p>While Entity Framework Core is the official Microsoft choice, the .NET ecosystem has several other powerful ORMs that excel in different scenarios. The right choice depends on whether you value <strong>Developer Speed</strong> or <strong>System Performance</strong>.</p>
+        
+        <blockquote class="callout">Analogy: Choosing an ORM is like picking a vehicle. <strong>EF Core</strong> is a luxury SUV—it's comfortable and does almost everything for you. <strong>Dapper</strong> is a stripped-down Formula 1 car—it's blazing fast, but you have to know how to drive a manual.</blockquote>
+
+        <ul>
+          <li><strong>Dapper (The Micro-ORM):</strong> Known as the "King of Performance." Created by the team at Stack Overflow, it performs nearly as fast as raw ADO.NET. It doesn't handle migrations or complex mapping—you write the SQL, and Dapper simply "populates" your C# objects from the results.</li>
+          <li><strong>NHibernate:</strong> A mature port of Java's Hibernate. It is incredibly feature-rich and used heavily in legacy enterprise systems that require complex, custom database mapping.</li>
+          <li><strong>SqlSugar / RepoDb:</strong> Modern, high-performance alternatives that offer a balance between the simplicity of Dapper and the features of EF Core.</li>
+        </ul>
+
+        <pre><code>using Dapper;
+// Dapper is an "Extension Method" for IDbConnection
+// It turns raw SQL results into C# Objects in one line!
+
+string sql = "SELECT * FROM Users WHERE IsActive = @isActive";
+var users = connection.Query&lt;User&gt;(sql, new { isActive = true }).ToList();</code></pre>
+
+        <p><strong>Core Differences:</strong> Use <strong>heavy ORMs</strong> (EF/NHibernate) when you have complex data relationships, and use <strong>micro-ORMs</strong> (Dapper/RepoDb) when you need to process millions of records very, very quickly.</p>
       </section>
 
       <!-- ==================== BAB I ==================== -->
@@ -805,19 +921,34 @@ var expensiveProducts = context.Products
         <h2>BAB I. Desktop Development (WPF)</h2>
 
         <h3>I.1 Introduction to WPF</h3>
-        <p>Windows Presentation Foundation (WPF) is the modern standard for building Windows desktop apps. It utilizes **XAML** (an XML-based language) for design and C# for logic.</p>
+        <p>Windows Presentation Foundation (WPF) is the modern standard for building Windows desktop apps. It utilizes <strong>XAML</strong> (an XML-based language) for design and C# for logic.</p>
         <blockquote class="callout">Analogy: WPF is like building a "Stage Set." XAML is the scenery and lighting (UI), and the C# code-behind is the actor moving between the sets (Logic).</blockquote>
         
         <h4>The MVVM Pattern</h4>
         <p>Professional WPF development almost always uses the <strong>Model-View-ViewModel (MVVM)</strong> pattern. This separates the UI (View) from the data (Model) through a middle-man (ViewModel), making the app much easier to test and maintain.</p>
+        
+        <pre><code>// 1. ViewModel: Prepares data for the View
+public class MainViewModel : INotifyPropertyChanged {
+    private string _userName;
+    public string UserName {
+        get => _userName;
+        set {
+            _userName = value;
+            OnPropertyChanged(); // Tells the UI to update!
+        }
+    }
+}</code></pre>
 
         <h3>I.2 Building GUI Applications</h3>
         <p>Mastering layouts, controls, and data binding allows you to create enterprise-grade desktop tools with dynamic, responsive interfaces.</p>
         <blockquote class="callout">Analogy: Building a GUI is like "Cockpit Design." You need to place the buttons where the pilot (user) can reach them easily and ensure the indicators (Data Binding) update instantly as the plane's status changes.</blockquote>
 
-        <pre><code>&lt;!-- Simplified XAML Data Binding --&gt;
-&lt;TextBlock Text="{Binding UserName}" /&gt;
-&lt;Button Content="Submit" Command="{Binding SaveCommand}" /&gt;</code></pre>
+        <pre><code>&lt;!-- XAML: The UI Definition --&gt;
+&lt;StackPanel&gt;
+    &lt;TextBlock Text="Enter Name:" /&gt;
+    &lt;TextBox Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" /&gt;
+    &lt;Button Content="Save" Command="{Binding SaveCommand}" /&gt;
+&lt;/StackPanel&gt;</code></pre>
 
         <ul>
           <li><strong>Data Binding:</strong> Automatically syncs the UI with your C# data variables.</li>
@@ -835,43 +966,51 @@ var expensiveProducts = context.Products
         
         <h4>The LifeCycle</h4>
         <ul>
-          <li><strong>Start():</strong> Runs once when the game object is created.</li>
-          <li><strong>Update():</strong> Runs once per frame (60+ times per second). This is where movement and input logic live.</li>
+          <li><strong>Start():</strong> Runs once when the game object is created. Use it for initialization.</li>
+          <li><strong>Update():</strong> Runs once per frame (60+ times per second). Use it for continuous input or movement.</li>
         </ul>
+
+        <pre><code>// Unity uses C# Scripts to define behavior
+public class PlayerController : MonoBehaviour {
+    public float speed = 5.0f;
+
+    void Update() {
+        // Move the player based on WASD keys
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+        transform.Translate(x * speed * Time.deltaTime, 0, z * speed * Time.deltaTime);
+    }
+}</code></pre>
 
         <h3>J.2 C# in Unity</h3>
         <p>C# scripts in Unity inherit from <code>MonoBehaviour</code>, allowing them to hook into the engine's physics and input systems.</p>
         <blockquote class="callout">Analogy: Scripting in games is like being a "Director." You write the script (Code), and when you press play, the actors (GameObjects) follow your commands exactly—gravity works, bullets fly, and players win or lose.</blockquote>
-
-        <pre><code>void Update() {
-  float move = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-  transform.Translate(move, 0, 0); // Basic player movement
-}</code></pre>
       </section>
 
       <!-- ==================== BAB K ==================== -->
       <section class="node section">
-        <h2>BAB K. Clean Code & Best Practices</h2>
+        <h2>BAB K. Clean Code & Architecture</h2>
 
         <h3>K.1 Clean Code Principles</h3>
         <p>Write code for humans first, and computers second. Clean code is about clarity, simplicity, and reducing the "cognitive load" for the next developer.</p>
         <blockquote class="callout">Analogy: Clean code is like a "Well-organized Library." Even if you haven't been there in years, you can find exactly what you need because the labels make sense and everything is in its logical place.</blockquote>
         
-        <ul>
-          <li><strong>Naming:</strong> Use <code>PascalCase</code> for classes/methods and <code>camelCase</code> for variables.</li>
-          <li><strong>KISS:</strong> "Keep It Simple, Stupid"—don't over-engineer simple features.</li>
-          <li><strong>DRY:</strong> "Don't Repeat Yourself"—extract repeating logic into methods.</li>
-        </ul>
+        <pre><code>// ❌ Bad Code (Mysterious Names)
+void Proc(int d) { foreach(var x in _l) { if(x.Day == d) x.Send(); } }
+
+// ✅ Clean Code (Intent Revealed)
+void NotifyUpcomingEvents(int targetDay) {
+    var overdueEvents = _eventList.Where(e => e.ScheduledDay == targetDay);
+    foreach(var ev in overdueEvents) {
+        ev.SendNotification();
+    }
+}</code></pre>
 
         <h3>K.2 SOLID Principles</h3>
         <p>SOLID is a set of five design principles that make software designs more understandable, flexible, and maintainable.</p>
-        <blockquote class="callout">Analogy: SOLID principles are like "Modular Furniture." Each piece has one specific function, they fit together perfectly, and you can add a new shelf without rebuilding the entire desk.</blockquote>
         <ul>
-          <li><strong>S</strong>ingle Responsibility: Each class should do only ONE thing.</li>
-          <li><strong>O</strong>pen/Closed: Open for extension, closed for modification.</li>
-          <li><strong>L</strong>iskov Substitution: Child classes should be replaceable for their parents.</li>
-          <li><strong>I</strong>nterface Segregation: Smaller, specific interfaces are better than one huge one.</li>
-          <li><strong>D</strong>ependency Inversion: Depend on abstractions, not concrete classes.</li>
+          <li><strong>Single Responsibility:</strong> A class should have only one reason to change.</li>
+          <li><strong>Dependency Inversion:</strong> Your high-level logic should depend on Abstractions (Interfaces), not concrete implementations. This makes swapping a "Real Database" for "Test Data" incredibly easy.</li>
         </ul>
 
         <h3>K.3 Code Maintainability</h3>
@@ -887,22 +1026,29 @@ var expensiveProducts = context.Products
         <p>Automated testing with frameworks like <strong>xUnit</strong> or <strong>NUnit</strong> ensures that when you add new features, you don't accidentally break old ones.</p>
         <blockquote class="callout">Analogy: A Unit Test is like a "Smoke Alarm" for a specific room. If you change a wire in the kitchen and start a fire, the alarm tells you immediately before the whole house (App) burns down.</blockquote>
 
-        <pre><code>[Fact]
-public void Add_ShouldReturnSum() {
-  var result = Math.Add(2, 2);
-  Assert.Equal(4, result); // The "Assert" step
+        <pre><code>// Example Testing with xUnit
+public class CalculatorTests {
+    [Fact]
+    public void Add_ShouldReturnSum() {
+        // Arrange
+        var calc = new Calculator();
+        // Act
+        var result = calc.Add(2, 2);
+        // Assert
+        Assert.Equal(4, result);
+    }
 }</code></pre>
 
-        <h3>L.2 Debugging & Optimization</h3>
-        <p>Go beyond simple bug fixes. Professional developers use <strong>Profilers</strong> to find memory leaks and identify "Hot Paths" where the code is running slowly.</p>
-        <blockquote class="callout">Analogy: Optimization is like "Tuning a Racing Engine." You're not just making it run; you're adjusting every valve to squeeze out every drop of power and efficiency for production scale.</blockquote>
+        <h3>L.2 NuGet & Ecosystem</h3>
+        <p>Don't reinvent the wheel. <strong>NuGet</strong> is the standard package manager for .NET, allowing you to easily pull in libraries for JSON parsing (Newtonsoft.Json), logging (Serilog), or styling.</p>
+        <blockquote class="callout">Analogy: NuGet is the ".NET App Store." If you need a specialized tool, you don't build it from scratch—you download a trusted package and plug it into your project in seconds.</blockquote>
 
-        <h3>L.3 Becoming a C# Developer</h3>
-        <p>Learning the syntax is just the start. To become professional, you must build a portfolio, understand the **NuGet** ecosystem, and stay updated with the yearly .NET release cycle.</p>
+        <h3>L.3 Next Steps: Becoming a Master</h3>
+        <p>Learning the syntax is just the start. To become professional, you must build real projects, participate in code reviews, and understand that great software is grown, not just built.</p>
         <blockquote class="callout">Analogy: This is your "Black Belt Ceremony." You've mastered the kata (Syntax); now it's time to step out into the real world and build systems that change lives.</blockquote>
 
       <section class="node">
-        <h1>🚀 Tips</h1>
+        <h2>🚀 Professional Development Tips</h2>
         <ul>
           <li>Don’t trust your first thought</li>
           <li>Always ask: “Is this true?”</li>
