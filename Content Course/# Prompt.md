@@ -1,245 +1,213 @@
-# Learn English Grammar Online — Complete English Master Course
-
-## Table of Contents
-
----
-
-# BAB A — Introduction to English Learning
-
-## A.1 Course Overview
-- Learning roadmap  
-- How to study effectively  
-
-## A.2 English Skills Overview
-- Grammar  
-- Speaking  
-- Writing  
-- Listening  
-- Pronunciation  
-
-## A.3 Learning Strategy
-- Practice-based learning  
-- Consistency & repetition  
-
-👉 Course ini gabungkan grammar + speaking + writing dalam satu sistem :contentReference[oaicite:2]{index=2}  
+## 🎯 Software Engineer Interview Masterclass (5 Courses in 1)
+Short description: A comprehensive, interview-focused roadmap covering coding, system design, behavioral interviews, and real-world hiring strategies.
 
 ---
 
-# BAB B — English Grammar Fundamentals (CORE 🔥)
+# BAB A — Fundamentals (Interview Foundations)
 
-## B.1 Parts of Speech
-- Nouns  
-- Pronouns  
-- Verbs  
-- Adjectives  
-- Adverbs  
+## A.1 Understanding the Hiring Process
+- Resume screening vs technical interview vs HR round  
+- What companies actually evaluate (skills vs signals)  
+- Common interview formats (DSA, system design, behavioral)
 
-## B.2 Sentence Structure
-- Subject + Verb + Object  
-- Simple sentences  
+## A.2 Resume & Profile Optimization
+- Writing impact-driven bullet points  
+- Highlighting projects and measurable results  
+- Optimizing LinkedIn & portfolio presence  
 
-## B.3 Articles & Determiners
-- a, an, the  
-- this, that, these, those  
-
-## B.4 Prepositions & Conjunctions
-- in, on, at  
-- and, but, because  
-
-👉 Grammar adalah fondasi semua skill English :contentReference[oaicite:3]{index=3}  
+👉 This section builds awareness: interviews are not just about coding, but positioning yourself correctly.
 
 ---
 
-# BAB C — Verb Tenses (VERY IMPORTANT 🔥)
+# BAB B — Data Structures & Algorithms (Core Coding Skills)
 
-## C.1 Present Tense
-- Simple present  
-- Present continuous  
+## B.1 Core Data Structures
+- Arrays, Strings, Linked Lists  
+- Stacks, Queues  
+- HashMaps, Sets  
+- Trees, Graphs, Heaps  
 
-## C.2 Past Tense
-- Simple past  
-- Past continuous  
+## B.2 Algorithm Fundamentals
+- Sorting & Searching techniques  
+- Recursion & Backtracking  
+- Greedy Algorithms  
+- Divide & Conquer  
 
-## C.3 Future Tense
-- Will vs going to  
+## B.3 Problem Solving Patterns
+- Sliding Window  
+- Two Pointers  
+- Fast & Slow Pointer  
+- Merge Intervals  
+- Dynamic Programming basics  
 
-## C.4 Perfect Tenses
-- Present perfect  
-- Past perfect  
-- Future perfect  
-
-👉 Tenses = core dari komunikasi waktu dalam English  
-
----
-
-# BAB D — Advanced Grammar
-
-## D.1 Passive Voice
-- Active vs passive  
-
-## D.2 Modal Verbs
-- can, could, must, should  
-
-## D.3 Conditionals
-- If clauses (0–3)  
-
-## D.4 Complex Sentences
-- Relative clauses  
-- Noun clauses  
+👉 This section is the backbone of coding interviews.
 
 ---
 
-# BAB E — Pronunciation & Accent
+# BAB C — Advanced Problem Solving
 
-## E.1 Sounds & Phonetics
-- Vowels & consonants  
+## C.1 Dynamic Programming Deep Dive
+- Memoization vs Tabulation  
+- Classic problems (Knapsack, LIS, etc.)  
+- State transition thinking  
 
-## E.2 Accent Training
-- American vs British  
+## C.2 Graph Algorithms
+- BFS & DFS  
+- Shortest path (Dijkstra)  
+- Topological sort  
+- Cycle detection  
 
-## E.3 Speaking Clarity
-- Stress & intonation  
+## C.3 Complexity Analysis
+- Time & Space Complexity (Big-O)  
+- Trade-offs in solutions  
+- Writing optimal code under constraints  
 
-👉 Course include accent training untuk sounding natural :contentReference[oaicite:4]{index=4}  
-
----
-
-# BAB F — Speaking Skills (CORE 🔥)
-
-## F.1 Daily Conversations
-- Introducing yourself  
-- Small talk  
-
-## F.2 Real-Life Situations
-- Shopping  
-- Travel  
-- Work  
-
-## F.3 Fluency Development
-- Thinking in English  
-- Speaking without translating  
-
-👉 Ada 27+ topik speaking real-life :contentReference[oaicite:5]{index=5}  
+👉 Focus is on thinking, not memorizing.
 
 ---
 
-# BAB G — Writing Skills
+# BAB D — System Design (Scalable Architecture)
 
-## G.1 Sentence Writing
-- Clear & correct sentences  
+## D.1 System Design Basics
+- Scalability concepts  
+- Latency vs throughput  
+- Load balancing  
 
-## G.2 Paragraph Writing
-- Structure & flow  
+## D.2 Core Components
+- Databases (SQL vs NoSQL)  
+- Caching strategies (Redis)  
+- Message queues  
 
-## G.3 Punctuation
-- 14 punctuation marks  
+## D.3 Designing Real Systems
+- URL Shortener  
+- Chat System  
+- News Feed / Social Media  
+- Rate Limiter  
 
-## G.4 Professional Writing
-- Emails  
-- Formal writing  
-
-👉 Writing skill jadi bagian penting selain grammar :contentReference[oaicite:6]{index=6}  
-
----
-
-# BAB H — Listening & Comprehension
-
-## H.1 Listening Practice
-- Native speaker audio  
-
-## H.2 Understanding Context
-- Meaning from conversation  
-
-## H.3 Improving Comprehension
-- Repetition & exposure  
+👉 This is what differentiates mid-level vs senior engineers.
 
 ---
 
-# BAB I — Vocabulary Building
+# BAB E — Behavioral & Soft Skills
 
-## I.1 Daily Vocabulary
-- Common words & phrases  
+## E.1 Behavioral Interview Framework
+- STAR method (Situation, Task, Action, Result)  
+- Structuring answers clearly  
 
-## I.2 Topic-Based Vocabulary
-- Work  
-- Travel  
-- Social life  
+## E.2 Common Questions
+- Tell me about yourself  
+- Conflict resolution  
+- Leadership & ownership  
 
-## I.3 Expressions & Idioms
-- Natural English usage  
+## E.3 Communication Skills
+- Explaining technical ideas simply  
+- Thinking out loud during coding  
 
----
-
-# BAB J — Practice & Exercises
-
-## J.1 Quizzes & Tests
-- Grammar quizzes  
-
-## J.2 Speaking Practice
-- Role-play  
-
-## J.3 Writing Exercises
-- Sentence building  
-
-👉 Course include hundreds of quizzes & practice :contentReference[oaicite:7]{index=7}  
+👉 Many candidates fail here despite strong technical skills.
 
 ---
 
-# BAB K — Exam Preparation
+# BAB F — Practical Mock Interviews
 
-## K.1 TOEFL / IELTS Basics
-- Grammar for exams  
+## F.1 Live Coding Practice
+- Solving problems under time pressure  
+- Writing clean, bug-free code  
 
-## K.2 Test Strategies
-- Answer techniques  
+## F.2 Mock Interviews
+- Simulated real interview scenarios  
+- Feedback and improvement loops  
 
-## K.3 Practice Questions
-- Exam-style exercises  
+## F.3 Common Mistakes
+- Overcomplicating solutions  
+- Poor communication  
+- Lack of structure  
 
-👉 Bisa bantu improve score exam English :contentReference[oaicite:8]{index=8}  
-
----
-
-# BAB L — Real-World English Application
-
-## L.1 Business English
-- Meetings  
-- Communication  
-
-## L.2 Academic English
-- Essays  
-- Reports  
-
-## L.3 Daily Life Usage
-- Casual conversations  
+👉 Practice transforms knowledge into performance.
 
 ---
 
-# BAB M — AI & Modern Learning Tools
+# BAB G — Career Strategy & Job Hunting
 
-## M.1 AI English Coach
-- Practice anytime  
+## G.1 Job Search Strategy
+- Applying effectively  
+- Referrals vs cold applications  
 
-## M.2 Interactive Learning
-- Conversations with AI  
+## G.2 Salary Negotiation
+- Understanding market value  
+- Negotiation techniques  
 
-## M.3 Personalized Learning
-- Feedback system  
+## G.3 Offer Evaluation
+- Salary vs growth vs culture  
+- Long-term career planning  
 
-👉 Course sudah include AI-based practice :contentReference[oaicite:9]{index=9}  
+👉 This section ensures you convert interviews into offers.
 
 ---
 
-# BAB N — Mastery & Fluency
+# 💡 Key Insights
 
-## N.1 Speaking Like a Native
-- Natural expression  
+### 1. Big Picture
+This course teaches how to pass software engineering interviews end-to-end — from preparation to offer negotiation.
 
-## N.2 Confidence Building
-- Overcoming fear  
+### 2. Core Skills
+- Problem solving (DSA)  
+- System design thinking  
+- Communication & storytelling  
+- Interview strategy  
 
-## N.3 Long-Term Improvement
-- Daily habits  
+### 3. Unique Value
+Combines 5 critical interview domains into one structured roadmap instead of learning them separately.
+
+---
+
+# ⚠️ Real Talk
+
+- What this course is GOOD at
+  - Structured interview preparation  
+  - Covering both technical and non-technical aspects  
+  - Giving real-world interview strategies  
+
+- What it does NOT cover
+  - Deep production-level system implementation  
+  - Advanced niche topics (compiler, distributed internals)  
+  - Real company-specific question banks  
+
+- Who it is suitable for
+  - Beginner → Mid-level engineers  
+  - Job seekers preparing for interviews  
+  - Developers targeting FAANG-level companies  
+
+---
+
+# 🔥 Positioning
+
+| Skill Area            | Role                          |
+|----------------------|-------------------------------|
+| Data Structures      | Coding Interview Foundation   |
+| Algorithms           | Problem Solving Core          |
+| System Design        | Senior-Level Thinking         |
+| Behavioral Skills    | Communication & Culture Fit   |
+| Career Strategy      | Job Offer Conversion          |
+
+---
+
+# 🚀 Best Learning Strategy
+
+1. Start with BAB A to understand the interview landscape  
+2. Spend most time on BAB B & C (daily coding practice)  
+3. Parallel learn BAB D (system design) after basics  
+4. Practice behavioral answers from BAB E weekly  
+5. Simulate interviews using BAB F  
+6. Apply jobs while learning BAB G  
+
+👉 Key rule: Practice > Watching
+
+---
+
+# 🔥 Ultimate Insight
+
+```md
+Preparation → Structured Practice → Confident Execution → Job Offer
 
 👉 Apply knowledge ke project nyata :contentReference[oaicite:10]{index=10}  
 

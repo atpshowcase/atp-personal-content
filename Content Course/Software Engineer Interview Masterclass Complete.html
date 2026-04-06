@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Software Engineer Interview Masterclass Complete - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Software Engineering Career & Interview Strategy</p>
+      <h1>Software Engineer Interview Masterclass</h1>
+      <p class="subtitle">A comprehensive, interview-focused roadmap covering coding, system design, behavioral interviews, and real-world hiring strategies.</p>
+
+      <div class="summary">
+        <strong>Map Cepat Section:</strong>
+        <p>BAB A Fundamentals, BAB B Data Structures & Algorithms, BAB C Advanced Problem Solving, BAB D System Design, BAB E Behavioral & Soft Skills (E.1-E.5), BAB F Practical Mock Interviews, BAB G Career Strategy & Job Hunting.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Fundamentals (Interview Foundations)</h2>
+
+        <h3>A.1 Understanding the Hiring Process</h3>
+        <p>The interview journey is more than just solving a LeetCode problem. It’s a multi-stage process designed to filter thousands of candidates down to the few who "fit." You'll encounter Resume screening, Technical rounds, and HR behavioral evaluations.</p>
+        <blockquote class="callout">Analogy: The hiring process is like a dating app marathon. The resume is your profile pic, the technical round is the first date to see if you actually know what you're talking about, and the HR round is like meeting the parents to see if you have good manners and long-term potential.</blockquote>
+        <ul>
+          <li>Resume screening: The first hurdle where bots and recruiters scan for keywords.</li>
+          <li>Technical interviews: Deep dive into your coding and architecture skills.</li>
+          <li>HR/Culture round: Checking if you're a team player or a "brilliant jerk."</li>
+        </ul>
+
+        <h3>A.2 Resume & Profile Optimization</h3>
+        <p>Your resume needs to sell your impact, not just your duties. Use measurable results and high-impact action verbs. Your LinkedIn and portfolio should act as a 24/7 recruiter magnet.</p>
+        <blockquote class="callout">Analogy: Your resume is a "Movie Trailer." It shouldn't show every scene of your life; it should show the most explosive, interesting highlights so that the company (the audience) is dying to see the full movie (hire you).</blockquote>
+        <ul>
+          <li>Writing impact-driven bullet points: Focus on "Result over Duty."</li>
+          <li>Highlighting projects: Show the "Why" and "How," not just the "What."</li>
+          <li>Optimizing LinkedIn: Make your profile easy for recruiters to find.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Data Structures & Algorithms (Core Coding Skills)</h2>
+
+        <h3>B.1 Core Data Structures</h3>
+        <p>Mastering the basics is non-negotiable. You need to know when to use an Array vs a LinkedList, and why a HashMap is your best friend in O(1) time complexity.</p>
+        <blockquote class="callout">Analogy: Data structures are like a "Professional Toolbox." You wouldn't use a hammer to screw in a bolt. You need to know which tool (Hashmap, Stack, or Queue) is the fastest and most efficient for the specific job at hand.</blockquote>
+        <ul>
+          <li>Arrays & Strings: Sequential storage.</li>
+          <li>Stacks & Queues: FIFO vs LIFO ordering.</li>
+          <li>HashMaps & Sets: Instant lookup and uniqueness.</li>
+          <li>Trees & Graphs: Representing complex relationships.</li>
+        </ul>
+
+        <h3>B.2 Algorithm Fundamentals</h3>
+        <p>Algorithms are the "instructions" you give to the computer. Sorting, searching, and recursion are the building blocks for every complex solution you'll write.</p>
+        <blockquote class="callout">Analogy: Algorithms are like "Cooking Recipes." You have the ingredients (data), and the algorithm is the step-by-step guide on how to sauté, boil, and garnish them to create a perfect dish (the output).</blockquote>
+        <ul>
+          <li>Sorting & Searching: Organizing and finding data quickly.</li>
+          <li>Recursion & Backtracking: Solving problems by breaking them into smaller versions.</li>
+          <li>Greedy Algorithms: Making the best local choice at each step.</li>
+        </ul>
+
+        <h3>B.3 Problem Solving Patterns</h3>
+        <p>Instead of memorizing 1000 problems, learn the patterns. Sliding Windows, Two Pointers, and Merge Intervals cover a huge chunk of interview questions.</p>
+        <blockquote class="callout">Analogy: Problem-solving patterns are like "Cheat Codes" or "Shortcuts." Why crawl through the thick jungle when there's a paved road (the pattern) that leading exactly where you need to go?</blockquote>
+        <ul>
+          <li>Sliding Window: Handling sub-arrays and sequences.</li>
+          <li>Two Pointers: Efficiently searching in sorted data.</li>
+          <li>Dynamic Programming basics: Avoiding redundant work.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Advanced Problem Solving</h2>
+
+        <h3>C.1 Dynamic Programming Deep Dive</h3>
+        <p>DP is often the most feared topic. It's simply about breaking a problem into sub-problems and storing the results so you don't calculate them twice.</p>
+        <blockquote class="callout">Analogy: DP is like "Writing Things Down." If I ask you what 1+1+1+1 is, you count 4. If I add another "1", you don't start from zero; you just look at your previous answer (3+1) and say 4 + 1 = 5. That's memoization.</blockquote>
+        <ul>
+          <li>Memoization (Top-down) vs Tabulation (Bottom-up).</li>
+          <li>Classic problems: Knapsack, Longest Increasing Subsequence.</li>
+          <li>Identifying state transitions: The core of DP.</li>
+        </ul>
+
+        <h3>C.2 Graph Algorithms</h3>
+        <p>Graphs represent maps, social networks, and dependencies. BFS and DFS are your primary navigation tools, while Dijkstra helps you find the "cheapest" path.</p>
+        <blockquote class="callout">Analogy: Graph algorithms are like "Google Maps." Whether you're finding the shortest drive home (Shortest Path) or exploring every street in a neighborhood (BFS/DFS), graph theory is what's under the hood.</blockquote>
+        <ul>
+          <li>BFS: Level-order traversal (finding shortest path in unweighted graphs).</li>
+          <li>DFS: Deep exploration (visiting every corner).</li>
+          <li>Topological Sort: Handling task dependencies.</li>
+        </ul>
+
+        <h3>C.3 Complexity Analysis</h3>
+        <p>Big-O notation is how we talk about efficiency. It’s not just about getting the right answer; it’s about how many "steps" it takes as the input grows to millions.</p>
+        <blockquote class="callout">Analogy: Complexity analysis is like "Fuel Efficiency" for a car. Your code might get to the finish line, but we need to know if it uses a gallon of gas (O(1)) or a whole tanker truck (O(n^2)) to get there.</blockquote>
+        <pre><code>// O(n) example
+for(let i = 0; i < n; i++) {
+  console.log(i);
+}</code></pre>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. System Design (Scalable Architecture)</h2>
+
+        <h3>D.1 System Design Basics</h3>
+        <p>System design asks: "How do we build Twitter for 100 million users?" You need to understand Scaling, Load Balancers, and the trade-off between Latency and Throughput.</p>
+        <blockquote class="callout">Analogy: System design is like "Managing a Famous Restaurant." You need a Host (Load Balancer) to manage the hungry crowd so the Kitchen (Servers) doesn't get overwhelmed and crash.</blockquote>
+        <ul>
+          <li>Scalability: Vertical (bigger server) vs Horizontal (more servers).</li>
+          <li>Load Balancing: Distributing the work evenly.</li>
+          <li>High Availability: Making sure the system never goes down.</li>
+        </ul>
+
+        <h3>D.2 Core Components</h3>
+        <p>Every system uses familiar building blocks: Databases for storage, Caches for speed, and Message Queues for communication between services.</p>
+        <blockquote class="callout">Analogy: Core components are like a "Modern Warehouse." Databases are the heavy shelves, Caching is the "Fast-Track Counter" for popular items, and Message Queues are the conveyor belts moving items between rooms.</blockquote>
+        <ul>
+          <li>Databases: SQL for structured data, NoSQL for flexibility.</li>
+          <li>Caching: Using Redis to serve data in milliseconds.</li>
+          <li>Message Queues: Decoupling services so they don't wait on each other.</li>
+        </ul>
+
+        <h3>D.3 Designing Real Systems</h3>
+        <p>We'll walk through classic interview prompts like designing a URL Shortener, a Chat System, or a Social Media News Feed.</p>
+        <blockquote class="callout">Analogy: Designing real systems is like "Urban Planning." You have to decide where the roads (API), the water pipes (Data Flow), and power lines (Networking) go before the people (Users) arrive.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Behavioral & Soft Skills</h2>
+
+        <h3>E.1 Behavioral Interview Framework</h3>
+        <p>Most candidates fail because they ramble. Use the STAR method—Situation, Task, Action, Result—to tell concise, high-impact stories.</p>
+        <blockquote class="callout">Analogy: The STAR method is like "Telling a Great Campfire Story." You set the scene, describe the monster (the challenge), explain how you fought it, and most importantly, show the treasure you brought home (the result).</blockquote>
+
+        <h3>E.2 Common Questions</h3>
+        <p>Be prepared for the classics: "Tell me about yourself," "A time you had a conflict," and "Your biggest failure." Your answers should show growth and ownership.</p>
+        <blockquote class="callout">Analogy: These questions are like an "Interview Highlight Reel." You aren't just reciting facts; you're showing the interviewer that you're someone they can actually enjoy working with for 8 hours a day.</blockquote>
+
+        <h3>E.3 Communication Skills</h3>
+        <p>Interviewer's aren't just looking for the code; they're looking at how you think. Thinking out loud is a skill that must be practiced.</p>
+        <blockquote class="callout">Analogy: Communication is like being a "Live Sports Commentator" for your own brain. If the audience (interviewer) doesn't know what you're doing, they lose interest, even if the game (your code) is going well.</blockquote>
+
+        <h3>E.4 Example Questions from Recruiter (HR & Logistics)</h3>
+        <p>Recruiters look for high-level fit, tenure, and impact. Based on experience at TBIG and Aporisma, here are 10 key questions they often ask.</p>
+        <blockquote class="callout">Analogy: The Recruiter round is like an "Airport Security Check." They aren't checking if you're a pilot; they're checking if you have the right passport, no prohibited items (red flags), and if you're actually headed to the same destination as the company.</blockquote>
+        <ul>
+          <li><strong>Q: What is your current notice period at TBIG?</strong><br>A: My official notice period at TBIG is currently 1 month. However, I’ve always prioritized professional handovers. I have a very structured documentation habit for all the query optimizations and AI tools I've built. If this role is a critical hire for your team, I am more than happy to discuss a transition plan where I can front-load my current tasks and ensure my departure doesn't disrupt any ongoing sprints, potentially making for a very smooth and faster transition.</li>
+          <li><strong>Q: What are your salary expectations for this role?</strong><br>A: Based on my 5+ years of experience as a Full Stack Developer and my specialized skills in high-performance environments like TBIG and Bizintek, I am looking for a package between [IDR X] and [IDR Y]. This range reflects the tangible value I bring—not just in writing code, but in slashing processing times by 40% and building custom AI automation that saves the team dozens of hours. I'm definitely open to discussing the total compensation including benefits, as finding the right technical fit is my top priority.</li>
+          <li><strong>Q: Why are you looking for a new challenge instead of staying at TBIG?</strong><br>A: I’ve had a fantastic run at TBIG. I successfully solved the critical reporting timeouts and even built a custom AI integration that significantly boosted our team’s velocity. Now that those systems are stable and running efficiently, I’m hungry for a new environment where I can tackle even larger architectural challenges, perhaps migrating a complex monolith to microservices or leading the implementation of high-concurrency systems using Go and .NET Core at a scale that really tests my design skills.</li>
+          <li><strong>Q: Are you currently interviewing with other companies?</strong><br>A: Yes, I am currently in the final stages with a few other tech firms, as I am looking to make a move that aligns with my expertise in scalable microservices. However, I have followed your company's growth in the [Industry Name] sector with great interest. The specific challenges you are facing with [Mention a potential company problem] are exactly the kind of puzzles I enjoy solving, which is why your role is currently at the top of my list of priorities.</li>
+          <li><strong>Q: Are you open to On-Site work (WFO) or hybrid settings?</strong><br>A: I am very flexible with my working arrangements. During my time at Aporisma, I spent significant time onsite for the KANSAI Go-Live, managing everything from core development to production readiness on-the-ground. Whether the team follows a hybrid model or prefers working from the office five days a week, I am comfortable as long as we have the right communication channels to maintain our development velocity and stay aligned on our project milestones.</li>
+          <li><strong>Q: How do you handle work pressure during a 'Go-Live' phase?</strong><br>A: Pressure is something I’ve learned to manage through preparation. When I led the KANSAI deployment, the stakes were high and the timeline was tight. My strategy is to break down complex issues into manageable tasks, maintain clear communication with stakeholders, and stay focused on the most critical path to production readiness. I find that staying calm and sticking to a well-tested plan actually prevents the 'panic' that leads to production bugs during a roll-out.</li>
+          <li><strong>Q: Where do you see yourself in the next 3 to 5 years?</strong><br>A: My career goal is to transition into a Senior Software Architect or Lead Developer role. I’ve already started down this path by optimizing large-scale systems and building automation tools for my peers at TBIG. Over the next few years, I want to deepen my expertise in distributed systems and large-scale data engineering. I’m also very passionate about mentorship; I want to be the person who not only designs the system but also helps others grow their technical mastery within the team.</li>
+          <li><strong>Q: Do you have any pending offers at the moment?</strong><br>A: At this exact moment, I am in the final decision-making stages with two other companies, though I haven't signed anything yet. I’m being very selective because I want to ensure my next move is one where I can stay for the long term and have a measurable impact on the company’s technical infrastructure. Given what I’ve learned about your team today, I’m very excited about the possibility of joining you and contributing to your upcoming [Specific Project] roadmap.</li>
+          <li><strong>Q: What is your preferred tech stack for a new project?</strong><br>A: I’m a big fan of the "right tool for the job" philosophy. For high-concurrency, performance-critical microservices, I find Go to be incredibly efficient. For complex business logic and established enterprise ecosystems, .NET Core is my go-to. On the frontend, Next.js and React allow for the kind of responsive, high-traffic dashboards I refactored at Bizintek. Ultimately, I enjoy a stack that prioritizes clean architecture and allows for fast, stable deployments without the technical debt.</li>
+          <li><strong>Q: Why should we hire you over other candidates?</strong><br>A: What sets me apart is my ability to connect code to business outcomes. I don't just 'refactor' for the sake of it; I do it to slash query times from timeouts to 1 second, directly improving the user experience and internal operations. I bring a combination of 5+ years of full-stack depth, onsite leadership experience from my Aporisma days, and a modern approach to productivity using custom AI tools. I’m ready to hit the ground running and solve your most pressing performance bottlenecks starting from week one.</li>
+        </ul>
+
+        <h3>E.5 Example Questions from User / Peer / Manager</h3>
+        <p>Peers and Managers dive into the "How." They want to know if they can trust you with their production environment and if you'll make the team better.</p>
+        <blockquote class="callout">Analogy: The Peer interview is like "Being Invited to a Jam Session." They already know you can play the instrument (from your CV), but they want to see if you can stay in tune, handle a difficult solo (bug), and if you're fun to play with.</blockquote>
+        <ul>
+          <li><strong>Q: How exactly did you refactor the backend query logic at TBIG?</strong><br>A: The 1-second load time wasn't achieved with a simple index. Initial logs showed our reporting queries were massive and hitting legacy joins that caused frequent timeouts. I refactored the backend logic to handle data processing in smaller, more manageable batches, updated our SQL Server indexing strategy to match daily transaction patterns, and implemented a Redis caching layer for the most frequently accessed statistics. This multi-layered approach didn't just stop the timeouts; it made the whole reporting engine feel instantaneous for our end-users.</li>
+          <li><strong>Q: In your AI integration, how did you handle data privacy?</strong><br>A: Data privacy was the top priority. I engineered the custom AI integration using prompt engineering patterns that focused entirely on the logic structure and skeleton code generation, ensuring that no sensitive domain data or customer-identifiable information is ever sent to the LLM APIs. By decoupling the 'logic templates' from the 'actual data', we were able to boost our team's sprint efficiency by automating test cases while remaining 100% compliant with internal security and data protection standards.</li>
+          <li><strong>Q: What technical challenge did you face with the SAP Business One integration?</strong><br>A: The biggest challenge was the data synchronization gap between the real-time web platform and the ERP's asynchronous processing. I developed custom SAP Business One API wrappers to act as a buffer, ensuring all transactions were atomic and validated before being pushed to the ERP. This eliminated the frequent data mismatches we were seeing and allowed for a seamless, automated flow between the frontend and the legacy backend system, which was critical for the KANSAI 'Go-Live' success.</li>
+          <li><strong>Q: How do you handle high-traffic dashboard performance?</strong><br>A: At Bizintek, I noticed our real-time analytics dashboards were lagging because of inefficient data processing layers. I refactored these layers to use more efficient aggregation logic and optimized our database queries specifically for high-concurrency read operations. The result was a measurable 40% improvement in system response times, which meant the business could make faster decisions based on real-time data without the UI freezing or showing stale information during peak traffic periods.</li>
+          <li><strong>Q: Go or C# for a new microservice?</strong><br>A: It really depends on the specific use case, but I have a strong framework for deciding. If we’re building a high-concurrency service with extreme performance and low-latency requirements, Go is my preferred choice because of its lightweight goroutines and excellent networking stack. However, for a service that requires complex business logic, heavy domain-driven design, and tight integration with an existing enterprise ecosystem, .NET Core provides a more robust set of tools and libraries that often speed up the initial development cycle.</li>
+          <li><strong>Q: How do you ensure 'Clean Architecture' isn't just 'Over-Engineering'?</strong><br>A: Clean Architecture is a tool for maintenance, not a goal in itself. My approach is to ensure that the separation of concerns actually brings benefit—like isolating our domain logic from the specific quirks of a database or an external API like SAP. At TBIG, I applied these patterns to ensure that when we needed to change our caching strategy or update a query, we could do so in one place without breaking the entire system. It’s about building a codebase that is easy to reason about as the team grows.</li>
+          <li><strong>Q: What's your strategy for database indexing and query optimization?</strong><br>A: My strategy is 'Data-Driven Optimization'. I start by analyzing execution plans and identifying queries with high I/O or CPU costs. I look for opportunities to add composite indexes or covering indexes to reduce key lookups. Beyond just indexes, I also look at query refactoring—replacing cursors with set-based operations or breaking down massive temp-table operations. This is how I reduced response times at Bizintek; it’s about understanding exactly how the DB engine is 'thinking' before making a change.</li>
+          <li><strong>Q: Describe a complex 'Go-Live' situation.</strong><br>A: The KANSAI deployment was a high-stakes 'battlefield' environment. Being onsite as the core developer meant I had to handle everything from last-minute environment configuration bugs to real-time production-readiness checks. I focused on maintaining a clear deployment checklist, performing iterative smoke tests at each stage, and keeping a direct line of communication with the stakeholders. This hands-on management throughout the full project lifecycle was why we were able to achieve 100% production readiness on schedule without any major post-launch incidents.</li>
+          <li><strong>Q: How do you handle state management in large Next.js apps?</strong><br>A: I favor a 'Lean State' approach in Next.js. I lean heavily on React Server Components for initial data fetching to keep the client-side bundle small and fast. For shared client-side state, I use lightweight libraries like Zustand or the native React Context API if the state isn't too deeply nested. The key is to avoid 'over-storing' data on the client—if it can live on the server, it should. This ensures that the high-concurrency dashboards I build remain responsive even on lower-end devices.</li>
+          <li><strong>Q: How do you automate code reviews with AI?</strong><br>A: I’ve been exploring the use of custom LLM prompts to perform initial 'sanitization' and style checks on PRs. This doesn't replace the human reviewer, but it catches common bugs, missing unit tests, and style violations before a peer even looks at the code. At TBIG, the skeleton code generation tool I built ensured that every new module started with a consistent structure, which inherently made our code reviews faster because the reviewer could focus on the business logic rather than the boilerplate and 'plumbing' code.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Practical Mock Interviews</h2>
+
+        <h3>F.1 Live Coding Practice</h3>
+        <p>Practicing in a quiet room is easy. Practicing with a timer and an interviewer watching your every typo is hard. You need to simulate the pressure.</p>
+        <blockquote class="callout">Analogy: Live coding is like "MasterChef." You have 30 minutes to make a 5-star meal while famous chefs watch you chop onions. You need to stay calm and keep your "kitchen" (code) clean.</blockquote>
+
+        <h3>F.2 Mock Interviews</h3>
+        <p>Simulating the real thing with a friend or a mentor. Feedback is the only way to catch the "blind spots" in your communication and technical logic.</p>
+        <blockquote class="callout">Analogy: Mock interviews are like "Dress Rehearsals" for a play. You want to trip over your lines and forget your cues now, so that when the curtains open (the real interview), you're flawless.</blockquote>
+
+        <h3>F.3 Common Mistakes</h3>
+        <p>Overcomplicating the solution, jumping into code without clarifying requirements, or staying silent for 10 minutes while thinking.</p>
+        <blockquote class="callout">Analogy: Common mistakes are like "Talking too much on a First Date." Keep it relevant, keep it interactive, and don't make the situation more awkward than it needs to be.</blockquote>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Career Strategy & Job Hunting</h2>
+
+        <h3>G.1 Job Search Strategy</h3>
+        <p>Applying to 100 jobs on LinkedIn is a low-percentage game. Referrals and targeted outreach are how high-performers land the best roles.</p>
+        <blockquote class="callout">Analogy: Job searching is like "Finding a Hidden Gem Restaurant." You're way more likely to go there if a friend says "You have to try this place!" (a Referral) than if you just see a random ad on a bus.</blockquote>
+
+        <h3>G.2 Salary Negotiation</h3>
+        <p>The negotiation starts long before the offer. Know your market value and never accept the first number without a conversation.</p>
+        <blockquote class="callout">Analogy: Salary negotiation is like "Buying a Custom Car." You don't just pay the sticker price; you know what the car is worth, you've done your research, and you're ready to walk away if the deal isn't fair.</blockquote>
+
+        <h3>G.3 Offer Evaluation</h3>
+        <p>It's not just the base salary. Look at the equity, the growth potential, the team culture, and the work-life balance.</p>
+        <blockquote class="callout">Analogy: Evaluating an offer is like "Choosing a New House." It's not just about the price; it's about the neighborhood, the commute, and whether you can actually see yourself living there for the next 5 years.</blockquote>
+
+      <section class="node">
+        <h1>Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>
