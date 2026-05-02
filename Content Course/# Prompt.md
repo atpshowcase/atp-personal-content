@@ -1,170 +1,265 @@
-## 🎯 The Complete Prompt Engineering for AI Bootcamp (2026)
-Short description: A practical, project-based course teaching how to design, optimize, and deploy prompts for modern AI systems like GPT, Midjourney, and more.
+## 🎯 Master the Coding Interview: Big Tech (FAANG) Interviews
+Short description: A comprehensive coding interview course focused on mastering data structures, algorithms, and problem-solving frameworks to pass FAANG-level interviews.
 
 ---
 
-# BAB A — Fundamentals of Prompt Engineering
+# BAB A — Introduction & Interview Mindset
 
-## A.1 What is Prompt Engineering?
-- Definition and importance of prompting  
-- How AI models interpret inputs  
-- Why prompt quality affects output quality  
+## A.1 Course Overview
+- Understanding FAANG interview expectations  
+- Structure of coding interviews  
+- Importance of problem-solving frameworks  
 
-## A.2 Understanding AI Models
-- ChatGPT, GPT-5, Midjourney, Veo3 overview  
-- Strengths vs limitations of AI models  
-- Hallucinations and reliability issues  
+## A.2 Interview Mindset
+- Thinking like an interviewer  
+- Communicating clearly while coding  
+- Handling pressure and edge cases  
 
-## A.3 Prompting Basics
-- Clear instructions vs vague prompts  
-- Role prompting (assigning AI roles)  
-- Output formatting techniques  
+## A.3 Learning Strategy
+- Practice-driven approach  
+- Avoiding memorization traps  
+- Building consistency  
 
-👉 Prompt engineering is essentially learning how to “communicate with AI effectively.”
-
----
-
-# BAB B — Core Prompting Techniques
-
-## B.1 The Five Principles of Prompting
-- Clarity  
-- Context  
-- Constraints  
-- Iteration  
-- Evaluation  
-
-## B.2 Prompt Structures
-- Instruction-based prompts  
-- Few-shot prompting (examples)  
-- Step-by-step prompting  
-
-## B.3 Common Use Cases
-- Text generation (blogs, emails)  
-- Summarization  
-- Data extraction  
-- Translation  
-
-👉 These techniques are the foundation for consistent AI output. :contentReference[oaicite:0]{index=0}
+👉 The course emphasizes frameworks over memorizing solutions. :contentReference[oaicite:0]{index=0}
 
 ---
 
-# BAB C — Advanced Prompt Engineering
+# BAB B — Big-O & Complexity Analysis
 
-## C.1 Chain-of-Thought & Reasoning
-- Step-by-step reasoning prompts  
-- Improving complex problem solving  
+## B.1 Time Complexity
+- Big-O notation basics  
+- Polynomial vs exponential growth  
+- Trade-offs in performance  
 
-## C.2 Advanced Techniques
-- Self-consistency sampling  
-- ReAct (Reason + Act)  
-- Personas of thought  
+## B.2 Space Complexity
+- Memory optimization strategies  
+- Time vs space trade-offs  
 
-## C.3 Meta Prompting
-- Prompting prompts (prompt generators)  
-- Optimizing prompt quality automatically  
-- Handling token limits  
+## B.3 Practical Optimization
+- Writing efficient code under constraints  
+- Recognizing inefficient solutions  
 
-👉 Focus shifts from “writing prompts” → “designing systems of prompts.” :contentReference[oaicite:1]{index=1}
-
----
-
-# BAB D — Working with AI Tools & Ecosystem
-
-## D.1 AI Tools Overview
-- ChatGPT & GPT APIs  
-- Midjourney (image generation)  
-- GitHub Copilot  
-
-## D.2 Practical Tool Usage
-- Generating images (inpainting, outpainting)  
-- Using AI for coding assistance  
-- Building workflows with AI tools  
-
-## D.3 Limitations & Best Practices
-- Bias and ethical concerns  
-- Controlling outputs  
-- Reliability strategies  
-
-👉 You learn not just prompting, but tool orchestration.
+👉 Optimization is critical for passing interviews.
 
 ---
 
-# BAB E — AI Engineering & Coding (Optional Technical Track)
+# BAB C — Core Data Structures
 
-## E.1 Python for AI Workflows
-- Using APIs  
-- Automating prompts  
-- Handling responses programmatically  
+## C.1 Linear Structures
+- Arrays & Strings  
+- Hash Tables  
+- Stacks & Queues  
 
-## E.2 AI Engineering Tools
-- LangChain  
-- DSPy  
-- Prompt pipelines  
+## C.2 Linked Structures
+- Singly & Doubly Linked Lists  
+- Cycle detection (Floyd’s algorithm)  
 
-## E.3 Scaling AI Systems
-- Production considerations  
-- Reliability & monitoring  
-- Prompt optimization pipelines  
+## C.3 Trees & Graphs
+- Binary Trees & BST  
+- Heaps & Priority Queues  
+- Graph representations (Adjacency List/Matrix)  
 
-👉 This section transitions from user → AI engineer. :contentReference[oaicite:2]{index=2}
-
----
-
-# BAB F — Real-World Projects
-
-## F.1 Text-Based Projects
-- SEO blog generation  
-- Content automation  
-- Chatbot creation  
-
-## F.2 Image-Based Projects
-- AI-generated stock images  
-- Creative design workflows  
-
-## F.3 Business Use Cases
-- Productivity automation  
-- Data analysis workflows  
-- Marketing content generation  
-
-👉 Includes 20+ real-world projects for hands-on experience. :contentReference[oaicite:3]{index=3}
+👉 Data structures are the foundation of coding interviews. :contentReference[oaicite:1]{index=1}
 
 ---
 
-# BAB G — AI Agents & Advanced Systems
+# BAB D — Algorithm Fundamentals
 
-## G.1 Building AI Agents
-- Agent architectures  
-- Memory & task scheduling  
-- Autonomous workflows  
+## D.1 Searching & Sorting
+- Binary Search  
+- Sorting algorithms  
 
-## G.2 Retrieval & Knowledge Systems
-- Embeddings  
-- Retrieval-Augmented Generation (RAG)  
-- Context injection  
+## D.2 Recursion & Divide and Conquer
+- Breaking problems into subproblems  
+- Recursive thinking patterns  
 
-## G.3 Optimization Patterns
-- Evaluator–optimizer loops  
-- Feedback-driven improvement  
+## D.3 Traversal Techniques
+- Tree traversals  
+- Graph traversals (BFS, DFS)  
 
-👉 This is cutting-edge AI system design.
+👉 Algorithms turn data structures into solutions.
 
 ---
 
-# BAB H — Career & Industry Readiness
+# BAB E — Advanced Algorithms & Patterns
 
-## H.1 Becoming a Prompt Engineer
-- Required skills (technical + communication)  
-- Portfolio building  
+## E.1 Greedy Algorithms
+- Making optimal local decisions  
+- Common greedy problems  
 
-## H.2 AI Career Paths
-- Prompt Engineer  
-- AI Engineer  
-- AI Product Builder  
+## E.2 Dynamic Programming
+- Memoization vs tabulation  
+- Classic optimization problems  
 
-## H.3 Industry Trends
-- Rapid evolution of AI tools  
-- Future of prompting skills  
-- AI-driven workflows  
+## E.3 Backtracking
+- Exploring all possibilities  
+- Constraint-based problems  
+
+👉 These topics are frequently asked in FAANG interviews. :contentReference[oaicite:2]{index=2}
+
+---
+
+# BAB F — Real Interview Coding Problems
+
+## F.1 Array Problems
+- Two Sum  
+- Container With Most Water  
+- Trapping Rainwater  
+
+## F.2 String Problems
+- Longest Substring Without Repeating Characters  
+- Backspace string comparison  
+
+## F.3 Linked List Problems
+- Reverse Linked List  
+- Sublist reversal (M, N problem)  
+
+👉 Each problem is solved step-by-step: brute force → optimization → analysis. :contentReference[oaicite:3]{index=3}
+
+---
+
+# BAB G — Problem Solving Framework
+
+## G.1 Step-by-Step Approach
+- Understand the problem  
+- Define test cases  
+- Build brute-force solution  
+- Optimize  
+
+## G.2 Communication in Interviews
+- Explain your thought process  
+- Discuss trade-offs  
+- Justify decisions  
+
+## G.3 Pattern Recognition
+- Mapping problems to known patterns  
+- Building intuition over time  
+
+👉 This is the MOST important skill for interviews.
+
+---
+
+# BAB H — Advanced Topics & Algorithms
+
+## H.1 Graph Algorithms
+- Dijkstra’s Algorithm  
+- Bellman-Ford  
+- Topological Sort  
+
+## H.2 Specialized Algorithms
+- Quickselect  
+- Cycle detection  
+
+## H.3 Complex Data Structures
+- Tries  
+- Heaps  
+- Priority queues  
+
+👉 These topics appear in harder interview rounds. :contentReference[oaicite:4]{index=4}
+
+---
+
+# BAB I — Practical Coding & Interview Preparation
+
+## I.1 Coding Exercises
+- Hands-on coding practice  
+- LeetCode-style problems  
+
+## I.2 Mock Interview Preparation
+- Simulating real interview conditions  
+- Timing and pressure handling  
+
+## I.3 Continuous Practice System
+- Daily coding habits  
+- Tracking improvement  
+
+👉 Practice is the key differentiator.
+
+---
+
+# BAB J — Career & FAANG Preparation
+
+## J.1 Targeting Big Tech Companies
+- Google, Amazon, Meta, Apple, Microsoft, Netflix  
+- Understanding hiring expectations  
+
+## J.2 Building Interview Confidence
+- Repetition and exposure  
+- Learning from failures  
+
+## J.3 Becoming a Better Engineer
+- Strengthening fundamentals  
+- Thinking in scalable solutions  
+
+👉 The goal is not just passing interviews, but becoming a stronger engineer. :contentReference[oaicite:5]{index=5}
+
+---
+
+# 💡 Key Insights
+
+### 1. Big Picture
+This course teaches a complete system to solve ANY coding interview problem using patterns, data structures, and structured thinking.
+
+### 2. Core Skills
+- Data structures mastery  
+- Algorithmic thinking  
+- Problem-solving frameworks  
+- Communication during interviews  
+
+### 3. Unique Value
+Focuses on teaching **how to think**, not just what to solve — making it applicable to unseen questions.
+
+---
+
+# ⚠️ Real Talk
+
+- What this course is GOOD at
+  - Comprehensive DSA coverage  
+  - Real interview-style problems  
+  - Strong problem-solving framework  
+
+- What it does NOT cover
+  - System design (very limited)  
+  - Behavioral interviews  
+  - Real production-level engineering  
+
+- Who it is suitable for
+  - Beginners to intermediate developers  
+  - Self-taught programmers  
+  - Anyone targeting FAANG-level roles  
+
+---
+
+# 🔥 Positioning
+
+| Skill Area            | Role                          |
+|----------------------|-------------------------------|
+| Data Structures      | Interview Foundation          |
+| Algorithms           | Problem Solving Core          |
+| Coding Practice      | Execution Skill               |
+| Interview Framework  | Thinking System               |
+| Optimization         | Performance Advantage         |
+
+---
+
+# 🚀 Best Learning Strategy
+
+1. Start with BAB B–D (fundamentals)  
+2. Practice problems in BAB F daily  
+3. Focus on understanding patterns (BAB G)  
+4. Re-solve problems without looking  
+5. Simulate interviews weekly  
+6. Combine with LeetCode practice  
+
+👉 Key rule: Consistent practice beats passive learning
+
+---
+
+# 🔥 Ultimate Insight
+
+```md
+Patterns → Practice → Optimization → Confidence → FAANG Offer
+
 
 👉 The course aims to prepare you for real AI jobs.
 

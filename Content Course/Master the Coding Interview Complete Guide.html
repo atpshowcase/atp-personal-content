@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Master the Coding Interview - Big Tech (FAANG) Masterclass</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - Master the Coding Interview</p>
+      <h1>Master the Coding Interview: Big Tech (FAANG) Interviews</h1>
+      <p class="subtitle">A comprehensive coding interview course focused on mastering data structures, algorithms, and problem-solving frameworks to pass FAANG-level interviews.</p>
+
+      <div class="summary">
+        <strong>Map Cepat Section:</strong>
+        <p>BAB A Interview Mindset, BAB B Big-O Analysis, BAB C Core Data Structures, BAB D Algorithm Fundamentals, BAB E Advanced Algorithms, BAB F Real Coding Problems, BAB G Problem Solving Framework, BAB H Advanced Topics, BAB I Practical Preparation, BAB J FAANG Career Strategy.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on. We are keeping it casual but highly informative!</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction & Interview Mindset</h2>
+
+        <h3>A.1 Course Overview</h3>
+        <p>Welcome, bro! If you want to break into FAANG (Meta, Amazon, Apple, Netflix, Google) or any top-tier tech company, you have to understand their game. This isn't just about whether your code compiles. It's about how you think under pressure. We will break down exactly what interviewers expect, the standard structure of these interviews, and why problem-solving frameworks are your best friend here.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Auditioning for a Top Chef Restaurant.</strong> 
+          Imagine you are trying to get a job at a Michelin-star restaurant. They don't just ask, "Can you fry an egg?" They want to see how you organize your kitchen, how you react when the stove catches fire, and how you communicate with the head chef. 
+          <br><br>
+          A FAANG interview is the same. They want to see your "kitchen organization"—your thought process and frameworks—not just the final working code.
+        </blockquote>
+
+        <ul>
+          <li><strong>Understanding Expectations:</strong> FAANG doesn't care if you've memorized syntax; they care if you can untangle complex logic.</li>
+          <li><strong>Interview Structure:</strong> Usually, you get 45 minutes: 5 mins intro, 35 mins coding/thinking, 5 mins questions. Time is tight!</li>
+          <li><strong>Frameworks:</strong> You need a step-by-step mental framework so you don't freeze up when you see a problem you've never encountered before.</li>
+        </ul>
+
+        <h3>A.2 Interview Mindset</h3>
+        <p>You have to shift your perspective. Don't think of the interviewer as a scary examiner trying to fail you. Think of them as your future coworker. You are pair-programming with them! Communicate clearly while you code, and don't panic when they throw crazy edge cases at you. That's just them testing the suspension on your car.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The Copilot on a Road Trip.</strong> 
+          Your interviewer is like your copilot on a cross-country road trip. If you just drive in total silence and suddenly take a sharp left turn into the woods, your copilot is going to freak out. 
+          <br><br>
+          But if you say, "Hey, there's traffic ahead, I'm going to take this shortcut through the woods because it saves 20 minutes," the copilot trusts you. In an interview, <strong>Talk out loud!</strong> Let them know why you are doing what you are doing.
+        </blockquote>
+
+        <ul>
+          <li><strong>Think Like an Interviewer:</strong> They want to hire you! Help them help you by giving them good signals to write down.</li>
+          <li><strong>Communication:</strong> "Silent coding" is the fastest way to get rejected. Always narrate your thoughts.</li>
+          <li><strong>Edge Cases:</strong> Expect them. Embrace them. If your code breaks, smile, say "Ah, good catch," and fix it.</li>
+        </ul>
+
+        <h3>A.3 Learning Strategy</h3>
+        <p>You can't just binge-watch these videos like a Netflix series, bro. Coding interviews are a muscle. You have to put in the reps. Avoid the trap of memorizing solutions—if the interviewer changes one variable, a memorized solution will crash and burn. Build consistency by practicing every single day.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Memorizing the Maze vs. Learning to Use a Compass.</strong> 
+          Memorizing LeetCode solutions is like memorizing the left and right turns of a specific maze. It works great until someone moves one wall. 
+          <br><br>
+          Learning the <strong>Frameworks</strong> is like learning how to use a compass. It doesn't matter what maze they drop you in; you can always find your way out. The course emphasizes frameworks over memorizing solutions!
+        </blockquote>
+
+        <ul>
+          <li><strong>Practice-Driven:</strong> Hands on the keyboard. Watching someone else code gives you a false sense of security.</li>
+          <li><strong>Anti-Memorization:</strong> Focus on the "Why," not the "What." Why use a Hash Map here? Why not an Array?</li>
+          <li><strong>Consistency:</strong> Doing 1 problem a day for 30 days is 100x better than doing 30 problems in one weekend.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Big-O & Complexity Analysis</h2>
+
+        <h3>B.1 Time Complexity</h3>
+        <p>Big-O notation is how developers talk about code speed. It's not about seconds or milliseconds; it's about how the runtime grows as the data gets massive. You need to understand the difference between polynomial growth (like O(N^2), which is usually bad) and linear or logarithmic growth (O(N) or O(log N), which is great). This is how you prove your solution is actually good.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Searching for a Book in a Library.</strong> 
+          If you have to check every single book one by one, that's O(N). If the library doubles in size, it takes twice as long. 
+          <br><br>
+          If the books are sorted and you can check the middle, then cut the pile in half, that's O(log N). Even if the library has a million books, you can find yours in like 20 steps. <strong>Big-O is just measuring how smart your search strategy is!</strong>
+        </blockquote>
+
+        <ul>
+          <li><strong>Big-O Basics:</strong> Drop the constants. O(2N) is just O(N). We only care about the worst-case massive scale.</li>
+          <li><strong>Growth Rates:</strong> Know your hierarchy: O(1) > O(log N) > O(N) > O(N log N) > O(N^2) > O(2^N).</li>
+          <li><strong>Trade-offs:</strong> Sometimes making it faster means it uses more memory. You need to discuss this trade-off with your interviewer.</li>
+        </ul>
+
+        <h3>B.2 Space Complexity</h3>
+        <p>Speed isn't everything; memory matters too. Space complexity measures how much extra RAM your algorithm eats as the input grows. Creating a massive new array inside your loop? That's going to cost you space. You have to know how to optimize memory, especially if the interviewer says, "Can you do it in-place?"</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Packing for a Trip in a Tiny Car.</strong> 
+          Time complexity is how fast you drive to your destination. Space complexity is how much luggage you can fit in the trunk. 
+          <br><br>
+          If you bring a massive suitcase for every single shirt (bad space complexity), your tiny car (RAM) is going to overflow. Sometimes you have to fold things tighter or reuse the same bag to save space.
+        </blockquote>
+
+        <ul>
+          <li><strong>Memory Optimization:</strong> Modifying the input array directly (in-place) usually gives you O(1) space complexity.</li>
+          <li><strong>Time vs. Space:</strong> Often, you can buy speed by spending memory (like using a Hash Map). This is the classic developer bargain.</li>
+        </ul>
+
+        <h3>B.3 Practical Optimization</h3>
+        <p>In the real interview, you will usually start with a "Brute Force" solution. It's ugly, it's slow (probably O(N^2)), but it works. Your next job is to look at it, recognize the bottlenecks, and optimize it under constraints. Optimization is the key that unlocks the FAANG door.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Upgrading Your Delivery Bike to a Truck.</strong> 
+          Brute force is like delivering 100 pizzas by riding your bicycle back and forth 100 times. It works, but you're going to pass out. 
+          <br><br>
+          Optimization is looking at the problem, renting a delivery truck, and taking all 100 pizzas in a single trip. The interviewer wants to see if you can spot the bicycle and upgrade to the truck.
+        </blockquote>
+
+        <ul>
+          <li><strong>Constraints:</strong> Pay attention when they say "Data is sorted." That's a massive clue that you can optimize using Binary Search.</li>
+          <li><strong>Recognizing Inefficiency:</strong> If you see nested loops (a loop inside a loop), your Spidey-Sense should tingle. That's O(N^2). Can we fix it with a Hash Map?</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Core Data Structures</h2>
+
+        <h3>C.1 Linear Structures</h3>
+        <p>Arrays, Strings, Hash Tables, Stacks, and Queues. These are your bread and butter, bro. Arrays are simple but slow to insert in the middle. Hash Tables are pure magic for O(1) lookups. Stacks (Last In, First Out) and Queues (First In, First Out) help manage data flow. You need to know these like the back of your hand.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The Waitress and the Order Tickets.</strong> 
+          A <strong>Queue</strong> is like a line at the cashier—the first guy in line gets served first (FIFO). 
+          <br><br>
+          A <strong>Stack</strong> is like a waitress stacking dirty plates. The last plate she put on top is the first one she takes off to wash (LIFO). 
+          <br><br>
+          A <strong>Hash Table</strong> is like having the chef's direct phone number—you don't wait in line; you just get exactly what you want instantly!
+        </blockquote>
+
+        <ul>
+          <li><strong>Arrays & Strings:</strong> Often interchangeable in interview logic. Master string manipulation!</li>
+          <li><strong>Hash Tables:</strong> The ultimate cheat code for optimizing O(N^2) down to O(N).</li>
+          <li><strong>Stacks & Queues:</strong> Crucial for parsing problems, tracking history, or doing Breadth-First Searches.</li>
+        </ul>
+
+        <h3>C.2 Linked Structures</h3>
+        <p>Singly and Doubly Linked Lists. Unlike Arrays, these elements aren't sitting next to each other in memory; they just hold a "pointer" to the next guy. They are great for inserting data anywhere, but terrible if you need to find the 500th element quickly. You also need to know tricks like Floyd's Cycle Detection (the Tortoise and Hare).</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The Treasure Hunt with Clues.</strong> 
+          An Array is like a row of mailboxes—you can jump straight to box #5. 
+          <br><br>
+          A Linked List is like a <strong>Treasure Hunt</strong>. You open the first box, and inside is a note that says, "The next clue is under the big oak tree." You can't skip to the end; you have to follow the pointers one by one until you find the treasure (or hit `null`).
+        </blockquote>
+
+        <ul>
+          <li><strong>Singly vs. Doubly:</strong> Doubly has a "previous" pointer too, letting you walk backward.</li>
+          <li><strong>Cycle Detection:</strong> If the treasure hunt loops back to the beginning, you're stuck forever. Two pointers moving at different speeds (Tortoise and Hare) will eventually crash into each other if there's a loop!</li>
+        </ul>
+
+        <h3>C.3 Trees & Graphs</h3>
+        <p>Welcome to the big leagues. Binary Trees, Binary Search Trees (BST), Heaps, and Graphs. These structures represent relationships. Trees are just restricted Graphs. You'll need to know how to represent a Graph (Adjacency List is usually best) and how a Priority Queue (Heap) always keeps the biggest or smallest item at the top.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The Company Org Chart vs. The Social Network.</strong> 
+          A <strong>Tree</strong> is like a corporate Org Chart. The CEO is at the root, and it branches down to managers and employees. It only flows down. 
+          <br><br>
+          A <strong>Graph</strong> is like Facebook or Instagram. You follow a friend, they follow you, they follow a celebrity. Anyone can be connected to anyone in a massive web.
+        </blockquote>
+
+        <ul>
+          <li><strong>Binary Search Trees (BST):</strong> Left side is smaller, right side is bigger. Perfect for fast searching.</li>
+          <li><strong>Heaps:</strong> A VIP line where the most important person always skips to the front (O(1) access to max/min).</li>
+          <li><strong>Graphs:</strong> Master the Adjacency List—it’s just a Hash Map where keys are people and values are lists of their friends.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Algorithm Fundamentals</h2>
+
+        <h3>D.1 Searching & Sorting</h3>
+        <p>If you don't know Binary Search, you are going to have a bad time. Sorting is also fundamental. You don't usually have to write QuickSort from scratch in a 45-minute interview, but you DO need to know that sorting takes O(N log N) time, and you need to know when sorting the input first makes the rest of the problem ridiculously easy.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The Phonebook Tear.</strong> 
+          If you are looking for "Smith" in a massive phonebook, you don't flip page by page. 
+          <br><br>
+          You open it directly to the middle (Binary Search). You see "Miller." You know "Smith" is after "Miller," so you rip the phonebook in half, throw away the first half, and repeat. You find Smith in seconds! That's the power of searching sorted data.
+        </blockquote>
+
+        <ul>
+          <li><strong>Binary Search:</strong> Only works on sorted data. Reduces O(N) to O(log N).</li>
+          <li><strong>Sorting Trade-offs:</strong> Sorting costs O(N log N). If your brute force is O(N^2), sorting first is a massive win.</li>
+        </ul>
+
+        <h3>D.2 Recursion & Divide and Conquer</h3>
+        <p>Recursion is a function that calls itself until it hits a base case. It bends your brain at first, but it’s essential for Trees and Graphs. Divide and Conquer is taking a massive problem, splitting it into smaller identical problems, solving them, and stitching the answers back together.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The Boss Delegating Work.</strong> 
+          Imagine you have to count 10,000 coins. Instead of doing it yourself, you split it into 10 piles and give it to 10 friends (Divide). 
+          <br><br>
+          They give their piles to their friends (Recursion). Eventually, someone has 2 coins, counts them, and passes the number back up. You just add the final numbers together (Conquer). You did massive work with tiny, simple steps.
+        </blockquote>
+
+        <ul>
+          <li><strong>Base Case:</strong> The most important part of recursion. Without it, you get an Infinite Loop (Stack Overflow).</li>
+          <li><strong>Recursive Patterns:</strong> Practice tracing the call stack on paper so you can visualize how it unwinds.</li>
+        </ul>
+
+        <h3>D.3 Traversal Techniques</h3>
+        <p>How do we visit every node in a Tree or Graph? We use Breadth-First Search (BFS) or Depth-First Search (DFS). BFS uses a Queue and searches level by level (like dropping a stone in water). DFS uses a Stack (or Recursion) and dives as deep as possible before backing up.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Finding Your Lost Keys in a House.</strong> 
+          <strong>BFS:</strong> You search the entire living room first. Then the entire kitchen. Then you move upstairs to the bedrooms. You search broadly. 
+          <br><br>
+          <strong>DFS:</strong> You walk into the living room, see a closet, walk into the closet, see a box, open the box, check inside a shoe inside the box. You go as deep as possible down one path before checking anywhere else!
+        </blockquote>
+
+        <ul>
+          <li><strong>BFS (Breadth-First Search):</strong> Great for finding the "Shortest Path" on unweighted graphs.</li>
+          <li><strong>DFS (Depth-First Search):</strong> Easier to write cleanly with recursion. Great for exploring all possibilities.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Advanced Algorithms & Patterns</h2>
+
+        <h3>E.1 Greedy Algorithms</h3>
+        <p>Greedy algorithms make the best local choice right now, hoping that it leads to the best global outcome. It doesn't look at the big picture; it just takes the biggest piece of pie sitting directly in front of it. It doesn't work for everything, but when it does, it's blazing fast.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Giving Change at a Cash Register.</strong> 
+          If you owe someone $0.85, you don't calculate all possible coin combinations. You are greedy! 
+          <br><br>
+          You grab the biggest coin first (3 quarters = $0.75). Then the next biggest (1 dime = $0.10). Boom, $0.85. You made the optimal local choice at every step, and it magically gave you the perfect global answer.
+        </blockquote>
+
+        <ul>
+          <li><strong>Local Optima:</strong> Always picking the immediate best option.</li>
+          <li><strong>Common Problems:</strong> Interval scheduling, jump games, making change (with standard currency).</li>
+        </ul>
+
+        <h3>E.2 Dynamic Programming (DP)</h3>
+        <p>This is the boogeyman of interviews, but it's just recursion with a memory bank. If you calculate something once, you save it (Memoization) so you never have to calculate it again. Alternatively, you build the answer from the bottom up using an array (Tabulation).</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Remembering the Math Equation.</strong> 
+          If I ask you what 1 + 1 + 1 + 1 + 1 is, you count and say "5". 
+          <br><br>
+          If I then add "+ 1" to the end of it, you don't recalculate the whole thing from the start! You just remember the old answer (5) and add 1 to get 6. <strong>Dynamic Programming is just remembering past answers so you don't do stupid repetitive work.</strong>
+        </blockquote>
+
+        <ul>
+          <li><strong>Memoization (Top-Down):</strong> Recursion + a Hash Map to cache answers.</li>
+          <li><strong>Tabulation (Bottom-Up):</strong> Iteration + an Array. Usually faster because it avoids function call overhead.</li>
+        </ul>
+
+        <h3>E.3 Backtracking</h3>
+        <p>Backtracking is DFS on steroids. It explores all possible combinations, but the moment it realizes a path is invalid, it "backs up" (undoes the move) and tries a different path. It's how you solve Sudoku, generate permutations, or solve the N-Queens problem.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Exploring a Giant Corn Maze.</strong> 
+          You walk down a path in the maze. You hit a dead end. Do you teleport back to the start? No! 
+          <br><br>
+          You just walk backwards (Backtrack) to the last intersection you saw, and you try the other path. You keep doing this, systematically exploring and backing out of bad decisions, until you find the exit.
+        </blockquote>
+
+        <ul>
+          <li><strong>Constraint-Based:</strong> If a move violates the rules, prune that branch immediately to save time.</li>
+          <li><strong>State Reversal:</strong> Always remember to "undo" your choice (remove the item from your temporary list) before returning from the recursive call.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Real Interview Coding Problems</h2>
+
+        <h3>F.1 Array Problems</h3>
+        <p>Arrays are the most common interview topic. Problems like Two Sum, Container With Most Water, and Trapping Rainwater will test your ability to use the "Two Pointer" technique or Hash Maps to achieve O(N) linear time.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The Two Detectives.</strong> 
+          Imagine you have a lineup of suspects (an Array). A brute force search uses one detective to question every suspect against every other suspect. 
+          <br><br>
+          The <strong>Two Pointer</strong> technique uses two detectives. One starts at the beginning of the line, one at the end, and they walk toward each other. They solve the case in half the time by working from the edges in!
+        </blockquote>
+
+        <ul>
+          <li><strong>Two Sum:</strong> The classic. Use a Hash Map to store what you've seen to find the complement instantly.</li>
+          <li><strong>Trapping Rainwater:</strong> A hard problem made easy by pre-calculating the max heights on the left and right.</li>
+        </ul>
+
+        <h3>F.2 String Problems</h3>
+        <p>Strings are just Arrays of characters. You will heavily use the "Sliding Window" pattern here. For example, "Longest Substring Without Repeating Characters" requires you to expand a window until you hit a duplicate, then shrink it from the left.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: A Photographer's Camera Lens.</strong> 
+          A <strong>Sliding Window</strong> is like a camera lens panning across a group of people. 
+          <br><br>
+          If someone ugly steps into the frame (a duplicate character), you slide the left side of the lens forward to cut them out, while continuing to pan the right side forward. The goal is to capture the widest beautiful picture possible!
+        </blockquote>
+
+        <ul>
+          <li><strong>Sliding Window:</strong> Perfect for substring/subarray problems.</li>
+          <li><strong>Backspace String Compare:</strong> Easily solved by simulating the typing with a Stack.</li>
+        </ul>
+
+        <h3>F.3 Linked List Problems</h3>
+        <p>You have to be comfortable moving pointers around without losing track of your data. Reversing a Linked List is the rite of passage. If you drop a pointer, half your list floats off into the abyss forever.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Reversing the Train Cars.</strong> 
+          Imagine a train where each car hooks to the next one. To reverse the train, you can't just flip the locomotive. 
+          <br><br>
+          You have to walk between every single car, unhook the chain, and hook it backward to the car behind it. You need three hands (three pointers: prev, current, next) to hold the chains so nothing rolls away down the hill!
+        </blockquote>
+
+        <ul>
+          <li><strong>Reverse Linked List:</strong> Master the `prev`, `curr`, `nextTemp` pointer dance.</li>
+          <li><strong>Fast and Slow Pointers:</strong> Use them to find the middle of the list in one pass.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Problem Solving Framework</h2>
+
+        <h3>G.1 Step-by-Step Approach</h3>
+        <p>Never dive straight into writing code. That is a rookie mistake. Follow the framework: 1. Understand the problem. 2. Define test cases. 3. Propose a Brute-Force solution. 4. Optimize it. 5. Code it. 6. Test it. This proves you are a mature, systematic engineer.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Measuring Twice, Cutting Once.</strong> 
+          If you are building a custom dining table, you don't just grab a chainsaw and start cutting wood wildly (coding immediately). 
+          <br><br>
+          You draw a blueprint, you measure the wood twice, you confirm the dimensions with the client (the interviewer), and ONLY then do you make the cut. The actual cutting takes 5 minutes; the planning ensures it’s the right cut.
+        </blockquote>
+
+        <ul>
+          <li><strong>Clarifying Questions:</strong> Always ask about edge cases. Can inputs be negative? Is the array sorted?</li>
+          <li><strong>Brute Force First:</strong> It's better to have a slow working solution than a genius broken solution.</li>
+        </ul>
+
+        <h3>G.2 Communication in Interviews</h3>
+        <p>Your interviewer is grading your teamwork, not just your logic. Explain your thought process, discuss the Big-O trade-offs out loud, and justify why you chose a Hash Map instead of an Array. If you get stuck, talking out loud gives the interviewer a chance to give you a hint.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The Sports Commentator.</strong> 
+          You need to be the Play-by-Play commentator of your own brain. 
+          <br><br>
+          "I'm considering a nested loop here, but that would be O(N^2) which is too slow. Let me see if I can trade space for time using a Hash Map..." This shows the interviewer you are evaluating options, not just guessing blindly.
+        </blockquote>
+
+        <ul>
+          <li><strong>Think Out Loud:</strong> Silence is deadly. Keep a steady flow of communication.</li>
+          <li><strong>Take Feedback:</strong> If they drop a hint, TAKE IT. Don't be stubborn.</li>
+        </ul>
+
+        <h3>G.3 Pattern Recognition</h3>
+        <p>This is the MOST important skill. Once you do enough problems, you realize there aren't 10,000 unique questions; there are only about 15-20 core patterns (Sliding Window, Two Pointers, Top K Elements). Map the new problem to a known pattern, and the code writes itself.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The Master Mechanic.</strong> 
+          A master mechanic doesn't memorize every single model of car on earth. 
+          <br><br>
+          They just know the patterns. If the car won't start and the lights are dim, it's a battery pattern. If it overheats, it's a coolant pattern. Interview problems are the same—look for the symptoms, apply the known pattern.
+        </blockquote>
+
+        <ul>
+          <li><strong>Keywords:</strong> "Top K" -> Heap. "Continuous Subarray" -> Sliding Window. "Sorted Array" -> Binary Search.</li>
+          <li><strong>Intuition:</strong> Intuition is just crystallized experience. Build it through consistent pattern practice.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Advanced Topics & Algorithms</h2>
+
+        <h3>H.1 Graph Algorithms</h3>
+        <p>For higher-level FAANG roles, BFS/DFS isn't enough. You need Dijkstra’s Algorithm for finding the absolute shortest path on a weighted graph (like Google Maps), Bellman-Ford if you have negative weights, and Topological Sort for scheduling tasks with dependencies.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The Uber Driver Navigation.</strong> 
+          Standard BFS just counts the number of intersections to a destination. But an Uber driver knows some streets have heavy traffic (Weighted Edges). 
+          <br><br>
+          <strong>Dijkstra's Algorithm</strong> is the Uber GPS. It calculates the actual fastest route based on time (weights), always prioritizing the cheapest path forward using a Priority Queue.
+        </blockquote>
+
+        <ul>
+          <li><strong>Dijkstra’s:</strong> BFS with a Priority Queue instead of a normal Queue.</li>
+          <li><strong>Topological Sort:</strong> Perfect for resolving dependencies (e.g., "Take Course A before Course B").</li>
+        </ul>
+
+        <h3>H.2 Specialized Algorithms</h3>
+        <p>Sometimes they throw a curveball. Quickselect is a genius way to find the Kth largest element in O(N) time without sorting the whole array. Cycle detection (like Floyd's) is crucial not just for Linked Lists, but for finding deadlocks in operating systems.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The VIP Bouncer (Quickselect).</strong> 
+          If you want to find the 5th richest person in a room of 100 people, you don't need to organize all 100 people in perfect order (Sorting: O(N log N)). 
+          <br><br>
+          You just grab a random guy, put everyone richer on the left, poorer on the right. If the left side has 4 people, the random guy IS the 5th richest! You only sorted the part you cared about (Quickselect: O(N)).
+        </blockquote>
+
+        <ul>
+          <li><strong>Quickselect:</strong> Based on the QuickSort partitioning logic. Massively efficient.</li>
+        </ul>
+
+        <h3>H.3 Complex Data Structures</h3>
+        <p>Tries (Prefix Trees) are the magic behind autocomplete. If an interviewer asks you to build a search bar or a spell checker, you use a Trie. Advanced Heaps and Priority Queues are your go-to for merging K sorted lists or keeping track of streaming data.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The Autocomplete Dictionary (Trie).</strong> 
+          A Trie is like a physical dictionary with alphabet tabs. 
+          <br><br>
+          If you type "C-A-T", you go to the 'C' section, then branch to 'A', then branch to 'T'. You instantly bypass millions of words that start with 'Z' or 'B'. It's wildly fast for prefix searching!
+        </blockquote>
+
+        <ul>
+          <li><strong>Tries:</strong> Every node is a character. Path down the tree spells a word.</li>
+          <li><strong>Streaming Data:</strong> Tracking the median of a continuous stream of numbers? Use two Heaps (one Max-Heap, one Min-Heap).</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Practical Coding & Interview Preparation</h2>
+
+        <h3>I.1 Coding Exercises</h3>
+        <p>Theory means nothing if your hands can't type the code. You have to get into the trenches with LeetCode or HackerRank. Don't just copy-paste solutions; write them out, debug them, and understand why they failed the edge cases.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Shadowboxing vs. Sparring.</strong> 
+          Reading about algorithms is like <strong>Shadowboxing</strong> in front of a mirror. You look great and feel smart. 
+          <br><br>
+          Coding exercises are actual <strong>Sparring</strong>. You will get punched in the face by compiler errors and time limit exceededs. But sparring is the only way you get ready for the real fight.
+        </blockquote>
+
+        <ul>
+          <li><strong>Quality > Quantity:</strong> Deeply understanding 50 pattern-based questions is better than randomly solving 500.</li>
+          <li><strong>Blind Coding:</strong> Can you code BFS on a whiteboard without an IDE helping you with syntax? Practice it.</li>
+        </ul>
+
+        <h3>I.2 Mock Interview Preparation</h3>
+        <p>You MUST simulate the real environment. Get a friend or use a platform like Pramp. Coding alone in your bedroom is very different from coding while a Senior Engineer from Meta is staring at your screen via Zoom.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The Dress Rehearsal.</strong> 
+          Actors don't just read lines in their bedrooms; they do a full Dress Rehearsal with lights, costumes, and a live audience. 
+          <br><br>
+          A Mock Interview is your dress rehearsal. It exposes your nervous tics, tests how you handle pressure, and forces you to talk out loud. Do at least 5 mocks before the real thing.
+        </blockquote>
+
+        <ul>
+          <li><strong>Time Pressure:</strong> Set a 45-minute timer. When it goes off, pencils down. Train your pacing.</li>
+          <li><strong>Handling Freeze-ups:</strong> Learn how to calmly ask for a hint without looking defeated.</li>
+        </ul>
+
+        <h3>I.3 Continuous Practice System</h3>
+        <p>Build a habit. FAANG prep is a marathon, not an overnight cram session. Set up an Excel sheet, track the problems you failed, wait three days, and try them again. This spaced repetition permanently wires the patterns into your brain.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Going to the Tech Gym.</strong> 
+          You can't get six-pack abs by doing 1000 crunches the day before a beach party. 
+          <br><br>
+          You get them by going to the gym for 30 minutes every single day for months. Treat coding practice like the Tech Gym. Consistency is the ultimate superpower.
+        </blockquote>
+
+        <ul>
+          <li><strong>Spaced Repetition:</strong> Re-solving a problem from scratch is the best way to prove you learned the pattern, not the code.</li>
+          <li><strong>Track Improvement:</strong> Celebrate small wins. Be proud when an O(N^2) brute force naturally jumps to an O(N) Hash Map in your mind.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. Career & FAANG Preparation</h2>
+
+        <h3>J.1 Targeting Big Tech Companies</h3>
+        <p>Every FAANG has its own flavor. Google loves hard graph/math puzzles. Amazon obsesses over their Leadership Principles (Behavioral). Meta wants bug-free execution at lightning speed. Tailor your final weeks of prep to the specific company you are interviewing for.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Studying for Specific Professors.</strong> 
+          In university, different professors emphasize different things for the final exam, even for the same subject. 
+          <br><br>
+          Google is the professor who wants the theoretical math proof. Meta is the professor who wants the practical code written flawlessly on the board. Know your audience!
+        </blockquote>
+
+        <ul>
+          <li><strong>Company Tags:</strong> Use LeetCode premium to study the top 50 questions recently asked by your target company.</li>
+          <li><strong>Behavioral Matters:</strong> Don't ignore the "Tell me about a time..." questions. Amazon will reject a genius coder if they fail the Leadership Principles.</li>
+        </ul>
+
+        <h3>J.2 Building Interview Confidence</h3>
+        <p>Confidence comes from exposure. The first interview will be terrifying. By the fifth one, it's just another Tuesday. Don't put FAANG on a pedestal; they are just tech companies looking for problem solvers. Accept that failure is part of the numbers game.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Taking Shots in Basketball.</strong> 
+          Even Michael Jordan missed 50% of his shots. You only need one FAANG offer. 
+          <br><br>
+          If you fail at Netflix, it doesn't mean you are a bad engineer. It just means you missed one shot. Adjust your form, practice the pattern, and shoot again at Google. Repetition breeds confidence.
+        </blockquote>
+
+        <ul>
+          <li><strong>Embrace Rejection:</strong> Use every failed interview as a free diagnostic test to show you exactly what to study next.</li>
+          <li><strong>Imposter Syndrome:</strong> Everyone has it. The interviewer had it when they interviewed. Just breathe and focus on the problem.</li>
+        </ul>
+
+        <h3>J.3 Becoming a Better Engineer</h3>
+        <p>The ultimate secret? The goal isn't just passing the interview. The goal is becoming a genuinely stronger engineer. When you master Big-O, you write faster production code. When you master Trees, you design better databases. The interview prep is just a bootcamp for your real career.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The Karate Kid's "Wax On, Wax Off".</strong> 
+          You might think reversing a Linked List on a whiteboard is a stupid, pointless exercise (like waxing a car). 
+          <br><br>
+          But when you get into the real job, and you have to optimize a massive distributed cache, you'll realize you suddenly have the mental reflexes of a ninja. The prep makes you elite!
+        </blockquote>
+
+        <ul>
+          <li><strong>Real-World Application:</strong> Apply these patterns to your daily work. Think about the Time Complexity of your API endpoints.</li>
+          <li><strong>The Offer:</strong> Patterns → Practice → Optimization → Confidence → FAANG Offer. You got this, bro!</li>
+        </ul>
+      </section>
+
+      <section class="node">
+        <h1>Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought.</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions.</li>
+          <li>Focus on clarity, not being right.</li>
+          <li>Consistent practice beats passive learning!</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+      const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+      return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

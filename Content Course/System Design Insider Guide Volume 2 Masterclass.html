@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>System Design Insider Guide Volume 2 - Masterclass</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul,
+    ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+
+      .toolbar,
+      .actions,
+      .copy-btn,
+      .copy-actions-inline {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Study Notes - System Design Guide Vol 2</p>
+      <h1>System Design Interview Insider Guide Vol 2 Masterclass</h1>
+      <p class="subtitle">Leveling up your architectural game for Senior and Staff positions. Deep dive into distributed
+        systems, trade-offs, and real-world scale.</p>
+
+      <div class="summary">
+        <strong>Map Cepat Section:</strong>
+        <p>BAB A Advanced Foundations, BAB B Advanced Data Management, BAB C Real-World Problems, BAB D Distributed Deep
+          Dive, BAB E Reliability & Performance, BAB F Specialized Systems, BAB G Modern Patterns, BAB H Interview
+          Strategy.</p>
+        <p>Hierarchy: BAB (Chapter) -> Sub-chapter (A.1, A.2, etc.). Each section includes analogies for easier
+          digestion.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Advanced System Design Foundations</h2>
+
+        <h3>A.1 Revisiting Core Principles</h3>
+        <p>Before we go "God mode," let's make sure your foundations aren't shaky. Scalability isn't just about "adding
+          more servers." It's about how your architecture behaves as users grow from 1,000 to 1 billion. You need to
+          understand horizontal vs vertical scaling, but more importantly, when to stop pouring money into a single
+          giant box. Most people think more RAM = more speed, but in high-scale systems, the bottleneck is usually the
+          <strong>Networking</strong> and <strong>Disk I/O</strong>, not just the raw CPU power.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Crowded Warung (Noodle Stall).</strong>
+          Imagine your small noodle stall becomes viral.
+          <br><br>
+          <strong>Vertical Scale:</strong> You buy a bigger stove and a faster chef. It works for a bit, but there's a
+          limit to how fast one chef can move before they collapse. Plus, the kitchen space is limited. Once the kitchen
+          is full, buying a faster stove won't help because there's no space to stand. This is the <strong>Law of
+            Diminishing Returns</strong>.
+          <br><br>
+          <strong>Horizontal Scale:</strong> You open 10 more stalls across the city. If one stall runs out of gas, the
+          others keep serving. This is the goal: a system that's <strong>"Elastic"</strong> (can grow/shrink based on
+          demand) and <strong>"Resilient"</strong> (survives failures).
+        </blockquote>
+
+        <ul>
+          <li><strong>Availability:</strong> The percent of time your system stays alive. Five nines (99.999%) means you
+            only have ~5 minutes of downtime <em>per year</em>. Achieving this requires zero single points of failure.
+          </li>
+          <li><strong>Latency vs Throughput:</strong> Latency is the "response time" (from clicking to seeing results).
+            Throughput is the "bandwidth" (how many orders processed per second). Improving throughput by adding servers
+            doesn't always improve latency—in fact, too many servers can increase latency due to network overhead.</li>
+          <li><strong>Reliability:</strong> The ability of a system to perform its required functions under stated
+            conditions for a specified period. If the DB fails but the system automatically switches to a Read-Only
+            replica, you are reliable.</li>
+          <li><strong>SLA vs SLO vs SLI:</strong> SLI is what you measure (latency), SLO is the target (99.9% < 200ms),
+              and SLA is the legal contract (if we miss SLO, we pay the customer).</li>
+        </ul>
+
+        <h3>A.2 CAP Theorem & Trade-offs</h3>
+        <p>In a distributed world, you can't have it all. When the network split (Partition), you must choose between
+          <strong>Consistency</strong> (accurate data) or <strong>Availability</strong> (online status). However, CAP
+          only talks about what happens during a network failure. Modern architects focus on <strong>PACELC</strong>:
+          which adds "Latency vs Consistency" even when the network is <em>healthy</em>.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Ghosting Girlfriend vs. The Pathological Liar.</strong>
+          <br><br>
+          <strong>Consistency (CP):</strong> Like a girlfriend who only speaks if she's 100% sure of the truth. If she's
+          unsure (network split), she "ghosts" you (System goes offline). You get accuracy, but she's not always there.
+          Use this for <strong>Banking</strong> or <strong>Stock Trading</strong>.
+          <br><br>
+          <strong>Availability (AP):</strong> Like a girlfriend who is always there to answer your call, but sometimes
+          she gives you old/wrong information just to keep the conversation going. She’s "Available," but not always
+          "Consistent." Use this for <strong>Social Media Likes</strong> or <strong>Comments</strong>.
+        </blockquote>
+
+        <ul>
+          <li><strong>C (Consistency):</strong> Every read receives the most recent write or an error.</li>
+          <li><strong>A (Availability):</strong> Every request receives a non-error response, without the guarantee that
+            it contains the most recent write.</li>
+          <li><strong>P (Partition Tolerance):</strong> The system continues to operate despite an arbitrary number of
+            messages being dropped or delayed by the network between nodes.</li>
+          <li><strong>PACELC:</strong> If there is a <strong>P</strong>artition, choose between
+            <strong>A</strong>vailability and <strong>C</strong>onsistency; <strong>E</strong>lse (normal state), choose
+            between <strong>L</strong>atency and <strong>C</strong>onsistency. Even when everything is fine, keeping
+            data perfectly mirrored across the globe adds "Lag" (Latency).</li>
+        </ul>
+
+        <h3>A.3 Design Thinking Framework</h3>
+        <p>Senior engineers don't start with code. They start with constraints. You need to define the
+          <strong>Functional</strong> (what it does) and <strong>Non-functional</strong> (how well it does it)
+          requirements before drawing a single box. Estimating capacity early prevents you from building a "toy" system
+          for a "giant" problem. You must master the <strong>Back-of-the-envelope</strong> calculations.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: Planning a Music Festival.</strong>
+          You don't just "hire a band." You first ask: How many people? (Scale). How many toilets do we need?
+          (Capacity). What happens if it rains? (Fault Tolerance). If you don't calculate the number of people first,
+          your festival will be a disaster, no matter how good the music is. Designing a system without numbers is just
+          "guessing with circles and arrows."
+        </blockquote>
+
+        <p><strong>Latency Numbers Every Architect Should Know:</strong></p>
+        <ul>
+          <li>L1 Cache reference: 0.5 ns</li>
+          <li>Main memory (RAM) reference: 100 ns</li>
+          <li>Compress 1K bytes with Zippy: 3,000 ns</li>
+          <li>Read 1 MB sequentially from memory: 250,000 ns (0.25 ms)</li>
+          <li>Read 1 MB sequentially from SSD: 1,000,000 ns (1 ms)</li>
+          <li>Send packet CA to Netherlands and back: 150,000,000 ns (150 ms)</li>
+        </ul>
+
+        <p><strong>Capacity Calculation Checklist:</strong></p>
+        <ol>
+          <li><strong>Traffic:</strong> DAU x Average Requests/Day / 86400 = TPS (Transactions Per Second).</li>
+          <li><strong>Storage:</strong> Average Data Size x Total Requests over 5 years.</li>
+          <li><strong>Bandwidth:</strong> TPS x Average Response Size.</li>
+          <li><strong>Memory (Cache):</strong> The 80/20 rule (20% of data generated 80% of traffic). Aim to cache that
+            20% in RAM.</li>
+        </ol>
+
+        <pre><code>// Mental Framework Summary
+1. Clarify: What is the "one thing" this system must do perfectly?
+2. Constraints: High Availability or Strong Consistency?
+3. Math: Calculate the RPS and Storage.
+4. Skeleton: LB -> Web Tier -> Logic Tier -> Data Tier.
+5. Deep Dive: Solve for the 1% (Celebrities, Hot keys, etc.).</code></pre>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Advanced Data Management</h2>
+
+        <h3>B.1 Data Storage Strategies</h3>
+        <p>The "SQL vs NoSQL" debate is old news. The real question is: How do we partition (shard) the data so our
+          database doesn't explode? We need to manage distributed databases where data lives across the globe, not just
+          in one hard drive. Sharding is the process of breaking up your big table into smaller pieces called
+          <strong>Shards</strong>.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Massive Library.</strong>
+          If you have 100 million books, you can't put them in one room. You have to "Shard" them.
+          <br><br>
+          You put books from Author A-M in Building 1, and N-Z in Building 2. Now you have two libraries working in
+          parallel. But be careful—if you need to find a book by "Genre" instead of "Author," you have to visit every
+          building. That's the challenge of sharding.
+        </blockquote>
+
+        <ul>
+          <li><strong>Key-based (Hash) Sharding:</strong> Use a hash function on the ID (e.g., <code>user_id % 4</code>)
+            to decide which shard the data goes. It distributes data evenly but makes adding new shards (resharding)
+            very difficult.</li>
+          <li><strong>Range-based Sharding:</strong> Store data based on a range (e.g., users from Indonesia in Shard 1,
+            USA in Shard 2). Great for range queries but can lead to "Hot Spots" if one region is much more active.</li>
+          <li><strong>Directory-based Sharding:</strong> A separate lookup table tracks where every record lives. Highly
+            flexible but the directory itself becomes a single point of failure and a bottleneck.</li>
+          <li><strong>Consistent Hashing:</strong> The "Holy Grail" of sharding. It minimizes data movement when nodes
+            are added or removed, which is why it's used in systems like Cassandra and DynamoDB.</li>
+        </ul>
+
+        <h3>B.2 Data Consistency Models</h3>
+        <p>Updating data in 10 servers at once is impossible to do instantly. Do you need <strong>Strong
+            Consistency</strong> (hard/slow) or <strong>Eventual Consistency</strong> (fast but messy for a moment)?
+          Most "Modern" apps use Eventual Consistency because users care more about speed than a "Like count" being off
+          by 1 for 2 seconds. However, there are "middle ground" models you must know.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: Gossip at the Tongkrongan.</strong>
+          When a friend has a secret, he tells one person. After 5 minutes, 3 people know. After 1 hour, everyone knows.
+          That’s <strong>Eventual Consistency</strong>. For a few minutes, the "state" of the secret is inconsistent,
+          but eventually, everyone is on the same page.
+        </blockquote>
+
+        <ul>
+          <li><strong>Read Your Own Writes:</strong> Ensures that if you post a comment, YOU see it immediately, even if
+            your friends don't see it for another 2 seconds. Essential for user experience.</li>
+          <li><strong>Monotonic Reads:</strong> Ensures that if you see a sequence of updates, you don't "go back in
+            time." (e.g., if you see "Post has 10 likes," you won't see "Post has 5 likes" if you refresh).</li>
+          <li><strong>Consistent Prefix Reads:</strong> Ensures that if data is written in a sequence (A then B), any
+            reader will see A before B. Critical for chat conversations.</li>
+        </ul>
+
+        <h3>B.3 Data Replication</h3>
+        <p>Replication is how we survive disaster. If Server A dies, Server B must have a copy. We use Leader-Follower
+          (easy but risky) or Multi-leader (complex but high availability) setups to keep the data safe and accessible.
+          But how do we decide if a write is "successful"?</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: Backing up your phone.</strong>
+          Replication is like having your photos on your phone, your laptop, and the cloud. If your phone falls into a
+          river, your data survives. But if you delete a photo on your phone, you have to make sure it's deleted
+          everywhere, or you'll have "ghost data." No replication is perfect without a "Source of Truth."
+        </blockquote>
+
+        <ul>
+          <li><strong>Quorum (W + R > N):</strong> You have N replicas. To write, you must succeed on W nodes. To read,
+            you must check R nodes. If W + R > N, you are guaranteed to read the latest version. Usually, N=3, W=2, R=2.
+          </li>
+          <li><strong>Synchronous vs Asynchronous:</strong> Sync replication ensures zero data loss but high latency.
+            Async is fast but you might lose data if the leader crashes before the followers get the update.</li>
+          <li><strong>Conflict Resolution:</strong> In multi-leader systems, two people might edit the same thing. We
+            use <strong>LWW (Last Write Wins)</strong> based on timestamps, or <strong>Vector Clocks</strong> to track
+            the "causal" history of changes.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Real-World System Design Problems</h2>
+
+        <h3>C.1 Designing a Search Autocomplete System</h3>
+        <p>Autocomplete must be "instant" (under 100ms). You can't query a database every time someone types a letter.
+          We use a <strong>Trie</strong> (Prefix Tree) data structure stored in memory, and we distribute it to handle
+          millions of queries per second. But how do we keep the Trie "fresh" with the latest popular searches?</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Smart Mart Cashier.</strong>
+          When you type "A...", the system already knows the most popular words starting with "A" (Apple, Ant, Amazon).
+          It's like a waiter who already has a tray of the "Top 3 Drinks" ready to go before you even finish your
+          sentence.
+        </blockquote>
+
+        <ul>
+          <li><strong>The Data Pipeline:</strong> 1. Raw Logs (User searches) -> 2. Aggregator (Counts frequency) -> 3.
+            Analytical DB -> 4. Trie Cache. We don't update the Trie in real-time; we rebuild it every few hours or days
+            based on aggregated logs.</li>
+          <li><strong>Optimization:</strong> Store the "Top K" suggestions in each node of the Trie. This way, we don't
+            have to traverse the whole subtree when someone starts typing.</li>
+          <li><strong>Storage:</strong> Since a Trie for the entire internet is huge, we shard it by the first few
+            letters (Shard A, Shard B, etc.) and keep it in a distributed memory store like Redis.</li>
+        </ul>
+
+        <h3>C.2 Designing a Notification System</h3>
+        <p>Notifications are "Fire and Forget." You should send them through a <strong>Message Queue</strong>
+          (Kafka/RabbitMQ) so that if the SMS provider is slow, it doesn't freeze your entire app. You need to handle
+          push (FCM/APNs), email (SendGrid), and SMS (Twilio) at scale.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Wedding Invitation Team.</strong>
+          You don't personally visit 1,000 houses to deliver invitations. You hire a team (Workers) and give them a
+          stack of names (The Queue). They deliver them whenever they can. If one delivery guy gets stuck in traffic,
+          the others keep going. Your job is just to hand over the list.
+        </blockquote>
+
+        <ul>
+          <li><strong>Deduplication:</strong> Use <code>dedupe_id</code> to ensure that if a worker fails and retries,
+            the user doesn't get the same annoying notification twice.</li>
+          <li><strong>Retry with Exponential Backoff:</strong> If a provider (like Apple) is down, don't keep hammering
+            them. Wait 1s, then 2s, then 4s... give them room to recover.</li>
+          <li><strong>Rate Limiting:</strong> Protect the user. If your system has a bug, don't send 1,000 notifications
+            in 10 minutes. Set a per-user bucket limit for outgoing messages.</li>
+        </ul>
+
+        <h3>C.3 Designing a News Feed System</h3>
+        <p>The "Fan-out" problem: When a celebrity with 10M followers posts, you can't update 10M timelines instantly.
+          You need a mix of <strong>Push</strong> (for small users) and <strong>Pull</strong> (for celebrities) models
+          to balance the load. This is called a <strong>Hybrid Model</strong>.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Morning Newspaper vs. The Notice Board.</strong>
+          For normal people, the newspaper is delivered to your door (Push). But if the President has an announcement,
+          he puts it on a massive <strong>Notice Board</strong> (Pull) and everyone goes to read it. If he tried to
+          deliver a newspaper to 200 million people at once, the printing press would explode!
+        </blockquote>
+
+        <ul>
+          <li><strong>Push (Fan-out on Write):</strong> Great for fast reads. When a user posts, we push it to all
+            followers' pre-computed feed caches. (Fast to see feed, slow to post).</li>
+          <li><strong>Pull (Fan-out on Read):</strong> Great for celebrities. When a follower opens their app, they
+            "pull" the latest from high-engagement users. (Fast to post, slightly slower to see feed).</li>
+          <li><strong>The Hot-Key Problem:</strong> Celebrities (Justin Bieber, Cristiano Ronaldo) cause traffic spikes
+            that can melt a single database shard. We solve this by caching their posts in every single shard or using a
+            global CDN.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Distributed Systems Deep Dive</h2>
+
+        <h3>D.1 Messaging Systems</h3>
+        <p>Kafka and RabbitMQ are the "glue" of distributed systems. They allow services to talk without knowing about
+          each other (Decoupling). This makes your system "Asynchronous" and capable of handling massive spikes without
+          crashing. But handling "exactly-once" delivery is the hardest part.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Restaurant Ordering Box.</strong>
+          In a busy kitchen, the waiter doesn't scream at the chef. They put a ticket in a box (The Queue). The chef
+          takes tickets one by one. If the waiter gets 100 orders in 1 minute, the chef doesn't "crash"—he just takes
+          longer to finish the tickets. The box protects the chef from overwhelming noise.
+        </blockquote>
+
+        <ul>
+          <li><strong>Delivery Guarantees:</strong> 1. At-most-once (fast but might lose data), 2. At-least-once (safe
+            but might cause duplicates), 3. <strong>Exactly-once</strong> (perfect but requires complex
+            coordination/idempotency).</li>
+          <li><strong>Message Ordering:</strong> Messaging systems don't guarantee overall order in a cluster. To keep
+            things in order (e.g., updates for User #123), you must use <strong>Partition Keys</strong> so all messages
+            for that user go to the same worker.</li>
+          <li><strong>Pub/Sub:</strong> One message (event) can be received by multiple services. If a "Payment Success"
+            event happens, the "Email Service," "Inventory Service," and "Analytics Service" all react independently.
+          </li>
+        </ul>
+
+        <h3>D.2 Distributed Caching</h3>
+        <p>Fetching from a Database is slow; fetching from Memory is fast. We use Redis or Memcached as a "Protective
+          Layer" in front of our database. But remember: "The hardest two problems in CS are naming things and **Cache
+          Invalidation**." You need a clear strategy for how data gets into the cache.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: Your Brain vs. Your Notebook.</strong>
+          Memory (Cache) is like your brain—extremely fast access. The Database is like a massive notebook in your
+          backpack—reliable but takes 10 seconds to open. If you "remember" (Cache) that your friend's phone number is
+          123, but they changed it to 456, you are "stale." You need to know when to "forget" and check the notebook
+          again.
+        </blockquote>
+
+        <ul>
+          <li><strong>Cache Aside:</strong> The app checks the cache. If it's a miss, it reads from the DB and manually
+            updates the cache. (Most flexible).</li>
+          <li><strong>Read Through:</strong> The cache library automatically fetches from the DB if it's a miss. The app
+            only talks to the cache.</li>
+          <li><strong>Write Through:</strong> Data is written to the cache and the DB at the same time. Solid
+            consistency but high write latency.</li>
+          <li><strong>Write Behind:</strong> Data is written to the cache first, and the DB is updated 5 minutes later
+            in the background. Ultra-fast but risky if the cache crashes.</li>
+        </ul>
+
+        <h3>D.3 Rate Limiting & Throttling</h3>
+        <p>Protect your "Gates." Don't let one bad bot eat all your resources. We use Token Bucket or Leaky Bucket
+          algorithms to ensure every user gets a fair share of the API quota. But when you have 100 servers, your rate
+          limiter must be <strong>Distributed</strong>.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The "All You Can Eat" Buffet.</strong>
+          The restaurant has plenty of food, but if one person tries to eat 50 plates in 10 minutes, the kitchen can't
+          keep up. So they set a rule: "Please take only 2 plates at a time." This is Rate Limiting. It ensures 100
+          people can eat smoothly instead of 1 person hogging the whole buffet.
+        </blockquote>
+
+        <ul>
+          <li><strong>Distributed Challenges:</strong> If Server A and Server B both handle requests for User #1, they
+            must share the same counter. We use **Redis** to store global counters.</li>
+          <li><strong>Race Conditions:</strong> If two servers try to increment a counter simultaneously, the count
+            might be wrong. We use **Redis Lua Scripts** or `INCR` atomic operations to avoid this.</li>
+          <li><strong>Fixed vs Sliding Window:</strong> Fixed windows can be bypassed if someone attacks right at the
+            boundary (e.g., 20 requests at 11:59:59 and 20 at 12:00:01). Sliding windows solve this but are more
+            memory-heavy.</li>
+        </ul>
+
+        <pre><code>// Simple Token Bucket Logic (Mental Model)
+if (bucket.tokens > 0) {
+  bucket.tokens--;
+  allowRequest();
+} else {
+  denyRequest(); // 429 Too Many Requests
+}</code></pre>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. System Reliability & Performance</h2>
+
+        <h3>E.1 Load Balancing</h3>
+        <p>Load balancers are the "Traffic Cops." They decide which server should handle the next request. We use Layer
+          4 (Network) or Layer 7 (Application) balancing depending on how "smart" we need the routing to be. L7 is the
+          standard for modern Microservices because it can read the actual request content.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Parking Attendant.</strong>
+          When you enter a mall, the attendant points you to an empty spot. He doesn't drive the car for you; he just
+          directs traffic. Layer 7 is like an attendant who asks "Are you going to the Cinema or the Supermarket?" and
+          points you to the closest parking area for that specific shop.
+        </blockquote>
+
+        <ul>
+          <li><strong>Layer 4 (L4):</strong> Only looks at IP and Port. Very fast, low CPU usage. Great for raw TCP
+            traffic (DB connections, etc.).</li>
+          <li><strong>Layer 7 (L7):</strong> Looks at HTTP headers, cookies, and URLs. Can do **SSL Termination**
+            (decryption) and route traffic like: <code>/api/user</code> goes to Service A, <code>/api/payment</code>
+            goes to Service B.</li>
+          <li><strong>Algorithms:</strong> 1. Round Robin (simple), 2. Least Connections (sends to the quietest server),
+            3. IP Hash (ensures one user stays on the same server, good for sticky sessions).</li>
+        </ul>
+
+        <h3>E.2 Fault Tolerance</h3>
+        <p>Failure IS an option. In fact, it's guaranteed. You need Redundancy (backups) and Circuit Breakers
+          (protection). If a service is failing, stop calling it so it can recover, rather than continuing to bomb it
+          with requests until it dies forever. This is called <strong>Cascading Failure</strong> prevention.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Fuse Box in your House.</strong>
+          If there's a short circuit in your TV, the <strong>Fuse (Circuit Breaker)</strong> "trips" and cuts the power.
+          This stops your entire house from catching fire. Once the TV is fixed, you flip the switch back on. In
+          software, if Service A is slow, the Circuit Breaker "opens," stopping Service B from waiting forever and
+          timing out.
+        </blockquote>
+
+        <ul>
+          <li><strong>Graceful Degradation:</strong> If the recommendation service is down, don't show an Error page.
+            Show "Top 10 Global Products" instead. Better to show something static than nothing at all.</li>
+          <li><strong>Active-Passive Failover:</strong> One server works, one sleeps. If Active dies, Passive wakes up.
+            Simple but wastes 50% of your resources.</li>
+          <li><strong>Active-Active Failover:</strong> Both servers work together. If one dies, the other takes the 100%
+            load. Requires careful capacity planning so the survivor doesn't melt under the double pressure.</li>
+        </ul>
+
+        <h3>E.3 Monitoring & Observability</h3>
+        <p>If you don't have logs, you're flying blind. You need <strong>Metrics</strong> (how many?),
+          <strong>Logging</strong> (what happened?), and <strong>Tracing</strong> (where did it go?). Distributed
+          tracing is critical for finding that "one slow service" in a sea of 100 microservices. You must monitor the
+          <strong>Four Golden Signals</strong>.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Car Dashboard.</strong>
+          Driving without monitoring is like driving a car with a blacked-out windshield. You need the Speedometer
+          (Metrics), the Check Engine light (Alerting), and the GPS (Tracing) to know if you're actually going where you
+          want to go and if the engine is about to explode.
+        </blockquote>
+
+        <ul>
+          <li><strong>Latency:</strong> The time it takes to service a request. (Measure the 99th percentile, not just
+            the average!).</li>
+          <li><strong>Traffic:</strong> A measure of how much demand is being placed on your system. (e.g., HTTP
+            requests/sec).</li>
+          <li><strong>Errors:</strong> The rate of requests that fail (explicitly, implicitly, or by policy).</li>
+          <li><strong>Saturation:</strong> How "full" is your service? A measure of the most constrained resources
+            (e.g., CPU, RAM, or DB connection pool).</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Specialized System Designs</h2>
+
+        <h3>F.1 Designing a Payment System</h3>
+        <p>Payments require <strong>Strong Consistency</strong> and <strong>Idempotency</strong>. You cannot charge a
+          user twice for one coffee just because their Wi-Fi blinked. This involves complex database transactions and
+          external API integration (Stripe/PayPal). You must build a system that is "Audit-ready."</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The ATM Withdrawal.</strong>
+          When you take money from an ATM, the system must 1. Deduct your balance AND 2. Give you the cash. It must be
+          ONE action (Atomic). If the ATM crashes after deducting the balance but before giving the cash, it’s a
+          disaster. That’s why we need "Transactions."
+        </blockquote>
+
+        <ul>
+          <li><strong>Double-Entry Bookkeeping:</strong> Never just have a <code>balance</code> column. You must have a
+            <code>ledger</code> of entries: <code>Debit User A $10, Credit System $10</code>. If the sum of all entries
+            isn't zero, something went wrong.</li>
+          <li><strong>Idempotency Key:</strong> The client sends a unique <code>request_id</code>. If the server sees
+            the same ID again, it returns the previous result without processing the charge again.</li>
+          <li><strong>Reconciliation:</strong> A background job that compares your internal state with the state of the
+            payment provider (Stripe logs). Corrects any "Ghost transactions."</li>
+        </ul>
+
+        <h3>F.2 Designing a File Storage System</h3>
+        <p>Storing millions of files (like S3) isn't about "saving files in a folder." It's about
+          <strong>Chunking</strong>, <strong>Replication</strong>, and <strong>Metadata</strong>. You separate the
+          "where is it" data (Metadata) from the "actual content" (The File Chunks).</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Warehouse Storage.</strong>
+          If you have 10,000 boxes, you don't just "throw them in a pile." You give each box a code (ID) and put it on a
+          specific shelf. You keep a "Master Book" (Metadata) that says "Box #1 is on Shelf B, Row 3." To get the box,
+          you check the book first, then go straight to the shelf.
+        </blockquote>
+
+        <ul>
+          <li><strong>Erasure Coding:</strong> Instead of making 3 full copies of a file (which is expensive), we break
+            it into pieces and add "parity" bits. If one piece is lost, we can reconstruct the whole file from the
+            others. Much more storage efficient!</li>
+          <li><strong>Namenode vs Datanode:</strong> The Namenode keeps the directory tree and file mapping (hot data in
+            memory). Datanodes store the actual raw blocks. If the Namenode dies, you lose everything—so it must be
+            highly available.</li>
+          <li><strong>Cold Storage:</strong> Moving old files (that nobody looks at) to slower, cheaper hard drives to
+            save money.</li>
+        </ul>
+
+        <h3>F.3 Designing a Real-Time System</h3>
+        <p>WebSockets are the key. For a chat app or live game, you need a "Stateful" connection. You also need to
+          handle "Presence" (who is online?) and ensure low-latency message delivery across the globe. Since WebSockets
+          stay open, they challenge our standard horizontal scaling rules.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Walkie-Talkie vs. Regular Phone.</strong>
+          Standard web is like calling someone, asking a question, and hanging up. Real-time is like staying on the line
+          with the "Push-to-talk" button. You don't have to dial the number again; the connection is "Hot."
+        </blockquote>
+
+        <ul>
+          <li><strong>The Connection Problem:</strong> If User A is connected to Server 1 and User B is connected to
+            Server 2, how do they talk? We use a <strong>Pub/Sub (Redis)</strong> layer. Server 1 sends User A's message
+            to Redis, and Server 2 (which is "listening") delivers it to User B.</li>
+          <li><strong>Sticky Sessions:</strong> Your Load Balancer must ensure that during the initial "Handshake," the
+            client stays on the same server to successfully upgrade to a WebSocket.</li>
+          <li><strong>Presence Service:</strong> Using a <strong>Heartbeat</strong> mechanism. If the WebSocket closes
+            or the phone loses signal for 30s, the Presence Service updates Redis to show the user as "Offline."</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Modern Architecture Patterns</h2>
+
+        <h3>G.1 Microservices Architecture</h3>
+        <p>Break the giant "Monolith" into small, manageable services. Each service does one thing well (Auth, Payment,
+          Inventory). But beware: Microservices adds massive complexity in networking, deployment, and debugging. You
+          need a way for services to "find" each other without hardcoding IP addresses.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Food Court vs. The Single Restaurant.</strong>
+          A Monolith is one big restaurant with one kitchen. If the stove breaks, nobody eats. A Microservice setup is a
+          <strong>Food Court</strong>. There’s a burger place, a noodle place, and a drink place. If the drink place
+          runs out of ice, you can still buy a burger. But coordinating all the owners (Services) is much harder for the
+          mall manager.
+        </blockquote>
+
+        <ul>
+          <li><strong>Service Discovery:</strong> Instead of hardcoding <code>192.168.1.1</code>, services register
+            themselves in a "Phonebook" (like <strong>Consul</strong> or <strong>Eureka</strong>). When Service A needs
+            Service B, it just asks the phonebook for the current location.</li>
+          <li><strong>API Gateway:</strong> The "Single Entry Point." It handles Auth, Rate Limiting, and Routing so
+            that your internal services don't have to worry about security individually.</li>
+          <li><strong>Circuit Breaker:</strong> Essential in microservices. If Service A depends on Service B and B is
+            slow, Service A should "Trip the Circuit" so it doesn't wait forever and cause a chain reaction of failures.
+          </li>
+        </ul>
+
+        <h3>G.2 API Design</h3>
+        <p>APIs are the "Contract" between services. Use REST for standard apps, or <strong>gRPC</strong> for
+          high-performance internal communication. Good documentation (Swagger/OpenAPI) is just as important as the code
+          itself. You must plan for <strong>Change</strong>.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Universal Charger.</strong>
+          A good API is like a USB-C port. Everyone knows how it looks and what it does. You can plug in a phone, a
+          laptop, or a lamp, and it "just works." A bad API is like having a different unique plug for every single
+          device in your house—frustrating and impossible to scale.
+        </blockquote>
+
+        <ul>
+          <li><strong>Versioning:</strong> Never break your existing clients. Use URL versioning (<code>/v1/user</code>)
+            or Header versioning. If you change a field name, keep the old one for at least 6 months while clients
+            migrate.</li>
+          <li><strong>gRPC vs REST:</strong> REST uses JSON (text), which is easy to read but bulky. gRPC uses
+            <strong>Protocol Buffers</strong> (binary), which is tiny and extremely fast for server-to-server
+            communication.</li>
+          <li><strong>Idempotency:</strong> We've said it before, but it's critical here. Every POST/PUT request should
+            support a <code>request-key</code> to prevent duplicate actions during network retries.</li>
+        </ul>
+
+        <h3>G.3 Event-Driven Architecture</h3>
+        <p>Don't call a service directly; just "emit an event." If a user buys a shirt, the system says "Shirt Sold!"
+          and the Inventory, Shipping, and Email services react to that event. This makes the system extremely
+          <strong>Decoupled</strong>. But it can lead to "Advanced state management" challenges.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Group Chat Announcement.</strong>
+          If you want to invite 10 friends to a party, you don't call them one by one. You just post "Party at 8 PM!" in
+          the group chat (The Event Hub). Anyone who is "Subscribed" (Interested) will see it and react. You don't care
+          who sees it or what they do next; you just "Publish" the news.
+        </blockquote>
+
+        <ul>
+          <li><strong>Event Sourcing:</strong> Instead of only storing the current "Balance: $100," you store every
+            single transaction that ever happened. You can "Replay" the history to find bugs or generate new reports.
+          </li>
+          <li><strong>CQRS:</strong> Separating the **Command** (Write) from the **Query** (Read). Your write model
+            might be a complex SQL DB, while your read model is a fast, flattened Read-Only Redis cache. Perfect for
+            high-scale apps like Netflix or Twitter.</li>
+          <li><strong>Dead Letter Queue:</strong> If a worker fails to process an event 3 times, move it to a
+            <strong>Dead Letter Queue (DLQ)</strong> for manual inspection. Don't let a bad message block the entire
+            pipeline.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Interview Strategy for System Design</h2>
+
+        <h3>H.1 Structuring Your Answer</h3>
+        <p>The 4-step framework: 1. Clarification & Scoping, 2. High-Level Design, 3. Deep Dive, 4. Wrap-up &
+          Trade-offs. Use the first 5-10 minutes just to ask questions. If you start drawing too soon, you will fail for
+          "jumping to conclusions."</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Interview and the Map.</strong>
+          Before you start driving to a new city, you ask: "Where exactly are we going? Do we have gas? Is there
+          traffic?" If you just start driving, you might end up in a swamp. The first 10 minutes of the interview are
+          you "checking the map" with the interviewer.
+        </blockquote>
+
+        <p><strong>The 45-Minute Breakdown:</strong></p>
+        <ol>
+          <li><strong>0-5 min:</strong> Ask functional/non-functional requirements. Define scale (DAU).</li>
+          <li><strong>5-10 min:</strong> Back-of-the-envelope math. (How much storage? What RPS?).</li>
+          <li><strong>10-25 min:</strong> High-Level Boxes. Drawing the city map. Don't go deep yet.</li>
+          <li><strong>25-40 min:</strong> Deep Dive. The interviewer picks 1-2 parts (e.g., "How do we shard this?").
+          </li>
+          <li><strong>40-45 min:</strong> Conclusion. Mention things you would add if you had more time (Monitoring,
+            Security).</li>
+        </ol>
+
+        <h3>H.2 Communicating Trade-offs</h3>
+        <p>There is no "Right." Only "Better in this context." Always say "I'm choosing X because it's faster for reads,
+          even though it makes writes slightly slower." This is the hallmark of a Senior Engineer—knowing what you are
+          giving up.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: Choosing a Car.</strong>
+          If you're a family of 6, you don't buy a Ferrari. You buy an SUV. Even though the Ferrari is "better"
+          (faster), it's the "wrong" choice for the context. In System Design, you must explain why your "SUV" is the
+          right choice for the current "Family" (Requirements).
+        </blockquote>
+
+        <p><strong>Common "Vs" Scenarios:</strong></p>
+        <ul>
+          <li><strong>SQL vs NoSQL:</strong> "I chose SQL because we need ACID transactions for payments, even though
+            NoSQL would scale better horizontally."</li>
+          <li><strong>Kafka vs RabbitMQ:</strong> "I chose Kafka because we need to 'Replay' events for analytics,
+            whereas RabbitMQ is better for simple job queues."</li>
+          <li><strong>Poll vs WebSocket:</strong> "I chose WebSockets for the chat to save battery and latency, even
+            though Long Polling would be easier to scale with standard LBs."</li>
+        </ul>
+
+        <h3>H.3 Common Pitfalls</h3>
+        <p>Overengineering is the #1 killer. Don't use Kafka for 100 users. Don't use Microservices for a prototype.
+          Another killer is "The Silent Architect"—you must talk out loud while drawing. If you're quiet for 2 minutes,
+          you're losing the interviewer.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Over-enthusiastic Plumber.</strong>
+          Imagine you hire a plumber to fix a leaky tap, and he tries to replace the entire city’s water pipe system
+          just to "be sure." That’s Overengineering. It’s expensive, takes too long, and isn’t what you asked for. Keep
+          it simple until complexity is actually needed.
+        </blockquote>
+
+        <ul>
+          <li><strong>The God Box:</strong> Putting too many responsibilities in one service. If your "Notification
+            Service" starts processing payments, you've made a monolith in disguise.</li>
+          <li><strong>Ignoring Bottlenecks:</strong> Drawing 100 web servers but only one Database without a replica.
+            Your system is only as strong as its weakest link.</li>
+          <li><strong>Vague Vocabulary:</strong> "I will use a NoSQL database" (Too vague). Say: "I will use Cassandra
+            because its LSM-tree architecture is optimized for high-volume write traffic."</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Real Talk & Course Positioning</h2>
+
+        <h3>I.1 What This Course IS and IS NOT</h3>
+        <p>Let's keep it 100%. This course is designed to get you through the hardest interviews on the planet. It
+          covers the <em>Thinking Patterns</em> used by Staff Engineers. However, it won't write the code for you. You
+          still need to be a solid coder to implement these designs.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: The Architect vs. The Builder.</strong>
+          This course makes you a <strong>Master Architect</strong>. You will know exactly where the load-bearing walls
+          go and how the plumbing should flow. But if you don't know how to use a hammer (Coding), the house still won't
+          get built. You need both skills to be a top-tier engineer.
+        </blockquote>
+
+        <ul>
+          <li><strong>GOOD at:</strong> Structured interview prep, covering technical and non-technical aspects, and
+            giving you real-world "war stories" from the industry.</li>
+          <li><strong>NOT covering:</strong> Deep production-level implementation (e.g., how to configure a specific
+            Kafka parameter), advanced niche topics like compiler design, or company-specific leaked questions.</li>
+        </ul>
+
+        <h3>I.2 Skill Area Positioning</h3>
+        <p>Where does System Design fit in your career? It's the "Senior-Level Thinking" that separates the juniors from
+          the leads. You can be the best coder in the world, but if you can't design a scalable system, you'll stay
+          stuck at the mid-level.</p>
+
+        <ul>
+          <li><strong>Data Structures & Algorithms:</strong> The "Problem Solving Core." (Coding Interviews).</li>
+          <li><strong>System Design:</strong> The "Architectural Brain." (Senior/Staff Interviews).</li>
+          <li><strong>Behavioral Skills:</strong> The "Culture & Communication Fit." (The Soft Skills).</li>
+          <li><strong>Career Strategy:</strong> The "Job Offer Conversion." (Closing the Deal).</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. Ultimate Learning Strategy</h2>
+
+        <h3>J.1 The 6-Step Implementation Plan</h3>
+        <p>Don't just watch the videos or read the notes; you need a plan. Learning System Design is a marathon, not a
+          sprint. Follow this sequence to maximize your retention and confidence.</p>
+
+        <blockquote class="callout">
+          <strong>Analogy: Training for a Marathon.</strong>
+          You don't run 42km on day one. You start with 1km (Foundations), then 5km (Data Management), then you start
+          doing "simulated runs" (Practice Interviews). Consistency is your best friend.
+        </blockquote>
+
+        <ol>
+          <li><strong>Start with BAB A:</strong> Understand the interview landscape and the "Thinking Framework."</li>
+          <li><strong>Daily Practice (BAB B & C):</strong> Spend most of your time here. These are the "Lego Bricks" of
+            every system.</li>
+          <li><strong>Parallel Learning (BAB D):</strong> Deep dive into distributed systems once you understand the
+            bricks.</li>
+          <li><strong>Weekly Behavioral (BAB E):</strong> Practice your communication and soft skills. System design is
+            50% communication!</li>
+          <li><strong>Simulate (BAB F):</strong> Do mock interviews or whiteboard arbitrary problems (e.g., "Design a
+            Tinder clone").</li>
+          <li><strong>Apply (BAB G):</strong> Start applying and interviewing while you sharpen the final patterns.</li>
+        </ol>
+
+        <h3>J.2 The Ultimate Insight</h3>
+        <p>Preparation -> Structured Practice -> Confident Execution = **Job Offer**. The math is simple, but the work
+          is hard. Apply this knowledge to your real projects at work; that's the best way to make the knowledge "stick"
+          forever.</p>
+
+        <p><strong>Note:</strong> Practice > Watching. One hour of drawing on a whiteboard is worth 10 hours of watching
+          others do it.</p>
+      </section>
+
+      <section class="node">
+        <h1>Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+      const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+      return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Judul " + shortCode;
+          btnJudul.addEventListener("click", () => {
+            const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*[—-]*\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Judul " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Isi " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Isi " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+
+</html>

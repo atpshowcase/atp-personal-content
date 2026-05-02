@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anandela Titis Panggraito - CV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --muted-color: #4a4a4a;
+            --border-color: #d1d1d1;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: #f5f5f5;
+            color: var(--text-color);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            padding: 40px 20px;
+        }
+
+        .cv-page {
+            max-width: 850px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 60px 70px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            min-height: 1100px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            color: #000;
+        }
+
+        .contact-info {
+            font-size: 13px;
+            color: var(--muted-color);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .contact-info span:not(:last-child)::after {
+            content: "•";
+            margin-left: 8px;
+            color: #999;
+        }
+
+        .website {
+            font-size: 13px;
+            color: var(--muted-color);
+            text-decoration: none;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .header-divider {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 25px 0;
+        }
+
+        section {
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            border-bottom: 1px solid #000;
+            margin-bottom: 15px;
+            padding-bottom: 4px;
+        }
+
+        .section-header h2 {
+            font-size: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-content {
+            font-size: 13px;
+            color: var(--text-color);
+            text-align: justify;
+        }
+
+        .experience-item {
+            margin-bottom: 20px;
+        }
+
+        .experience-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .experience-top .role-company {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .experience-top .date {
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .summary-content strong {
+            font-weight: 700;
+        }
+
+        .experience-bullets {
+            list-style-type: none;
+            padding-left: 15px;
+        }
+
+        .experience-bullets li {
+            font-size: 13px;
+            position: relative;
+            margin-bottom: 6px;
+            color: var(--text-color);
+        }
+
+        .experience-bullets li::before {
+            content: "•";
+            position: absolute;
+            left: -15px;
+            font-weight: bold;
+        }
+
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+            }
+            .cv-page {
+                box-shadow: none;
+                padding: 40px 50px;
+                margin: 0;
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cv-page">
+        <header>
+            <h1>ANANDELA TITIS PANGGRAITO</h1>
+            <div class="contact-info">
+                <span>Indonesia, Bekasi</span>
+                <span>+62 895-3300-35795</span>
+                <span>anan.dela211@gmail.com</span>
+            </div>
+            <a href="https://www.atpshowcase.com" class="website">www.atpshowcase.com</a>
+        </header>
+
+        <hr class="header-divider">
+
+        <section>
+            <div class="section-header">
+                <h2>SUMMARY</h2>
+            </div>
+            <div class="summary-content">
+                Versatile Full-Stack System Architect with over 5+ years of expertise in building high-performance, distributed enterprise systems. Proven track record in optimizing backend query logic for high-traffic environments and architecting custom AI integrations to accelerate engineering cycles. Specialized in modern .NET and Next.js ecosystems with a deep focus on Clean Architecture, Microservices, and scalable infrastructure.
+            </div>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <h2>WORK EXPERIENCE</h2>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-top">
+                    <div class="role-company">Full Stack Developer - PT. Tower Bersama Infrastructure Tbk [TBIG]</div>
+                    <div class="date">Okt 2023 - Present</div>
+                </div>
+                <ul class="experience-bullets">
+                    <li>Optimized critical reporting systems for infrastructure management by refactoring legacy backend query logic, <strong>slashing processing latency by 90%</strong> to a consistent 1-second load time for high-volume datasets.</li>
+                    <li>Pioneered the integration of custom AI solutions into the development workflow, engineering automated test-case and skeleton code generators that boosted team sprint efficiency by 35%.</li>
+                    <li>Designed and maintained scalable microservices for internal ERP components using .NET Core and SQL Server, ensuring high availability for critical business operations.</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-top">
+                    <div class="role-company">Full Stack Developer - Business Intelligence Technologies (Bizintek)</div>
+                    <div class="date">Apr 2023 - Sep 2023</div>
+                </div>
+                <ul class="experience-bullets">
+                    <li>Architected real-time data processing layers for high-traffic BI dashboards, resolving performance bottlenecks and improving system responsiveness by over 40%.</li>
+                    <li>Collaborated closely with Product Managers to translate complex business intelligence requirements into robust technical specifications using Node.js and SQL environments.</li>
+                    <li>Implemented secure, high-throughput RESTful APIs to facilitate seamless data flow between legacy ERPs and modern analytics frontend.</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-top">
+                    <div class="role-company">Full Stack Developer - PT Aporisma Solusi Cipta Integrasi</div>
+                    <div class="date">Sep 2020 - Feb 2023</div>
+                </div>
+                <ul class="experience-bullets">
+                    <li>Lead Core Developer for the 'Go-Live' deployment of KANSAI Paint, managing the complete project lifecycle from architectural design to 100% production readiness.</li>
+                    <li>Developed proprietary SAP Business One API middleware in C# to eliminate data synchronization gaps, enabling flawless automated data flow between cloud platforms and ERP systems.</li>
+                    <li>Mentored junior developers on Clean Architecture principles and best practices in C# and SQL development.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <h2>EDUCATION</h2>
+            </div>
+            <div class="experience-item">
+                <div class="experience-top">
+                    <div class="role-company">Bachelor's Degree in Information Technology - University MH Thamrin</div>
+                    <div class="date">2021 - 2023</div>
+                </div>
+            </div>
+            <div class="experience-item">
+                <div class="experience-top">
+                    <div class="role-company">Associate's Degree in Information Technology - Politeknik LP3I</div>
+                    <div class="date">2018 - 2021</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <h2>TECHNICAL SKILLS</h2>
+            </div>
+            <div class="summary-content">
+                <strong>Languages & Frameworks:</strong> C#, .NET Core, Next.js, React, Go (Golang), TypeScript, SQL, PostgreSQL, Python (AI Integration)<br>
+                <strong>Architecture & DevOps:</strong> Microservices, Clean Architecture, Event-Driven Design, Kafka, Redis, Docker, Kubernetes, REST, gRPC<br>
+                <strong>Tools & AI:</strong> Prompt Engineering, LLM Orchestration, AI-Assisted Development, SDLC Automation
+            </div>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <h2>TOP PROJECTS & INITIATIVES</h2>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-top">
+                    <div class="role-company">Telecommunication Management System — PT Tower Bersama Group</div>
+                    <div class="date">2023 - Present</div>
+                </div>
+                <div class="summary-content">
+                    Handled ongoing feature requests and system issues across internal teams and vendors, improving system stability and keeping operations running smoothly at scale.
+                    <br><strong>Tech:</strong> .NET Core, SQL Server, Microservices.
+                </div>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-top">
+                    <div class="role-company">CASPER (Code Quality Enhancement)</div>
+                    <div class="date">2024</div>
+                </div>
+                <div class="summary-content">
+                    Addressed recurring bugs caused by inconsistent code quality by implementing SonarQube integration and systematic refactoring in ASP.NET, significantly increasing system stability.
+                    <br><strong>Tech:</strong> ASP.NET, SonarQube, Clean Code Principles.
+                </div>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-top">
+                    <div class="role-company">Warehouse Management System — Kansai Paint</div>
+                    <div class="date">2022</div>
+                </div>
+                <div class="summary-content">
+                    Centralized scattered warehouse processes by building a comprehensive WMS integrated with SAP B1, streamlining inventory management and automated reporting for manufacturing.
+                    <br><strong>Tech:</strong> ASP.NET, SQL Server, SAP B1 Integration.
+                </div>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-top">
+                    <div class="role-company">Dealer Management System — PT. Suzuki Indomobil Motor</div>
+                    <div class="date">2021</div>
+                </div>
+                <div class="summary-content">
+                    Enhanced visibility and management of dealer data and transactions by developing a unified system, resolving tracking complexities and improving data accuracy.
+                    <br><strong>Tech:</strong> Angular, .NET Core, Web API.
+                </div>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-top">
+                    <div class="role-company">HRIS — PT Business Intelligence Technologies</div>
+                    <div class="date">2023</div>
+                </div>
+                <div class="summary-content">
+                    Modernized manual HR workflows by developing a centralized HRIS to manage employee data, workflows, and administrative processes more efficiently.
+                    <br><strong>Tech:</strong> ASP.NET, SQL Server.
+                </div>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-top">
+                    <div class="role-company">ATP Showcase — Founder & Lead Developer</div>
+                    <div class="date">2023 - Present</div>
+                </div>
+                <div class="summary-content">
+                    Built a premium technical education platform from scratch to empower Indonesian software engineers with high-end architecture and system design knowledge.
+                    <br><strong>Tech:</strong> Next.js, React, Tiptap, PostgreSQL, Tailwind CSS.
+                </div>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-top">
+                    <div class="role-company">AI Code Automation Toolchain — Lead Architect</div>
+                    <div class="date">2024</div>
+                </div>
+                <div class="summary-content">
+                    Engineered an AI-driven automation suite to eliminate repetitive boilerplate and SDLC overhead in enterprise environments using LLM-based generators.
+                    <br><strong>Tech:</strong> Python, LLMs, .NET Core, Custom IDE Plugins.
+                </div>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-top">
+                    <div class="role-company">System Design Masterclass Series — Author</div>
+                    <div class="date">2023 - Present</div>
+                </div>
+                <div class="summary-content">
+                    Created a deep-dive educational series focusing on advanced distributed system concepts like Kafka orchestration and database sharding.
+                    <br><strong>Focus:</strong> Scalability, Distributed Systems, Architecture Patterns.
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <h2>LANGUAGES</h2>
+            </div>
+            <div class="summary-content">
+                <strong>Bahasa Indonesia:</strong> Native<br>
+                <strong>English:</strong> Professional Working Proficiency
+            </div>
+        </section>
+    </div>
+</body>
+</html>

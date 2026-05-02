@@ -241,53 +241,435 @@
 
       <!-- ==================== BAB A ==================== -->
       <section class="node section">
-        <h2>BAB A. Introduction & Environment Setup</h2>
+        <h2>CHAPTER A. Introduction & Environment Setup</h2>
 
         <h3>A.1 Course Overview</h3>
         <p>Go (or Golang) is Google's answer to the complexities of modern software engineering. It's built for speed, simplicity, and massive concurrency. We aren't just learning a language; we're learning to build the backbones of the modern internet.</p>
         <blockquote class="callout">Analogy: Learning Go is like switching from a heavy, manual transmission truck (C++/Java) to a high-speed, automated electric sports car. It's leaner, faster, and designed for the tracks of today.</blockquote>
         <ul>
-          <li>Learning path: from basic syntax to cloud-native systems.</li>
-          <li>Goals: building high-performance, real-world backends.</li>
-          <li>Project-based approach: learning by building.</li>
+          <li><strong>Learning path:</strong> from basic syntax to cloud-native systems.</li>
+          <li><strong>Goals:</strong> building high-performance, real-world backends.</li>
+          <li><strong>Project-based approach:</strong> learning by building.</li>
+          <li><strong>Why Go matters:</strong> designed for modern cloud infrastructure and microservices</li>
+          <li><strong>Industry adoption:</strong> used by Google, Uber, Twitch, and Dropbox for massive scale</li>
         </ul>
+        <p>Go represents a paradigm shift in backend development. Unlike traditional languages that carry decades of legacy baggage, Go was designed from scratch for today's distributed systems, containerized deployments, and high-concurrency scenarios. This isn't just another programming language—it's a complete ecosystem for building production-grade services that can handle millions of requests with minimal resources.</p>
 
         <h3>A.2 Installing Go Environment</h3>
         <p>Go's setup is famous for being effortless. Whether you're on Windows, Mac, or Linux, the toolchain is consistent and gives you everything you need to compile binaries out of the box.</p>
-        <blockquote class="callout">Analogy: Setting up Go is like opening a "Pro Tools Case." Everything—the compiler, the formatter, the tester—is already in the box, precisely where it should be.</blockquote>
+        <blockquote class="callout">Analogy: Setting up Go is like opening a "Pro Tools Case." Everything—the compiler, formatter, tester—is already in the box, precisely where it should be.</blockquote>
+        
+        <h4>Windows Installation</h4>
+        <pre><code># Download Go installer from golang.org
+# Run the MSI installer
+# Go automatically adds itself to PATH
+# Verify installation
+go version</code></pre>
+        
+        <h4>macOS Installation</h4>
+        <pre><code># Using Homebrew (recommended)
+brew install go
+
+# Or download from golang.org
+# Extract to /usr/local
+# Add to ~/.zshrc or ~/.bash_profile
+export PATH=$PATH:/usr/local/go/bin</code></pre>
+        
+        <h4>Linux Installation</h4>
+        <pre><code># Ubuntu/Debian
+sudo apt update
+sudo apt install golang-go
+
+# Or download tarball
+wget https://golang.org/dl/go1.21.0.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.21.0.linux-amd64.tar.gz</code></pre>
+        
+        <h4>IDE Setup</h4>
         <ul>
-          <li>Installation: Windows, macOS, and Linux steps.</li>
-          <li>IDEs: Setting up VS Code with the Go extension or GoLand.</li>
-          <li>Toolchain: Understanding <code>go build</code>, <code>go run</code>, and <code>go fmt</code>.</li>
+          <li><strong>VS Code:</strong> Install Go extension by Google for syntax highlighting, debugging, and testing</li>
+          <li><strong>GoLand:</strong> JetBrains' dedicated Go IDE with built-in debugger and profiler</li>
+          <li><strong>Vim/Neovim:</strong> vim-go plugin for Go development</li>
         </ul>
+        
+        <h4>Core Toolchain Commands</h4>
+        <pre><code>go run main.go          # Run directly
+go build -o app        # Build executable
+go test ./...           # Run all tests
+go fmt ./...            # Format all code
+go mod init myapp      # Initialize module
+go get github.com/pkg   # Add dependency</code></pre>
+        
+        <h4>Environment Verification</h4>
+        <pre><code># Create test file
+cat > hello.go << 'EOF'
+package main
+import "fmt"
+func main() {
+    fmt.Println("Go is working!")
+}
+EOF
+
+# Run your first Go program
+go run hello.go</code></pre>
 
         <h3>A.3 Development Tools</h3>
         <p>Being a pro Go dev means mastering the CLI and the surrounding ecosystem, including databases like PostgreSQL and version control with Git.</p>
         <blockquote class="callout">Analogy: Tools are the "Instruments" of your trade. You need to know your way around the CLI like a pilot knows their cockpit—it's your primary interface for power.</blockquote>
+        
+        <h4>Essential Development Tools</h4>
+        <ul>
+          <li><strong>Git Integration:</strong> Go works seamlessly with Git for version control</li>
+          <li><strong>Database Drivers:</strong> PostgreSQL, MySQL, MongoDB drivers built-in</li>
+          <li><strong>Package Management:</strong> Go modules for dependency management</li>
+          <li><strong>Build Tools:</strong> Make, Docker integration, CI/CD pipelines</li>
+        </ul>
+        
+        <h4>Development Workflow</h4>
+        <pre><code># Initialize new project
+go mod init github.com/username/project
+cd project
+
+# Create main application
+touch main.go
+
+# Initialize Git repository
+git init
+git add .
+git commit -m "Initial commit"
+
+# Create meaningful project structure
+mkdir -p {cmd,internal,pkg,configs,scripts}
+mkdir -p cmd/api
+mkdir -p internal/{handler,service,model}
+mkdir -p pkg/{database,logger}</code></pre>
+        
+        <h4>Productivity Tools</h4>
+        <pre><code># Linting and formatting
+go install golang.org/x/tools/cmd/goimports
+go install github.com/golangci/golangci-lint/cmd/golangci-lint
+
+# Testing and coverage
+go test -cover ./...
+go test -race ./...
+
+# Benchmarking
+go test -bench=. -benchmem
+
+# Dependency management
+go mod tidy
+go mod download</code></pre>
+        
+        <h4>IDE Extensions & Plugins</h4>
+        <ul>
+          <li><strong>VS Code Extensions:</strong> Go, GoLand, Docker, GitLens</li>
+          <li><strong>Browser Extensions:</strong> Go Playground for quick testing</li>
+          <li><strong>Terminal Tools:</strong> oh-my-zsh, powerline-go for enhanced CLI experience</li>
+        </ul>
+        
+        <h4>Environment Variables</h4>
+        <pre><code># Go environment variables
+export GO111MODULE=on          # Enable modules
+export GOPROXY=direct          # Bypass proxy
+export GOSUMDB=off            # Disable checksum database
+export CGO_ENABLED=0           # Disable CGO for faster builds</code></pre>
       </section>
 
       <!-- ==================== BAB B ==================== -->
       <section class="node section">
-        <h2>BAB B. Go Fundamentals</h2>
+        <h2>CHAPTER B. Go Fundamentals</h2>
 
         <h3>B.1 Basic Syntax</h3>
         <p>Go syntax is intentionally minimal. There's only one way to do things, which makes Go code incredibly readable across large teams.</p>
         <blockquote class="callout">Analogy: Go syntax is like a "Minimalist IKEA Instruction Manual." No extra words, no flowery language—just the steps you need to get the job done correctly.</blockquote>
-        <pre><code>package main
+        
+        <h4>Package Declaration</h4>
+        <pre><code>// Every Go file starts with package declaration
+package main
 
+// Library packages use descriptive names
+package utils
+package auth
+package database</code></pre>
+        
+        <h4>Import Statements</h4>
+        <pre><code>// Single import
 import "fmt"
 
+// Multiple imports
+import (
+    "fmt"
+    "net/http"
+    "log"
+)
+
+// Aliased imports
+import (
+    json "encoding/json"
+    http "net/http"
+)</code></pre>
+        
+        <h4>Functions and Entry Points</h4>
+        <pre><code>// Basic function
+func greet(name string) string {
+    return "Hello, " + name
+}
+
+// Main entry point (required for executable)
 func main() {
-    fmt.WriteLine("Go is for Builders")
+    fmt.Println(greet("Go Builder"))
+    
+    // Multiple return values
+    message, err := process()
+    if err != nil {
+        fmt.Println("Error:", err)
+    }
+    fmt.Println(message)
 }</code></pre>
+        
+        <h4>Comments and Documentation</h4>
+        <pre><code>// Single line comment
+
+/* 
+   Multi-line comment
+   Useful for complex explanations
+*/
+
+// Function documentation (godoc format)
+// CalculateTotal computes the total price including tax.
+// It takes a price amount and tax rate as parameters.
+// Returns the final total with tax applied.
+func CalculateTotal(price float64, taxRate float64) float64 {
+    tax := price * taxRate
+    return price + tax
+}</code></pre>
+        
+        <h4>Go Philosophy</h4>
+        <ul>
+          <li><strong>Orthogonality:</strong> Language features combine in predictable ways</li>
+          <li><strong>Simplicity:</strong> Small keyword set, explicit syntax</li>
+          <li><strong>Readability:</strong> Code reads like English sentences</li>
+          <li><strong>Performance:</strong> Compiled to native machine code</li>
+          <li><strong>Tooling:</strong> Built-in formatting, testing, and dependency management</li>
+        </ul>
 
         <h3>B.2 Variables & Data Types</h3>
         <p>Go is statically typed and extremely fast. We'll explore variables, constants, and the unique way Go handles Enums and types.</p>
         <blockquote class="callout">Analogy: Data types in Go are like "Shipping Containers." You must label exactly what's inside, and once it's labeled, it stays that way. This prevents massive accidents (bugs) during transport.</blockquote>
+        
+        <h4>Basic Data Types</h4>
+        <pre><code>// Variables with explicit types
+var name string = "Go Developer"
+var age int = 25
+var salary float64 = 75000.50
+var isActive bool = true
+
+// Short declaration (inferred type)
+name := "Go Developer"
+age := 25
+salary := 75000.50
+isActive := true
+
+// Constants
+const PI = 3.14159
+const MAX_CONNECTIONS = 100
+const APP_VERSION = "1.0.0"</code></pre>
+        
+        <h4>Complex Data Types</h4>
+        <pre><code>// Arrays (fixed size)
+var scores [5]int = [85, 92, 78, 95, 88]
+
+// Slices (dynamic arrays)
+var scores []int = []int{85, 92, 78, 95, 88}
+scores = append(scores, 100) // Add element
+
+// Maps (key-value pairs)
+person := map[string]interface{}{
+    "name": "Alice",
+    "age": 30,
+    "skills": []string{"Go", "Docker", "AWS"},
+}
+
+// Pointers (memory addresses)
+var x int = 42
+var ptr *int = &x  // ptr points to x's memory address</code></pre>
+        
+        <h4>Type Conversions</h4>
+        <pre><code>// Safe type conversions
+var i int = 42
+f := float64(i)        // int to float64
+s := string(i)         // int to string
+b := i != 0            // int to bool
+
+// Type assertions with interface{}
+var data interface{} = "hello"
+if str, ok := data.(string); ok {
+    fmt.Println("String:", str)
+}</code></pre>
+        
+        <h4>Custom Types and Enums</h4>
+        <pre><code>// Custom struct type
+type User struct {
+    ID       int    `json:"id"`
+    Name     string `json:"name"`
+    Email    string `json:"email"`
+    Active   bool   `json:"active"`
+}
+
+// Enum pattern using iota
+type Status int
+
+const (
+    StatusPending Status = iota
+    StatusActive
+    StatusCompleted
+    StatusCancelled
+)
+
+// String representation of enum
+func (s Status) String() string {
+    return []string{"Pending", "Active", "Completed", "Cancelled"}[s]
+}</code></pre>
+        
+        <h4>Zero Values and Initialization</h4>
+        <pre><code>// Zero values in Go
+var i int           // i == 0
+var s string        // s == ""
+var f float64       // f == 0.0
+var b bool          // b == false
+var p *int          // p == nil
+
+// Struct zero values
+type Person struct {
+    Name string
+    Age  int
+}
+var p Person        // p.Name == "", p.Age == 0
+
+// Initialization with constructors
+func NewUser(name, email string) *User {
+    return &User{
+        Name:  name,
+        Email: email,
+        Active: true, // Default value
+    }
+}</code></pre>
 
         <h3>B.3 Control Flow</h3>
         <p>Go keeps things simple: there is only the <code>for</code> loop. No <code>while</code>, no <code>do-while</code>. Just one loop to rule them all, along with standard <code>if/else</code> and <code>switch</code>.</p>
         <blockquote class="callout">Analogy: The <code>for</code> loop in Go is like a "Multi-purpose Utility Knife." It can do everything other loops do, but you only have to maintain one tool instead of three.</blockquote>
+        
+        <h4>For Loop Variations</h4>
+        <pre><code>// Traditional for loop (like while)
+for i := 0; i < 10; i++ {
+    fmt.Println(i)
+}
+
+// Infinite loop (like while(true))
+for {
+    // Break condition inside
+    if shouldStop {
+        break
+    }
+}
+
+// Range over slice/array
+numbers := []int{1, 2, 3, 4, 5}
+for index, value := range numbers {
+    fmt.Printf("Index: %d, Value: %d\n", index, value)
+}
+
+// Range over map (key-value)
+person := map[string]int{"Alice": 30, "Bob": 25}
+for name, age := range person {
+    fmt.Printf("%s is %d years old\n", name, age)
+}</code></pre>
+        
+        <h4>Conditional Statements</h4>
+        <pre><code>// Simple if-else
+age := 25
+if age >= 18 {
+    fmt.Println("Adult")
+} else {
+    fmt.Println("Minor")
+}
+
+// If with initialization
+if x := calculateValue(); x > 100 {
+    fmt.Println("High value:", x)
+}
+
+// Switch statement
+day := "Monday"
+switch day {
+case "Monday", "Tuesday", "Wednesday", "Thursday", "Friday":
+    fmt.Println("Weekday")
+case "Saturday", "Sunday":
+    fmt.Println("Weekend")
+default:
+    fmt.Println("Unknown day")
+}
+
+// Switch with initialization
+switch x := getValue(); x {
+case 1:
+    fmt.Println("One")
+case 2, 3:
+    fmt.Println("Two or Three")
+default:
+    fmt.Println("Other")
+}</code></pre>
+        
+        <h4>Defer, Panic, and Recover</h4>
+        <pre><code>// Defer - executes after function returns
+func processFile(filename string) {
+    file, err := os.Open(filename)
+    defer file.Close() // Always executed, even if error occurs
+    
+    if err != nil {
+        log.Fatal(err)
+    }
+    
+    // Process file...
+}
+
+// Panic and Recover
+func riskyOperation() {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("Recovered from panic:", r)
+        }
+    }()
+    
+    // Something that might panic
+    if someCondition {
+        panic("Something went wrong!")
+    }
+}</code></pre>
+        
+        <h4>Control Flow Best Practices</h4>
+        <pre><code>// Early returns for clarity
+func processUser(user *User) error {
+    if user == nil {
+        return errors.New("user cannot be nil")
+    }
+    
+    if !user.Active {
+        return errors.New("user is not active")
+    }
+    
+    // Main logic here
+    return processActiveUser(user)
+}
+
+// Guard clauses for map access
+func getUserName(users map[string]*User, id string) (string, error) {
+    user, exists := users[id]
+    if !exists {
+        return "", errors.New("user not found")
+    }
+    
+    return user.Name, nil
+}</code></pre>
 
         <h3>B.4 Mini Project: Sales Order Processor</h3>
         <p>Let's build a small CLI tool that takes orders, calculates totals, and applies logic. This is where your fundamentals turn into code that actually does work.</p>
