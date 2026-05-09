@@ -244,7 +244,7 @@
         <h2>BAB A. Introduction & Interview Mindset</h2>
 
         <h3>A.1 Course Overview</h3>
-        <p>Welcome, bro! If you want to break into FAANG (Meta, Amazon, Apple, Netflix, Google) or any top-tier tech company, you have to understand their game. This isn't just about whether your code compiles. It's about how you think under pressure. We will break down exactly what interviewers expect, the standard structure of these interviews, and why problem-solving frameworks are your best friend here.</p>
+        <p>Welcome, bro! If you want to break into FAANG (Meta, Amazon, Apple, Netflix, Google) or any top-tier tech company, you have to understand their game. This isn't just about whether your code compiles. It's about how you think under pressure. We will break down exactly what interviewers expect, the standard structure of these interviews, and why problem-solving frameworks are your best friend here. This course is your roadmap to navigating the high-stakes world of elite technical hiring.</p>
         
         <blockquote class="callout">
           <strong>Analogy: Auditioning for a Top Chef Restaurant.</strong> 
@@ -254,13 +254,13 @@
         </blockquote>
 
         <ul>
-          <li><strong>Understanding Expectations:</strong> FAANG doesn't care if you've memorized syntax; they care if you can untangle complex logic.</li>
-          <li><strong>Interview Structure:</strong> Usually, you get 45 minutes: 5 mins intro, 35 mins coding/thinking, 5 mins questions. Time is tight!</li>
-          <li><strong>Frameworks:</strong> You need a step-by-step mental framework so you don't freeze up when you see a problem you've never encountered before.</li>
+          <li><strong>Understanding Expectations:</strong> FAANG doesn't care if you've memorized syntax; they care if you can untangle complex logic. They look for "signals": can you optimize O(N^2) to O(N)? Can you handle massive scale? Are you someone they’d actually enjoy working with at 2 AM on a production bug?</li>
+          <li><strong>Interview Structure:</strong> Usually, you get 45 minutes: 5 mins intro/ice-breaker, 35 mins coding/thinking (the meat of the interview), and 5 mins for your questions. Time is tight, and every minute counts!</li>
+          <li><strong>Frameworks:</strong> You need a step-by-step mental framework so you don't freeze up when you see a problem you've never encountered before. We’ll teach you how to decompose problems into recognizable patterns (Sliding Window, Two Pointers, etc.) so you never start from zero.</li>
         </ul>
 
         <h3>A.2 Interview Mindset</h3>
-        <p>You have to shift your perspective. Don't think of the interviewer as a scary examiner trying to fail you. Think of them as your future coworker. You are pair-programming with them! Communicate clearly while you code, and don't panic when they throw crazy edge cases at you. That's just them testing the suspension on your car.</p>
+        <p>You have to shift your perspective. Don't think of the interviewer as a scary examiner trying to fail you. Think of them as your future coworker. You are pair-programming with them! Communicate clearly while you code, and don't panic when they throw crazy edge cases at you. That's just them testing the suspension on your car to see how robust your solution really is.</p>
         
         <blockquote class="callout">
           <strong>Analogy: The Copilot on a Road Trip.</strong> 
@@ -270,13 +270,13 @@
         </blockquote>
 
         <ul>
-          <li><strong>Think Like an Interviewer:</strong> They want to hire you! Help them help you by giving them good signals to write down.</li>
-          <li><strong>Communication:</strong> "Silent coding" is the fastest way to get rejected. Always narrate your thoughts.</li>
-          <li><strong>Edge Cases:</strong> Expect them. Embrace them. If your code breaks, smile, say "Ah, good catch," and fix it.</li>
+          <li><strong>Think Like an Interviewer:</strong> They want to hire you! Help them help you by giving them "green flags" to write down. Explain your trade-offs: "I'm using a Hash Map here to get O(1) lookup, even though it costs me O(N) extra space."</li>
+          <li><strong>Communication:</strong> "Silent coding" is the fastest way to get rejected. Always narrate your thoughts, even the "dumb" ones. If the interviewer sees you heading toward a cliff, they might give you a hint to steer back—but only if they know where you’re headed!</li>
+          <li><strong>Edge Cases:</strong> Expect them. Embrace them. If your code breaks on an empty array or a negative number, smile, say "Ah, good catch, let's handle that," and fix it calmly. Resilience under failure is a huge hiring signal.</li>
         </ul>
 
         <h3>A.3 Learning Strategy</h3>
-        <p>You can't just binge-watch these videos like a Netflix series, bro. Coding interviews are a muscle. You have to put in the reps. Avoid the trap of memorizing solutions—if the interviewer changes one variable, a memorized solution will crash and burn. Build consistency by practicing every single day.</p>
+        <p>You can't just binge-watch these videos like a Netflix series, bro. Coding interviews are a muscle. You have to put in the reps. Avoid the trap of memorizing solutions—if the interviewer changes one variable or adds a slight twist, a memorized solution will crash and burn. Build consistency by practicing every single day until these patterns become muscle memory.</p>
         
         <blockquote class="callout">
           <strong>Analogy: Memorizing the Maze vs. Learning to Use a Compass.</strong> 
@@ -286,9 +286,9 @@
         </blockquote>
 
         <ul>
-          <li><strong>Practice-Driven:</strong> Hands on the keyboard. Watching someone else code gives you a false sense of security.</li>
-          <li><strong>Anti-Memorization:</strong> Focus on the "Why," not the "What." Why use a Hash Map here? Why not an Array?</li>
-          <li><strong>Consistency:</strong> Doing 1 problem a day for 30 days is 100x better than doing 30 problems in one weekend.</li>
+          <li><strong>Practice-Driven:</strong> Hands on the keyboard. Watching someone else code gives you a false sense of security. Try to solve the problem for 20 minutes before looking at the solution, then implement it yourself from scratch.</li>
+          <li><strong>Anti-Memorization:</strong> Focus on the "Why," not the "What." Why use a Hash Map here? Why not an Array? Understanding the underlying data structure's strengths and weaknesses makes you adaptable to any problem twist.</li>
+          <li><strong>Consistency:</strong> Doing 1 problem a day for 30 days is 100x better than doing 30 problems in one weekend. Your brain needs time to "digest" the patterns. Set a "Tech Gym" ritual: 30-60 mins of focused practice every morning.</li>
         </ul>
       </section>
 
@@ -297,7 +297,7 @@
         <h2>BAB B. Big-O & Complexity Analysis</h2>
 
         <h3>B.1 Time Complexity</h3>
-        <p>Big-O notation is how developers talk about code speed. It's not about seconds or milliseconds; it's about how the runtime grows as the data gets massive. You need to understand the difference between polynomial growth (like O(N^2), which is usually bad) and linear or logarithmic growth (O(N) or O(log N), which is great). This is how you prove your solution is actually good.</p>
+        <p>Big-O notation is how developers talk about code speed. It's not about seconds or milliseconds; it's about how the runtime grows as the data gets massive. You need to understand the difference between polynomial growth (like O(N^2), which is usually bad) and linear or logarithmic growth (O(N) or O(log N), which is great). This is how you prove your solution is mathematically optimal.</p>
         
         <blockquote class="callout">
           <strong>Analogy: Searching for a Book in a Library.</strong> 
@@ -307,13 +307,13 @@
         </blockquote>
 
         <ul>
-          <li><strong>Big-O Basics:</strong> Drop the constants. O(2N) is just O(N). We only care about the worst-case massive scale.</li>
-          <li><strong>Growth Rates:</strong> Know your hierarchy: O(1) > O(log N) > O(N) > O(N log N) > O(N^2) > O(2^N).</li>
-          <li><strong>Trade-offs:</strong> Sometimes making it faster means it uses more memory. You need to discuss this trade-off with your interviewer.</li>
+          <li><strong>Big-O Basics:</strong> Drop the constants. O(2N) and O(N/2) are both just O(N). We only care about the dominant term as the input scale approaches infinity. Always think about the "Worst Case" (Big-O), but be aware of "Average Case" (Big-Theta) for real-world performance.</li>
+          <li><strong>Growth Rates:</strong> Know your hierarchy by heart: O(1) < O(log N) < O(N) < O(N log N) < O(N^2) < O(2^N) < O(N!). In interviews, O(N log N) is usually the threshold for "good" on large datasets, while O(2^N) is a massive red flag.</li>
+          <li><strong>Trade-offs:</strong> Sometimes making it faster means it uses more memory (Trading Space for Time). You need to discuss this trade-off explicitly with your interviewer—it shows you understand the constraints of the hardware.</li>
         </ul>
 
         <h3>B.2 Space Complexity</h3>
-        <p>Speed isn't everything; memory matters too. Space complexity measures how much extra RAM your algorithm eats as the input grows. Creating a massive new array inside your loop? That's going to cost you space. You have to know how to optimize memory, especially if the interviewer says, "Can you do it in-place?"</p>
+        <p>Speed isn't everything; memory matters too. Space complexity measures how much extra RAM your algorithm eats as the input grows. Creating a massive new array inside your loop? That's going to cost you space. You have to know how to optimize memory, especially if the interviewer says, "Can you do it in-place?" (using O(1) extra space).</p>
         
         <blockquote class="callout">
           <strong>Analogy: Packing for a Trip in a Tiny Car.</strong> 
@@ -323,12 +323,13 @@
         </blockquote>
 
         <ul>
-          <li><strong>Memory Optimization:</strong> Modifying the input array directly (in-place) usually gives you O(1) space complexity.</li>
-          <li><strong>Time vs. Space:</strong> Often, you can buy speed by spending memory (like using a Hash Map). This is the classic developer bargain.</li>
+          <li><strong>Memory Optimization:</strong> Modifying the input array directly (in-place) usually gives you O(1) space complexity. This is common in sorting or array manipulation problems.</li>
+          <li><strong>Stack Space:</strong> Don't forget about the "Hidden Space" in Recursion! Every recursive call adds a frame to the Call Stack. A recursive DFS on a tree with height H uses O(H) space, even if you don't create any new arrays.</li>
+          <li><strong>Time vs. Space:</strong> Often, you can buy speed by spending memory (like using a Hash Map). This is the classic developer bargain. In modern cloud computing, RAM is often cheaper than latency, but in embedded systems, space is king.</li>
         </ul>
 
         <h3>B.3 Practical Optimization</h3>
-        <p>In the real interview, you will usually start with a "Brute Force" solution. It's ugly, it's slow (probably O(N^2)), but it works. Your next job is to look at it, recognize the bottlenecks, and optimize it under constraints. Optimization is the key that unlocks the FAANG door.</p>
+        <p>In the real interview, you will usually start with a "Brute Force" solution. It's ugly, it's slow (probably O(N^2)), but it works. Your next job is to look at it, recognize the bottlenecks, and optimize it under constraints. Optimization is the key that unlocks the FAANG door. Use the <strong>BUD</strong> method: look for <strong>B</strong>ottlenecks, <strong>U</strong>nnecessary work, and <strong>D</strong>uplicated work.</p>
         
         <blockquote class="callout">
           <strong>Analogy: Upgrading Your Delivery Bike to a Truck.</strong> 
@@ -338,8 +339,9 @@
         </blockquote>
 
         <ul>
-          <li><strong>Constraints:</strong> Pay attention when they say "Data is sorted." That's a massive clue that you can optimize using Binary Search.</li>
-          <li><strong>Recognizing Inefficiency:</strong> If you see nested loops (a loop inside a loop), your Spidey-Sense should tingle. That's O(N^2). Can we fix it with a Hash Map?</li>
+          <li><strong>Constraints:</strong> Pay attention when they say "Data is sorted" or "Input range is small." That's a massive clue! Sorting lets you use Binary Search; small ranges might allow for Counting Sort or Bitmasking.</li>
+          <li><strong>Recognizing Inefficiency:</strong> If you see nested loops (a loop inside a loop), your Spidey-Sense should tingle. That's O(N^2). Can we fix it with a Hash Map? Can we use Two Pointers? Can we Pre-sort? These are the standard "Truck Upgrades."</li>
+          <li><strong>Pre-computation:</strong> Sometimes you can spend O(N) once to build a Prefix Sum or a Frequency Map, which makes every subsequent query O(1). This is a massive win in multi-query problems.</li>
         </ul>
       </section>
 
@@ -348,7 +350,7 @@
         <h2>BAB C. Core Data Structures</h2>
 
         <h3>C.1 Linear Structures</h3>
-        <p>Arrays, Strings, Hash Tables, Stacks, and Queues. These are your bread and butter, bro. Arrays are simple but slow to insert in the middle. Hash Tables are pure magic for O(1) lookups. Stacks (Last In, First Out) and Queues (First In, First Out) help manage data flow. You need to know these like the back of your hand.</p>
+        <p>Arrays, Strings, Hash Tables, Stacks, and Queues. These are your bread and butter, bro. Arrays are simple but slow to insert/delete in the middle. Hash Tables are pure magic for O(1) lookups. Stacks (Last In, First Out) and Queues (First In, First Out) help manage data flow. You need to know when to use which tool for the job, and more importantly, how they actually work under the hood.</p>
         
         <blockquote class="callout">
           <strong>Analogy: The Waitress and the Order Tickets.</strong> 
@@ -360,13 +362,13 @@
         </blockquote>
 
         <ul>
-          <li><strong>Arrays & Strings:</strong> Often interchangeable in interview logic. Master string manipulation!</li>
-          <li><strong>Hash Tables:</strong> The ultimate cheat code for optimizing O(N^2) down to O(N).</li>
-          <li><strong>Stacks & Queues:</strong> Crucial for parsing problems, tracking history, or doing Breadth-First Searches.</li>
+          <li><strong>Arrays & Strings:</strong> Most common interview topics. Master "Sliding Window" and "Two Pointers" here. Understand <strong>Dynamic Arrays</strong> (like ArrayList or Vector)—inserting at the end is "Amortized O(1)" because resizing only happens occasionally. For Strings, remember they are immutable in Java/Python; use a `StringBuilder` or list of chars to avoid O(N^2) complexity when building strings in a loop.</li>
+          <li><strong>Hash Tables:</strong> The ultimate optimization tool. It trades O(N) space for O(1) time. Interviewers might ask about <strong>Collision Resolution</strong>: Chaining (using a linked list at each bucket) or Open Addressing (finding the next empty slot). Always mention that in the absolute worst case (everyone hashes to the same bucket), lookup becomes O(N).</li>
+          <li><strong>Stacks & Queues:</strong> Crucial for parsing (think "Balanced Parentheses"), tracking history (Undo/Redo), or implementing Breadth-First Search (BFS). A <strong>Deque</strong> (Double-Ended Queue) is a pro move—it can act as both a Stack and a Queue.</li>
         </ul>
 
         <h3>C.2 Linked Structures</h3>
-        <p>Singly and Doubly Linked Lists. Unlike Arrays, these elements aren't sitting next to each other in memory; they just hold a "pointer" to the next guy. They are great for inserting data anywhere, but terrible if you need to find the 500th element quickly. You also need to know tricks like Floyd's Cycle Detection (the Tortoise and Hare).</p>
+        <p>Singly and Doubly Linked Lists. Unlike Arrays, these elements aren't sitting next to each other in memory; they just hold a "pointer" (reference) to the next guy. They are great for O(1) insertions at the head/tail, but terrible if you need to find the 500th element (O(N) search). You must master pointer manipulation without causing "Memory Leaks" or "Null Pointers."</p>
         
         <blockquote class="callout">
           <strong>Analogy: The Treasure Hunt with Clues.</strong> 
@@ -376,24 +378,25 @@
         </blockquote>
 
         <ul>
-          <li><strong>Singly vs. Doubly:</strong> Doubly has a "previous" pointer too, letting you walk backward.</li>
-          <li><strong>Cycle Detection:</strong> If the treasure hunt loops back to the beginning, you're stuck forever. Two pointers moving at different speeds (Tortoise and Hare) will eventually crash into each other if there's a loop!</li>
+          <li><strong>Singly vs. Doubly:</strong> Doubly has a "previous" pointer, allowing for O(1) deletion if you have the node reference. This is essential for building an <strong>LRU Cache</strong> (Least Recently Used), where you combine a Hash Map for O(1) lookup and a Doubly Linked List for O(1) updates.</li>
+          <li><strong>Cache Locality:</strong> A pro-level talking point! Arrays are "Cache Friendly" because elements are contiguous in memory. Linked Lists are "Cache Unfriendly" because pointers can jump all over the RAM, leading to slower performance in real-world systems despite similar Big-O.</li>
+          <li><strong>Dummy Nodes:</strong> A pro-tip! Use a "Dummy Head" node to simplify edge cases when inserting or deleting from the start of the list. It prevents the `if (head == null)` mess and makes your code much cleaner during the interview.</li>
         </ul>
 
         <h3>C.3 Trees & Graphs</h3>
-        <p>Welcome to the big leagues. Binary Trees, Binary Search Trees (BST), Heaps, and Graphs. These structures represent relationships. Trees are just restricted Graphs. You'll need to know how to represent a Graph (Adjacency List is usually best) and how a Priority Queue (Heap) always keeps the biggest or smallest item at the top.</p>
+        <p>Welcome to the big leagues. Binary Trees, Binary Search Trees (BST), Heaps, and Graphs. These structures represent hierarchical and networked relationships. Trees are just restricted Graphs without cycles. You'll need to know how to represent a Graph (Adjacency List vs Matrix) and how a Priority Queue (Heap) manages order efficiently.</p>
         
         <blockquote class="callout">
           <strong>Analogy: The Company Org Chart vs. The Social Network.</strong> 
-          A <strong>Tree</strong> is like a corporate Org Chart. The CEO is at the root, and it branches down to managers and employees. It only flows down. 
+          A <strong>Tree</strong> is like a corporate Org Chart. The CEO is at the root, and it branches down to managers and employees. It only flows one way. 
           <br><br>
           A <strong>Graph</strong> is like Facebook or Instagram. You follow a friend, they follow you, they follow a celebrity. Anyone can be connected to anyone in a massive web.
         </blockquote>
 
         <ul>
-          <li><strong>Binary Search Trees (BST):</strong> Left side is smaller, right side is bigger. Perfect for fast searching.</li>
-          <li><strong>Heaps:</strong> A VIP line where the most important person always skips to the front (O(1) access to max/min).</li>
-          <li><strong>Graphs:</strong> Master the Adjacency List—it’s just a Hash Map where keys are people and values are lists of their friends.</li>
+          <li><strong>Binary Search Trees (BST):</strong> Left is smaller, right is bigger. Searching, inserting, and deleting are all O(log N) *if* the tree is balanced. If it's not (e.g., just a straight line of nodes), it becomes O(N), effectively a linked list. Know how to check if a tree is a valid BST!</li>
+          <li><strong>Heaps (Priority Queues):</strong> Always gives you O(1) access to the Max or Min element. Perfect for "Find Top K" problems. Inserting is O(log N), but building a heap from an array (Heapify) can be done in O(N)—a trick often tested in Senior roles.</li>
+          <li><strong>Graphs:</strong> Master the <strong>Adjacency List</strong> trade-off. It’s memory efficient (O(V+E)) compared to an Adjacency Matrix (O(V^2)). Understand BFS for shortest paths and DFS for "can I reach X from Y?" problems. Also, know the concept of "In-degree" for Topological Sorting (ordering tasks with dependencies).</li>
         </ul>
       </section>
 
@@ -402,7 +405,7 @@
         <h2>BAB D. Algorithm Fundamentals</h2>
 
         <h3>D.1 Searching & Sorting</h3>
-        <p>If you don't know Binary Search, you are going to have a bad time. Sorting is also fundamental. You don't usually have to write QuickSort from scratch in a 45-minute interview, but you DO need to know that sorting takes O(N log N) time, and you need to know when sorting the input first makes the rest of the problem ridiculously easy.</p>
+        <p>If you don't know Binary Search, you are going to have a bad time. Sorting is also fundamental. You don't usually have to write QuickSort from scratch in a 45-minute interview, but you DO need to know that sorting takes O(N log N) time, and you need to know when sorting the input first makes the rest of the problem ridiculously easy. Understand the difference between "Stable" and "Unstable" sorting.</p>
         
         <blockquote class="callout">
           <strong>Analogy: The Phonebook Tear.</strong> 
@@ -412,12 +415,31 @@
         </blockquote>
 
         <ul>
-          <li><strong>Binary Search:</strong> Only works on sorted data. Reduces O(N) to O(log N).</li>
-          <li><strong>Sorting Trade-offs:</strong> Sorting costs O(N log N). If your brute force is O(N^2), sorting first is a massive win.</li>
+          <li><strong>Binary Search:</strong> Only works on sorted data. Reduces O(N) to O(log N). Master the variations: "Find the first occurrence," "Find the last occurrence," or "Search in a rotated sorted array." <strong>Always check your mid calculation: `mid = left + (right - left) / 2` to avoid integer overflow!</strong></li>
+          <li><strong>Sorting Trade-offs:</strong> Sorting costs O(N log N). If your brute force is O(N^2), sorting first is a massive win. Know that **QuickSort** is generally faster in practice but **Merge Sort** is stable and better for linked lists.</li>
+          <li><strong>Built-in Sorts:</strong> In most languages, `.sort()` uses Timsort (O(N log N)). Know when it's okay to use it versus when the interviewer wants to see you understand the mechanics.</li>
         </ul>
 
+        <p><strong>Example Question: Search in a Sorted Array (Binary Search)</strong></p>
+        <pre><code>function binarySearch(nums, target) {
+  let left = 0;
+  let right = nums.length - 1;
+
+  while (left <= right) {
+    let mid = Math.floor(left + (right - left) / 2);
+    if (nums[mid] === target) return mid;
+    if (nums[mid] < target) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+  return -1;
+}</code></pre>
+        <p><strong>Answer & Logic:</strong> We use the <strong>Decrease and Conquer</strong> strategy. Since the array is sorted, we check the middle element. If it's the target, we're done. If the target is larger, we know it must be in the right half, so we ignore the left. If smaller, we ignore the right. This cuts the search space in half every time, resulting in a <strong>Time Complexity of O(log N)</strong> and <strong>Space Complexity of O(1)</strong>.</p>
+
         <h3>D.2 Recursion & Divide and Conquer</h3>
-        <p>Recursion is a function that calls itself until it hits a base case. It bends your brain at first, but it’s essential for Trees and Graphs. Divide and Conquer is taking a massive problem, splitting it into smaller identical problems, solving them, and stitching the answers back together.</p>
+        <p>Recursion is a function that calls itself until it hits a base case. It bends your brain at first, but it’s essential for Trees, Graphs, and Dynamic Programming. Divide and Conquer is taking a massive problem, splitting it into smaller identical problems, solving them, and stitching the answers back together. It’s the strategy behind the fastest sorting algorithms.</p>
         
         <blockquote class="callout">
           <strong>Analogy: The Boss Delegating Work.</strong> 
@@ -427,12 +449,37 @@
         </blockquote>
 
         <ul>
-          <li><strong>Base Case:</strong> The most important part of recursion. Without it, you get an Infinite Loop (Stack Overflow).</li>
-          <li><strong>Recursive Patterns:</strong> Practice tracing the call stack on paper so you can visualize how it unwinds.</li>
+          <li><strong>Base Case:</strong> The most important part of recursion. Without it, you get an Infinite Loop (Stack Overflow). Always define your "Exit Condition" first.</li>
+          <li><strong>Recursive Patterns:</strong> Practice tracing the call stack on paper so you can visualize how it unwinds. Understand that every recursive call adds O(H) to your space complexity due to the stack.</li>
+          <li><strong>Memoization:</strong> This is recursion's superpower. If you see yourself calculating the same thing twice (like in Fibonacci), cache the result! (This leads directly into Dynamic Programming).</li>
         </ul>
 
+        <p><strong>Example Question: Merge Sort (Divide & Conquer)</strong></p>
+        <pre><code>function mergeSort(arr) {
+  if (arr.length <= 1) return arr;
+
+  const mid = Math.floor(arr.length / 2);
+  const left = mergeSort(arr.slice(0, mid));
+  const right = mergeSort(arr.slice(mid));
+
+  return merge(left, right);
+}
+
+function merge(left, right) {
+  let result = [];
+  while (left.length && right.length) {
+    if (left[0] < right[0]) {
+      result.push(left.shift());
+    } else {
+      result.push(right.shift());
+    }
+  }
+  return [...result, ...left, ...right];
+}</code></pre>
+        <p><strong>Answer & Logic:</strong> This is the classic <strong>Divide and Conquer</strong> pattern. <strong>Divide:</strong> We split the array in half until we reach base cases (arrays of length 1). <strong>Conquer:</strong> We merge the sorted halves back together in linear time. Because we split the array log N times and perform O(N) work at each level, the <strong>Time Complexity is O(N log N)</strong>. The <strong>Space Complexity is O(N)</strong> due to the temporary arrays created during merging.</p>
+
         <h3>D.3 Traversal Techniques</h3>
-        <p>How do we visit every node in a Tree or Graph? We use Breadth-First Search (BFS) or Depth-First Search (DFS). BFS uses a Queue and searches level by level (like dropping a stone in water). DFS uses a Stack (or Recursion) and dives as deep as possible before backing up.</p>
+        <p>How do we visit every node in a Tree or Graph? We use Breadth-First Search (BFS) or Depth-First Search (DFS). BFS uses a Queue and searches level by level (like dropping a stone in water). DFS uses a Stack (or Recursion) and dives as deep as possible before backing up. Mastering these is the key to all Tree and Graph problems.</p>
         
         <blockquote class="callout">
           <strong>Analogy: Finding Your Lost Keys in a House.</strong> 
@@ -442,9 +489,26 @@
         </blockquote>
 
         <ul>
-          <li><strong>BFS (Breadth-First Search):</strong> Great for finding the "Shortest Path" on unweighted graphs.</li>
-          <li><strong>DFS (Depth-First Search):</strong> Easier to write cleanly with recursion. Great for exploring all possibilities.</li>
+          <li><strong>BFS (Breadth-First Search):</strong> Great for finding the "Shortest Path" on unweighted graphs. If an interviewer asks for "minimum steps," think BFS. It uses a <strong>Queue</strong>.</li>
+          <li><strong>DFS (Depth-First Search):</strong> Easier to write cleanly with recursion. Great for exploring all possibilities (Backtracking) or finding connected components in a graph. It uses a <strong>Stack</strong> (explicit or implicit via recursion).</li>
+          <li><strong>Tree Traversals:</strong> Master In-order (Left, Root, Right), Pre-order (Root, Left, Right), and Post-order (Left, Right, Root). In-order on a BST gives you elements in sorted order!</li>
         </ul>
+
+        <p><strong>Example Question: BFS on a Tree (Level Order Traversal)</strong></p>
+        <pre><code>function bfs(root) {
+  if (!root) return [];
+  let queue = [root];
+  let result = [];
+
+  while (queue.length > 0) {
+    let node = queue.shift();
+    result.push(node.val);
+    if (node.left) queue.push(node.left);
+    if (node.right) queue.push(node.right);
+  }
+  return result;
+}</code></pre>
+        <p><strong>Answer & Logic:</strong> We use a <strong>Queue (FIFO)</strong> to keep track of nodes. We visit the root, then its children, then their children, level by level. By using `shift()` (O(N) in JS, but O(1) in a real Queue) to get the next node, we ensure we finish the current "level" before moving deeper. <strong>Time Complexity is O(N)</strong> as we visit every node once. <strong>Space Complexity is O(W)</strong> where W is the maximum width of the tree.</p>
       </section>
 
       <!-- ==================== BAB E ==================== -->
@@ -452,7 +516,7 @@
         <h2>BAB E. Advanced Algorithms & Patterns</h2>
 
         <h3>E.1 Greedy Algorithms</h3>
-        <p>Greedy algorithms make the best local choice right now, hoping that it leads to the best global outcome. It doesn't look at the big picture; it just takes the biggest piece of pie sitting directly in front of it. It doesn't work for everything, but when it does, it's blazing fast.</p>
+        <p>Greedy algorithms make the best local choice right now, hoping that it leads to the best global outcome. It doesn't look at the big picture; it just takes the biggest piece of pie sitting directly in front of it. It doesn't work for everything, but when it does, it's blazing fast (usually O(N) or O(N log N) with sorting).</p>
         
         <blockquote class="callout">
           <strong>Analogy: Giving Change at a Cash Register.</strong> 
@@ -462,12 +526,24 @@
         </blockquote>
 
         <ul>
-          <li><strong>Local Optima:</strong> Always picking the immediate best option.</li>
-          <li><strong>Common Problems:</strong> Interval scheduling, jump games, making change (with standard currency).</li>
+          <li><strong>Local Optima:</strong> Always picking the immediate best option. This works for things like "Activity Selection" or "Minimum Spanning Trees" (Kruskal's/Prim's).</li>
+          <li><strong>Common Problems:</strong> Interval scheduling, jump games, making change (with standard currency). If greedy works, it's almost always the fastest solution.</li>
+          <li><strong>When to Avoid:</strong> Greedy fails if local choices hurt future options. For example, in a "Knapsack" problem, taking the most expensive item first might prevent you from taking two slightly cheaper items that total more value.</li>
         </ul>
 
+        <p><strong>Example Question: Jump Game (Greedy)</strong></p>
+        <pre><code>function canJump(nums) {
+  let farthest = 0;
+  for (let i = 0; i < nums.length; i++) {
+    if (i > farthest) return false;
+    farthest = Math.max(farthest, i + nums[i]);
+  }
+  return true;
+}</code></pre>
+        <p><strong>Answer & Logic:</strong> We use a <strong>Greedy</strong> approach by tracking the `farthest` index we can reach. At each step, we update `farthest` if the current jump (`i + nums[i]`) exceeds our previous record. If we ever find ourselves at an index `i` that is beyond our `farthest` reach, it's game over. <strong>Time Complexity is O(N)</strong> and <strong>Space Complexity is O(1)</strong>.</p>
+
         <h3>E.2 Dynamic Programming (DP)</h3>
-        <p>This is the boogeyman of interviews, but it's just recursion with a memory bank. If you calculate something once, you save it (Memoization) so you never have to calculate it again. Alternatively, you build the answer from the bottom up using an array (Tabulation).</p>
+        <p>This is the boogeyman of interviews, but it's just recursion with a memory bank. If you calculate something once, you save it (Memoization) so you never have to calculate it again. Alternatively, you build the answer from the bottom up using an array (Tabulation). It’s about breaking down a complex problem into <strong>Overlapping Subproblems</strong> and <strong>Optimal Substructure</strong>.</p>
         
         <blockquote class="callout">
           <strong>Analogy: Remembering the Math Equation.</strong> 
@@ -477,12 +553,27 @@
         </blockquote>
 
         <ul>
-          <li><strong>Memoization (Top-Down):</strong> Recursion + a Hash Map to cache answers.</li>
-          <li><strong>Tabulation (Bottom-Up):</strong> Iteration + an Array. Usually faster because it avoids function call overhead.</li>
+          <li><strong>Memoization (Top-Down):</strong> Start with recursion and add a Hash Map or Array to cache answers. Easy to write if you already have the recursive logic.</li>
+          <li><strong>Tabulation (Bottom-Up):</strong> Start with the smallest subproblems (base cases) and fill an array iteratively. Usually faster because it avoids function call overhead and "Stack Overflow."</li>
+          <li><strong>State Transition:</strong> The "Magic Formula." For every DP problem, you need a formula like `dp[i] = dp[i-1] + dp[i-2]`. Mastering this formula is the key to solving "Hard" LeetCode problems.</li>
         </ul>
 
+        <p><strong>Example Question: Climbing Stairs (DP Tabulation)</strong></p>
+        <pre><code>function climbStairs(n) {
+  if (n <= 2) return n;
+  let dp = new Array(n + 1);
+  dp[1] = 1;
+  dp[2] = 2;
+
+  for (let i = 3; i <= n; i++) {
+    dp[i] = dp[i-1] + dp[i-2];
+  }
+  return dp[n];
+}</code></pre>
+        <p><strong>Answer & Logic:</strong> To reach step `i`, you could have come from step `i-1` (1-step jump) or step `i-2` (2-step jump). Thus, the total ways to reach `i` is the sum of ways to reach `i-1` and `i-2`. This is the <strong>State Transition Equation</strong>. By using an array to store these values, we avoid redundant calculations. <strong>Time Complexity is O(N)</strong> and <strong>Space Complexity is O(N)</strong> (can be optimized to O(1)).</p>
+
         <h3>E.3 Backtracking</h3>
-        <p>Backtracking is DFS on steroids. It explores all possible combinations, but the moment it realizes a path is invalid, it "backs up" (undoes the move) and tries a different path. It's how you solve Sudoku, generate permutations, or solve the N-Queens problem.</p>
+        <p>Backtracking is DFS on steroids. It explores all possible combinations, but the moment it realizes a path is invalid, it "backs up" (undoes the move) and tries a different path. It's how you solve Sudoku, generate permutations, or solve the N-Queens problem. It's essentially <strong>Brute Force with Brains</strong>.</p>
         
         <blockquote class="callout">
           <strong>Analogy: Exploring a Giant Corn Maze.</strong> 
@@ -492,9 +583,31 @@
         </blockquote>
 
         <ul>
-          <li><strong>Constraint-Based:</strong> If a move violates the rules, prune that branch immediately to save time.</li>
-          <li><strong>State Reversal:</strong> Always remember to "undo" your choice (remove the item from your temporary list) before returning from the recursive call.</li>
+          <li><strong>Constraint-Based:</strong> If a move violates the rules (e.g., two queens on the same row), "prune" that branch immediately to save massive time. This is called **Pruning**.</li>
+          <li><strong>State Reversal:</strong> The "Backtrack" step. Always remember to "undo" your choice (remove the item from your temporary list) before returning from the recursive call so the next path starts with a clean slate.</li>
+          <li><strong>Permutations vs Combinations:</strong> Know when the order matters (Permutations) versus when it doesn't (Combinations). This changes how you handle your "Used" items.</li>
         </ul>
+
+        <p><strong>Example Question: Generate Permutations (Backtracking)</strong></p>
+        <pre><code>function permute(nums) {
+  let result = [];
+  backtrack(nums, [], result);
+  return result;
+}
+
+function backtrack(nums, path, result) {
+  if (path.length === nums.length) {
+    result.push([...path]);
+    return;
+  }
+  for (let i = 0; i < nums.length; i++) {
+    if (path.includes(nums[i])) continue;
+    path.push(nums[i]); // Choose
+    backtrack(nums, path, result); // Explore
+    path.pop(); // Un-choose (Backtrack)
+  }
+}</code></pre>
+        <p><strong>Answer & Logic:</strong> We build the permutation step-by-step. For each position, we try every number that isn't already in our `path` (the "Choose" step). We then recursively call the function to fill the next position. Once we hit a dead end or complete a permutation, we <strong>Pop</strong> the last number (the "Backtrack" step) to try the next available candidate. <strong>Time Complexity is O(N!)</strong>.</p>
       </section>
 
       <!-- ==================== BAB F ==================== -->
@@ -502,7 +615,7 @@
         <h2>BAB F. Real Interview Coding Problems</h2>
 
         <h3>F.1 Array Problems</h3>
-        <p>Arrays are the most common interview topic. Problems like Two Sum, Container With Most Water, and Trapping Rainwater will test your ability to use the "Two Pointer" technique or Hash Maps to achieve O(N) linear time.</p>
+        <p>Arrays are the most common interview topic. Problems like Two Sum, Container With Most Water, and Trapping Rainwater will test your ability to use the "Two Pointer" technique or Hash Maps to achieve O(N) linear time. Master the art of **In-place** manipulation to save space.</p>
         
         <blockquote class="callout">
           <strong>Analogy: The Two Detectives.</strong> 
@@ -512,12 +625,27 @@
         </blockquote>
 
         <ul>
-          <li><strong>Two Sum:</strong> The classic. Use a Hash Map to store what you've seen to find the complement instantly.</li>
-          <li><strong>Trapping Rainwater:</strong> A hard problem made easy by pre-calculating the max heights on the left and right.</li>
+          <li><strong>Two Sum:</strong> The classic. Use a Hash Map to store what you've seen to find the complement instantly (O(N) time). If the array is sorted, use Two Pointers instead for O(1) space!</li>
+          <li><strong>Trapping Rainwater:</strong> A hard problem made easy by pre-calculating the max heights on the left and right, or using a monotonic stack. It tests your ability to visualize data.</li>
+          <li><strong>Subarray Sum:</strong> Use the "Prefix Sum" technique. It turns "How many subarrays sum to K?" from O(N^2) into O(N) using a Hash Map.</li>
         </ul>
 
+        <p><strong>Example Question: Two Sum (Hash Map)</strong></p>
+        <pre><code>function twoSum(nums, target) {
+  let map = new Map();
+  for (let i = 0; i < nums.length; i++) {
+    let complement = target - nums[i];
+    if (map.has(complement)) {
+      return [map.get(complement), i];
+    }
+    map.set(nums[i], i);
+  }
+  return [];
+}</code></pre>
+        <p><strong>Answer & Logic:</strong> We use a <strong>Hash Map</strong> to store the numbers we've already visited and their indices. For each new number, we calculate its `complement` (what we need to reach the target). If the complement is already in the map, we've found our pair! This replaces a nested O(N^2) loop with a single pass. <strong>Time Complexity is O(N)</strong> and <strong>Space Complexity is O(N)</strong>.</p>
+
         <h3>F.2 String Problems</h3>
-        <p>Strings are just Arrays of characters. You will heavily use the "Sliding Window" pattern here. For example, "Longest Substring Without Repeating Characters" requires you to expand a window until you hit a duplicate, then shrink it from the left.</p>
+        <p>Strings are just Arrays of characters, but with unique challenges like immutability and character encoding. You will heavily use the "Sliding Window" pattern here. For example, "Longest Substring Without Repeating Characters" requires you to expand a window until you hit a duplicate, then shrink it from the left.</p>
         
         <blockquote class="callout">
           <strong>Analogy: A Photographer's Camera Lens.</strong> 
@@ -527,12 +655,30 @@
         </blockquote>
 
         <ul>
-          <li><strong>Sliding Window:</strong> Perfect for substring/subarray problems.</li>
-          <li><strong>Backspace String Compare:</strong> Easily solved by simulating the typing with a Stack.</li>
+          <li><strong>Sliding Window:</strong> Perfect for any problem that mentions "continuous subarray" or "substring." It maintains a window that satisfies a condition.</li>
+          <li><strong>Anagrams & Palindromes:</strong> Use a frequency map (an array of size 26 for English letters) to compare character counts efficiently.</li>
+          <li><strong>String Search:</strong> Know the basics of KMP or Rabin-Karp if you're interviewing for Senior roles, though simple string manipulation is usually enough.</li>
         </ul>
 
+        <p><strong>Example Question: Longest Substring Without Repeating Characters (Sliding Window)</strong></p>
+        <pre><code>function lengthOfLongestSubstring(s) {
+  let set = new Set();
+  let left = 0, maxLen = 0;
+
+  for (let right = 0; right < s.length; right++) {
+    while (set.has(s[right])) {
+      set.delete(s[left]);
+      left++;
+    }
+    set.add(s[right]);
+    maxLen = Math.max(maxLen, right - left + 1);
+  }
+  return maxLen;
+}</code></pre>
+        <p><strong>Answer & Logic:</strong> We use two pointers to maintain a "window" of unique characters. The `right` pointer expands the window. If we encounter a duplicate character, we move the `left` pointer forward (shrinking the window) until the duplicate is gone. This ensures we check every possible valid substring in a single pass. <strong>Time Complexity is O(N)</strong>.</p>
+
         <h3>F.3 Linked List Problems</h3>
-        <p>You have to be comfortable moving pointers around without losing track of your data. Reversing a Linked List is the rite of passage. If you drop a pointer, half your list floats off into the abyss forever.</p>
+        <p>You have to be comfortable moving pointers around without losing track of your data. Reversing a Linked List is the rite of passage. If you drop a pointer, half your list floats off into the abyss forever. Master the "Fast and Slow Pointer" (Tortoise and Hare) technique.</p>
         
         <blockquote class="callout">
           <strong>Analogy: Reversing the Train Cars.</strong> 
@@ -542,9 +688,25 @@
         </blockquote>
 
         <ul>
-          <li><strong>Reverse Linked List:</strong> Master the `prev`, `curr`, `nextTemp` pointer dance.</li>
-          <li><strong>Fast and Slow Pointers:</strong> Use them to find the middle of the list in one pass.</li>
+          <li><strong>Reverse Linked List:</strong> Master the `prev`, `curr`, `nextTemp` pointer dance. It’s the base for many harder problems.</li>
+          <li><strong>Cycle Detection:</strong> Use Fast and Slow pointers. If the fast pointer ever catches up to the slow one, you have a loop. If it hits `null`, you don't.</li>
+          <li><strong>Merging K Sorted Lists:</strong> A classic "Hard" problem. Use a **Min-Heap** to always pick the smallest element from the head of the K lists. O(N log K) time.</li>
         </ul>
+
+        <p><strong>Example Question: Reverse a Singly Linked List (Iterative)</strong></p>
+        <pre><code>function reverseList(head) {
+  let prev = null;
+  let curr = head;
+
+  while (curr !== null) {
+    let nextTemp = curr.next; // Store next
+    curr.next = prev; // Reverse pointer
+    prev = curr; // Move prev forward
+    curr = nextTemp; // Move curr forward
+  }
+  return prev;
+}</code></pre>
+        <p><strong>Answer & Logic:</strong> We iterate through the list exactly once. At each node, we save the next node, flip the current node's `next` pointer to point backwards (to `prev`), and then move our `prev` and `curr` markers forward one step. <strong>Time Complexity is O(N)</strong> and <strong>Space Complexity is O(1)</strong> as we only use a few pointers.</p>
       </section>
 
       <!-- ==================== BAB G ==================== -->
@@ -552,7 +714,7 @@
         <h2>BAB G. Problem Solving Framework</h2>
 
         <h3>G.1 Step-by-Step Approach</h3>
-        <p>Never dive straight into writing code. That is a rookie mistake. Follow the framework: 1. Understand the problem. 2. Define test cases. 3. Propose a Brute-Force solution. 4. Optimize it. 5. Code it. 6. Test it. This proves you are a mature, systematic engineer.</p>
+        <p>Never dive straight into writing code. That is a rookie mistake. Follow the framework: 1. Understand the problem. 2. Define test cases. 3. Propose a Brute-Force solution. 4. Optimize it. 5. Code it. 6. Test it. This proves you are a mature, systematic engineer who values correctness over speed.</p>
         
         <blockquote class="callout">
           <strong>Analogy: Measuring Twice, Cutting Once.</strong> 
@@ -562,12 +724,13 @@
         </blockquote>
 
         <ul>
-          <li><strong>Clarifying Questions:</strong> Always ask about edge cases. Can inputs be negative? Is the array sorted?</li>
-          <li><strong>Brute Force First:</strong> It's better to have a slow working solution than a genius broken solution.</li>
+          <li><strong>Clarifying Questions:</strong> Ask about edge cases immediately. "Can I expect empty input?" "Is there a range for the integers?" This shows you think about production stability.</li>
+          <li><strong>Brute Force First:</strong> State the obvious O(N^2) solution first. It gives you a safety net and helps you identify the exact bottleneck to optimize. Never skip this step unless the interviewer tells you to.</li>
+          <li><strong>Dry Run:</strong> Before hitting "Submit" or telling the interviewer you're done, trace your code with a small example. You'll catch 90% of your bugs right then and there.</li>
         </ul>
 
         <h3>G.2 Communication in Interviews</h3>
-        <p>Your interviewer is grading your teamwork, not just your logic. Explain your thought process, discuss the Big-O trade-offs out loud, and justify why you chose a Hash Map instead of an Array. If you get stuck, talking out loud gives the interviewer a chance to give you a hint.</p>
+        <p>Your interviewer is grading your teamwork, not just your logic. Explain your thought process, discuss the Big-O trade-offs out loud, and justify why you chose a Hash Map instead of an Array. If you get stuck, talking out loud gives the interviewer a chance to guide you with a hint without making it feel like they're "saving" you.</p>
         
         <blockquote class="callout">
           <strong>Analogy: The Sports Commentator.</strong> 
@@ -577,12 +740,13 @@
         </blockquote>
 
         <ul>
-          <li><strong>Think Out Loud:</strong> Silence is deadly. Keep a steady flow of communication.</li>
-          <li><strong>Take Feedback:</strong> If they drop a hint, TAKE IT. Don't be stubborn.</li>
+          <li><strong>Think Out Loud:</strong> Silence is deadly. It makes the interviewer nervous. Keep a steady stream of "active thinking" so they can follow your logic.</li>
+          <li><strong>Take Feedback:</strong> If they say, "Are you sure about this pointer?", that is a GIFT. Don't be defensive. Say, "Good point, let me re-trace that," and find the bug. Being "coachable" is a top hiring signal.</li>
+          <li><strong>Trade-off Discussion:</strong> Always end with: "This solution is O(N) time and O(N) space. We could get O(1) space by sorting, but then time would increase to O(N log N)."</li>
         </ul>
 
         <h3>G.3 Pattern Recognition</h3>
-        <p>This is the MOST important skill. Once you do enough problems, you realize there aren't 10,000 unique questions; there are only about 15-20 core patterns (Sliding Window, Two Pointers, Top K Elements). Map the new problem to a known pattern, and the code writes itself.</p>
+        <p>This is the MOST important skill. Once you do enough problems, you realize there aren't 10,000 unique questions; there are only about 15-20 core patterns (Sliding Window, Two Pointers, Top K Elements). Map the new problem to a known pattern, and the code writes itself. This is how pros solve "Hard" problems in 20 minutes.</p>
         
         <blockquote class="callout">
           <strong>Analogy: The Master Mechanic.</strong> 
@@ -592,8 +756,9 @@
         </blockquote>
 
         <ul>
-          <li><strong>Keywords:</strong> "Top K" -> Heap. "Continuous Subarray" -> Sliding Window. "Sorted Array" -> Binary Search.</li>
-          <li><strong>Intuition:</strong> Intuition is just crystallized experience. Build it through consistent pattern practice.</li>
+          <li><strong>Keywords:</strong> "Top K" -> Heap. "Continuous Subarray" -> Sliding Window. "Sorted Array" -> Binary Search. "Connected components" -> BFS/DFS. "Shortest Path" -> BFS or Dijkstra.</li>
+          <li><strong>Mental Mapping:</strong> As soon as you hear the problem, start a mental checklist of patterns. "Does Two Pointers fit here? No. How about a Hash Map? Yes!"</li>
+          <li><strong>Intuition:</strong> Intuition is just crystallized experience. Build it through consistent pattern practice, not by memorizing specific LeetCode numbers.</li>
         </ul>
       </section>
 
@@ -602,7 +767,7 @@
         <h2>BAB H. Advanced Topics & Algorithms</h2>
 
         <h3>H.1 Graph Algorithms</h3>
-        <p>For higher-level FAANG roles, BFS/DFS isn't enough. You need Dijkstra’s Algorithm for finding the absolute shortest path on a weighted graph (like Google Maps), Bellman-Ford if you have negative weights, and Topological Sort for scheduling tasks with dependencies.</p>
+        <p>For higher-level FAANG roles, BFS/DFS isn't enough. You need Dijkstra’s Algorithm for finding the absolute shortest path on a weighted graph (like Google Maps), Bellman-Ford if you have negative weights, and Topological Sort for scheduling tasks with dependencies. These are the "heavy hitters" of graph theory.</p>
         
         <blockquote class="callout">
           <strong>Analogy: The Uber Driver Navigation.</strong> 
@@ -612,12 +777,42 @@
         </blockquote>
 
         <ul>
-          <li><strong>Dijkstra’s:</strong> BFS with a Priority Queue instead of a normal Queue.</li>
-          <li><strong>Topological Sort:</strong> Perfect for resolving dependencies (e.g., "Take Course A before Course B").</li>
+          <li><strong>Dijkstra’s:</strong> BFS with a Priority Queue instead of a normal Queue. It's O(E log V). Know how to handle the "visited" state to avoid infinite loops.</li>
+          <li><strong>Topological Sort:</strong> Essential for "Task Scheduling" problems. It uses Kahn's Algorithm (BFS with in-degrees) or DFS. If you see "A must happen before B," think Topological Sort.</li>
+          <li><strong>Disjoint Set Union (DSU):</strong> A magical data structure for checking if two nodes are in the same "cluster" or "island" in O(α(N)) time—basically constant time!</li>
         </ul>
 
+        <p><strong>Example Question: Topological Sort (Kahn's Algorithm)</strong></p>
+        <pre><code>function topologicalSort(numCourses, prerequisites) {
+  let adj = Array.from({ length: numCourses }, () => []);
+  let inDegree = new Array(numCourses).fill(0);
+  
+  for (let [course, pre] of prerequisites) {
+    adj[pre].push(course);
+    inDegree[course]++;
+  }
+
+  let queue = [];
+  for (let i = 0; i < numCourses; i++) {
+    if (inDegree[i] === 0) queue.push(i);
+  }
+
+  let order = [];
+  while (queue.length > 0) {
+    let curr = queue.shift();
+    order.push(curr);
+    for (let neighbor of adj[curr]) {
+      inDegree[neighbor]--;
+      if (inDegree[neighbor] === 0) queue.push(neighbor);
+    }
+  }
+
+  return order.length === numCourses ? order : [];
+}</code></pre>
+        <p><strong>Answer & Logic:</strong> We use <strong>Kahn's Algorithm</strong>. First, we calculate the `inDegree` (number of incoming edges) for each node. Nodes with an in-degree of 0 have no dependencies and can be processed immediately. As we process a node, we "remove" its edges, decreasing the in-degree of its neighbors. If a neighbor's in-degree hits 0, we add it to the queue. <strong>Time Complexity is O(V + E)</strong>.</p>
+
         <h3>H.2 Specialized Algorithms</h3>
-        <p>Sometimes they throw a curveball. Quickselect is a genius way to find the Kth largest element in O(N) time without sorting the whole array. Cycle detection (like Floyd's) is crucial not just for Linked Lists, but for finding deadlocks in operating systems.</p>
+        <p>Sometimes they throw a curveball to see how you handle advanced optimization. Quickselect is a genius way to find the Kth largest element in O(N) time without sorting. Bit manipulation can solve "Find the unique number" in O(N) time with O(1) space using XOR magic. These are your "Secret Weapons."</p>
         
         <blockquote class="callout">
           <strong>Analogy: The VIP Bouncer (Quickselect).</strong> 
@@ -627,11 +822,23 @@
         </blockquote>
 
         <ul>
-          <li><strong>Quickselect:</strong> Based on the QuickSort partitioning logic. Massively efficient.</li>
+          <li><strong>Quickselect:</strong> Based on the QuickSort partitioning logic. Incredibly efficient for "Median" or "Kth Largest" problems.</li>
+          <li><strong>Bit Manipulation:</strong> Master the basic operators: `&`, `|`, `^`, `~`, `<<`, `>>`. XOR is particularly useful because `x ^ x = 0`. It’s the ultimate way to cancel out duplicates.</li>
+          <li><strong>Segment Trees / Fenwick Trees:</strong> Only if you're aiming for Senior/Staff roles at places like Google. They allow for O(log N) range updates and queries.</li>
         </ul>
 
+        <p><strong>Example Question: Single Number (Bit Manipulation)</strong></p>
+        <pre><code>function singleNumber(nums) {
+  let result = 0;
+  for (let num of nums) {
+    result ^= num;
+  }
+  return result;
+}</code></pre>
+        <p><strong>Answer & Logic:</strong> We leverage the <strong>XOR property</strong>: `a ^ a = 0` and `a ^ 0 = a`. By XORing all numbers in the array together, every number that appears twice will cancel itself out to zero. The only number remaining will be the one that appeared once. <strong>Time Complexity is O(N)</strong> and <strong>Space Complexity is O(1)</strong>.</p>
+
         <h3>H.3 Complex Data Structures</h3>
-        <p>Tries (Prefix Trees) are the magic behind autocomplete. If an interviewer asks you to build a search bar or a spell checker, you use a Trie. Advanced Heaps and Priority Queues are your go-to for merging K sorted lists or keeping track of streaming data.</p>
+        <p>Tries (Prefix Trees) are the magic behind autocomplete. If an interviewer asks you to build a search bar or a spell checker, you use a Trie. Advanced Heaps and Priority Queues are your go-to for merging K sorted lists or keeping track of streaming data medians in real-time.</p>
         
         <blockquote class="callout">
           <strong>Analogy: The Autocomplete Dictionary (Trie).</strong> 
@@ -641,9 +848,41 @@
         </blockquote>
 
         <ul>
-          <li><strong>Tries:</strong> Every node is a character. Path down the tree spells a word.</li>
-          <li><strong>Streaming Data:</strong> Tracking the median of a continuous stream of numbers? Use two Heaps (one Max-Heap, one Min-Heap).</li>
+          <li><strong>Tries:</strong> Every node is a character. A path down the tree spells a word. It’s O(L) for search/insert where L is the word length. Much faster than a Hash Map for prefix lookups.</li>
+          <li><strong>Streaming Data:</strong> Tracking the median of a continuous stream of numbers? Use **Two Heaps** (one Max-Heap for the lower half, one Min-Heap for the upper half). The median is always at the top!</li>
+          <li><strong>LRU Cache:</strong> A high-frequency interview topic. It combines a **Hash Map** (for O(1) lookup) and a **Doubly Linked List** (for O(1) removal/insertion of recently used items).</li>
         </ul>
+
+        <p><strong>Example Question: Implement a Trie (Insert and Search)</strong></p>
+        <pre><code>class TrieNode {
+  constructor() {
+    this.children = {};
+    this.isEndOfWord = false;
+  }
+}
+
+class Trie {
+  constructor() {
+    this.root = new TrieNode();
+  }
+  insert(word) {
+    let curr = this.root;
+    for (let char of word) {
+      if (!curr.children[char]) curr.children[char] = new TrieNode();
+      curr = curr.children[char];
+    }
+    curr.isEndOfWord = true;
+  }
+  search(word) {
+    let curr = this.root;
+    for (let char of word) {
+      if (!curr.children[char]) return false;
+      curr = curr.children[char];
+    }
+    return curr.isEndOfWord;
+  }
+}</code></pre>
+        <p><strong>Answer & Logic:</strong> A **Trie** optimizes word-based lookups. Each node represents a character, and we follow the path to check if a word exists. This is much better than a Hash Map for "find all words starting with 'prefix'" because we don't have to iterate through the entire dictionary. <strong>Time Complexity is O(L)</strong> for both insert and search.</p>
       </section>
 
       <!-- ==================== BAB I ==================== -->
@@ -651,37 +890,39 @@
         <h2>BAB I. Practical Coding & Interview Preparation</h2>
 
         <h3>I.1 Coding Exercises</h3>
-        <p>Theory means nothing if your hands can't type the code. You have to get into the trenches with LeetCode or HackerRank. Don't just copy-paste solutions; write them out, debug them, and understand why they failed the edge cases.</p>
+        <p>Theory means nothing if your hands can't type the code. You have to get into the trenches with LeetCode or HackerRank. Don't just copy-paste solutions; write them out, debug them, and understand why they failed the edge cases. This is where you build your "Muscle Memory."</p>
         
         <blockquote class="callout">
           <strong>Analogy: Shadowboxing vs. Sparring.</strong> 
           Reading about algorithms is like <strong>Shadowboxing</strong> in front of a mirror. You look great and feel smart. 
           <br><br>
-          Coding exercises are actual <strong>Sparring</strong>. You will get punched in the face by compiler errors and time limit exceededs. But sparring is the only way you get ready for the real fight.
+          Coding exercises are actual <strong>Sparring</strong>. You will get punched in the face by compiler errors and "Time Limit Exceeded." But sparring is the only way you get ready for the real fight.
         </blockquote>
 
         <ul>
-          <li><strong>Quality > Quantity:</strong> Deeply understanding 50 pattern-based questions is better than randomly solving 500.</li>
-          <li><strong>Blind Coding:</strong> Can you code BFS on a whiteboard without an IDE helping you with syntax? Practice it.</li>
+          <li><strong>Quality > Quantity:</strong> Deeply understanding 50 pattern-based questions is better than randomly solving 500. After you solve a problem, look at the top-voted solutions. How did they write it cleaner? How did they save 2 lines of code?</li>
+          <li><strong>Whiteboard Coding:</strong> Can you code BFS without an IDE helping you with syntax? Practice on paper or a physical whiteboard. It forces you to think through every semi-colon and bracket.</li>
+          <li><strong>The 20-Minute Rule:</strong> If you're stuck for more than 20 minutes, look at a tiny hint. If you're still stuck after 40, look at the solution. But then, come back 2 days later and solve it again from scratch.</li>
         </ul>
 
         <h3>I.2 Mock Interview Preparation</h3>
-        <p>You MUST simulate the real environment. Get a friend or use a platform like Pramp. Coding alone in your bedroom is very different from coding while a Senior Engineer from Meta is staring at your screen via Zoom.</p>
+        <p>You MUST simulate the real environment. Get a friend or use a platform like Pramp or Interviewing.io. Coding alone in your bedroom is very different from coding while a Senior Engineer from Meta is staring at your screen via Zoom and asking "Why did you use a stack here?"</p>
         
         <blockquote class="callout">
           <strong>Analogy: The Dress Rehearsal.</strong> 
           Actors don't just read lines in their bedrooms; they do a full Dress Rehearsal with lights, costumes, and a live audience. 
           <br><br>
-          A Mock Interview is your dress rehearsal. It exposes your nervous tics, tests how you handle pressure, and forces you to talk out loud. Do at least 5 mocks before the real thing.
+          A Mock Interview is your dress rehearsal. It exposes your nervous tics, tests how you handle pressure, and forces you to talk out loud. Do at least 5-10 mocks before your dream company call.
         </blockquote>
 
         <ul>
-          <li><strong>Time Pressure:</strong> Set a 45-minute timer. When it goes off, pencils down. Train your pacing.</li>
-          <li><strong>Handling Freeze-ups:</strong> Learn how to calmly ask for a hint without looking defeated.</li>
+          <li><strong>Time Pressure:</strong> Set a 45-minute timer. When it goes off, pencils down. Train your pacing so you leave enough time to test and discuss trade-offs.</li>
+          <li><strong>Handling Freeze-ups:</strong> Practice what to say when your brain goes blank. "I'm thinking about the relationship between X and Y... let me explore if a Hash Map might simplify this." It keeps the conversation alive.</li>
+          <li><strong>Peer Feedback:</strong> Listen to your mock interviewer. If they say you're "too quiet" or "too slow to optimize," take that as a specific workout plan for next week.</li>
         </ul>
 
         <h3>I.3 Continuous Practice System</h3>
-        <p>Build a habit. FAANG prep is a marathon, not an overnight cram session. Set up an Excel sheet, track the problems you failed, wait three days, and try them again. This spaced repetition permanently wires the patterns into your brain.</p>
+        <p>Build a habit. FAANG prep is a marathon, not an overnight cram session. Set up a tracking sheet, categorize problems by pattern, and use **Spaced Repetition** to ensure you don't forget what you learned last month.</p>
         
         <blockquote class="callout">
           <strong>Analogy: Going to the Tech Gym.</strong> 
@@ -691,8 +932,9 @@
         </blockquote>
 
         <ul>
-          <li><strong>Spaced Repetition:</strong> Re-solving a problem from scratch is the best way to prove you learned the pattern, not the code.</li>
-          <li><strong>Track Improvement:</strong> Celebrate small wins. Be proud when an O(N^2) brute force naturally jumps to an O(N) Hash Map in your mind.</li>
+          <li><strong>Spaced Repetition:</strong> Re-solving a problem 3 days, 1 week, and 1 month later is the best way to prove you learned the *pattern*, not just the specific code snippet.</li>
+          <li><strong>Track Improvement:</strong> Celebrate small wins. Be proud when an O(N^2) brute force naturally jumps to an O(N) Hash Map in your mind before you even finish reading the problem.</li>
+          <li><strong>Stay Focused:</strong> Don't get distracted by "new" shiny frameworks. Stick to the core: DSA and System Design. That's what gets you the offer.</li>
         </ul>
       </section>
 
@@ -701,48 +943,51 @@
         <h2>BAB J. Career & FAANG Preparation</h2>
 
         <h3>J.1 Targeting Big Tech Companies</h3>
-        <p>Every FAANG has its own flavor. Google loves hard graph/math puzzles. Amazon obsesses over their Leadership Principles (Behavioral). Meta wants bug-free execution at lightning speed. Tailor your final weeks of prep to the specific company you are interviewing for.</p>
+        <p>Every FAANG has its own flavor and interview "rubric." Google loves hard graph puzzles and mathematical precision. Amazon obsesses over their 16 Leadership Principles (Behavioral). Meta (Facebook) wants bug-free execution at lightning speed. Tailor your final weeks of prep to the specific company you are targeting.</p>
         
         <blockquote class="callout">
           <strong>Analogy: Studying for Specific Professors.</strong> 
           In university, different professors emphasize different things for the final exam, even for the same subject. 
           <br><br>
-          Google is the professor who wants the theoretical math proof. Meta is the professor who wants the practical code written flawlessly on the board. Know your audience!
+          Google is the professor who wants the theoretical math proof. Meta is the professor who wants the practical code written flawlessly on the board. Know your audience and adjust your "performance" accordingly!
         </blockquote>
 
         <ul>
-          <li><strong>Company Tags:</strong> Use LeetCode premium to study the top 50 questions recently asked by your target company.</li>
-          <li><strong>Behavioral Matters:</strong> Don't ignore the "Tell me about a time..." questions. Amazon will reject a genius coder if they fail the Leadership Principles.</li>
+          <li><strong>Company Tags:</strong> Use LeetCode Premium or Glassdoor to study the top 50 questions recently asked by your target company. They tend to have "favorite" topics (e.g., Uber loves geometry/maps; LinkedIn loves concurrency).</li>
+          <li><strong>Behavioral Matters:</strong> Don't ignore the "Tell me about a time..." questions. At Amazon, you can be a coding god and still get rejected if you don't demonstrate "Ownership" or "Customer Obsession." Use the **STAR** method (Situation, Task, Action, Result).</li>
+          <li><strong>Referrals are Gold:</strong> Don't just apply through a portal. Reach out to friends or alumni for a referral. It bypasses the initial "Resume Black Hole" and gets you a faster response.</li>
         </ul>
 
         <h3>J.2 Building Interview Confidence</h3>
-        <p>Confidence comes from exposure. The first interview will be terrifying. By the fifth one, it's just another Tuesday. Don't put FAANG on a pedestal; they are just tech companies looking for problem solvers. Accept that failure is part of the numbers game.</p>
+        <p>Confidence comes from exposure and preparation, not just intelligence. The first interview will be terrifying. By the fifth one, it's just another Tuesday. Don't put FAANG on a pedestal; they are just tech companies looking for reliable problem solvers. Accept that failure is simply a data point in the numbers game.</p>
         
         <blockquote class="callout">
           <strong>Analogy: Taking Shots in Basketball.</strong> 
-          Even Michael Jordan missed 50% of his shots. You only need one FAANG offer. 
+          Even Michael Jordan missed thousands of shots. You only need ONE high-quality FAANG offer to change your life. 
           <br><br>
-          If you fail at Netflix, it doesn't mean you are a bad engineer. It just means you missed one shot. Adjust your form, practice the pattern, and shoot again at Google. Repetition breeds confidence.
+          If you fail at Netflix, it doesn't mean you are a bad engineer. It just means you missed one shot. Adjust your form, practice the pattern, and shoot again at Google. Repetition breeds confidence and lowers the "stakes" in your mind.
         </blockquote>
 
         <ul>
-          <li><strong>Embrace Rejection:</strong> Use every failed interview as a free diagnostic test to show you exactly what to study next.</li>
-          <li><strong>Imposter Syndrome:</strong> Everyone has it. The interviewer had it when they interviewed. Just breathe and focus on the problem.</li>
+          <li><strong>Embrace Rejection:</strong> Use every failed interview as a free diagnostic test. What was the exact question you couldn't answer? Go home and study *that* specific topic until you can do it in your sleep.</li>
+          <li><strong>Imposter Syndrome:</strong> Everyone has it. The interviewer had it when they were in your seat. Focus on the *problem* on the screen, not the *person* behind it. Break the problem down into small, solvable steps.</li>
+          <li><strong>The Power of "I Don't Know":</strong> If you truly don't know an answer, don't lie. Say: "I haven't used X deeply, but based on my knowledge of Y, I would approach it like this..." This shows maturity and reasoning ability.</li>
         </ul>
 
         <h3>J.3 Becoming a Better Engineer</h3>
-        <p>The ultimate secret? The goal isn't just passing the interview. The goal is becoming a genuinely stronger engineer. When you master Big-O, you write faster production code. When you master Trees, you design better databases. The interview prep is just a bootcamp for your real career.</p>
+        <p>The ultimate secret? The goal isn't just passing the interview. The goal is becoming a genuinely stronger, more thoughtful engineer. When you master Big-O, you write faster production code. When you master Trees, you design better databases and APIs. The interview prep is just a high-intensity bootcamp for your real career.</p>
         
         <blockquote class="callout">
           <strong>Analogy: The Karate Kid's "Wax On, Wax Off".</strong> 
           You might think reversing a Linked List on a whiteboard is a stupid, pointless exercise (like waxing a car). 
           <br><br>
-          But when you get into the real job, and you have to optimize a massive distributed cache, you'll realize you suddenly have the mental reflexes of a ninja. The prep makes you elite!
+          But when you get into the real job, and you have to optimize a massive distributed cache or debug a race condition, you'll realize you suddenly have the mental reflexes of a ninja. The prep makes you elite, regardless of where you work!
         </blockquote>
 
         <ul>
-          <li><strong>Real-World Application:</strong> Apply these patterns to your daily work. Think about the Time Complexity of your API endpoints.</li>
-          <li><strong>The Offer:</strong> Patterns → Practice → Optimization → Confidence → FAANG Offer. You got this, bro!</li>
+          <li><strong>Real-World Application:</strong> Apply these patterns to your daily work. When you see a nested loop in a PR, point it out. When you choose a data structure for a new feature, justify it with Big-O.</li>
+          <li><strong>Stay Curious:</strong> The tech world moves fast. Today it's FAANG; tomorrow it's AI startups. The core patterns you learn here are timeless and will serve you for the next 20 years.</li>
+          <li><strong>The Final Result:</strong> Patterns + Practice + Optimization + Communication = **Multiple FAANG Offers**. You’ve got the roadmap, now go put in the reps, bro!</li>
         </ul>
       </section>
 

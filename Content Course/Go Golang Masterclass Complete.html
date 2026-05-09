@@ -681,16 +681,124 @@ func getUserName(users map[string]*User, id string) (string, error) {
         <h2>BAB C. Data Structures & Memory</h2>
 
         <h3>C.1 Core Data Structures</h3>
-        <p>Mastering <code>Arrays</code>, <code>Slices</code> (dynamic arrays), and <code>Maps</code> (key-value stores) is the key to efficient data processing in Go.</p>
-        <blockquote class="callout">Analogy: An Array is like a fixed shelf; a Slice is like a "Magic Accordion Drawer" that grows as you add more things to it. Maps are like a "Locker Room," where every key gives you instant access to exactly what's inside.</blockquote>
+        <p>Mastering Go's core data structures—Arrays, Slices, and Maps—is essential for building high-performance applications. While Arrays are the foundation, Slices are the most commonly used tool due to their dynamic nature, while Maps provide ultra-fast O(1) lookups for key-value data.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Arrays are fixed shelves; Slices are Magic Accordion Drawers.</strong> 
+          An Array has a set size that never changes. A Slice is like a drawer that automatically expands as you add more items to it. Maps are like a Locker Room—if you have the right key, you find your gear instantly without searching every locker.
+        </blockquote>
+
+        <p><strong>Example: Working with Slices and Maps</strong></p>
+        <pre><code>// Slices: The workhorse of Go
+users := []string{"Alice", "Bob"}
+users = append(users, "Charlie") // Automatically grows the slice
+
+// Slicing an existing slice
+firstTwo := users[0:2] // ["Alice", "Bob"]
+
+// Maps: Fast key-value access
+scores := make(map[string]int)
+scores["Alice"] = 95
+scores["Bob"] = 88
+
+// Checking for existence
+val, exists := scores["Charlie"]
+if !exists {
+    fmt.Println("Score not found")
+}</code></pre>
+
+        <ul>
+          <li><strong>Slice Internals:</strong> A slice is actually a small header containing a pointer to an underlying array, a length, and a capacity. Understanding this helps you avoid common memory bugs.</li>
+          <li><strong>Map Safety:</strong> Maps are not thread-safe by default. If multiple goroutines access a map simultaneously, your app will crash. Always use `sync.RWMutex` for concurrent access.</li>
+        </ul>
 
         <h3>C.2 Memory Management</h3>
-        <p>Go gives you the power of pointers without the "headache" of manual cleanup. Understand how Value vs. Reference works to keep your apps memory-efficient.</p>
-        <blockquote class="callout">Analogy: Sharing a variable is like giving someone a "Map to a House" (Pointer). Moving a house itself is slow, but giving someone the address is fast and allows both of you to work on the same building.</blockquote>
+        <p>Go provides a unique balance of performance and safety. You have access to pointers (memory addresses), but the garbage collector (GC) handles the heavy lifting of cleaning up unused memory. The key is understanding when to pass by "Value" (copying) vs. "Reference" (pointing).</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Sharing a variable is like giving someone a "Map to a House."</strong> 
+          Passing by value is like building a whole new house for your friend—it's slow and expensive. Passing a pointer is just giving them the address (the pointer); it's fast, and if they paint the walls, you see the change too!
+        </blockquote>
+
+        <p><strong>Example: Value vs. Pointer Receivers</strong></p>
+        <pre><code>type Counter struct {
+    count int
+}
+
+// Pass by Value: Operates on a COPY (doesn't change original)
+func (c Counter) IncrementVal() {
+    c.count++ 
+}
+
+// Pass by Pointer: Operates on the ORIGINAL
+func (c *Counter) IncrementPtr() {
+    c.count++ 
+}
+
+func main() {
+    c := Counter{count: 0}
+    c.IncrementVal() // Still 0
+    c.IncrementPtr() // Now 1
+}</code></pre>
+
+        <ul>
+          <li><strong>Escape Analysis:</strong> Go's compiler automatically decides if a variable stays on the "Stack" (fast, temporary) or moves to the "Heap" (slower, persistent).</li>
+          <li><strong>Avoid Pointer Overuse:</strong> Don't use pointers for everything. Copying small structs is often faster than the overhead of pointer indirection and GC tracking.</li>
+        </ul>
 
         <h3>C.3 Mini Project: Contact Management System</h3>
-        <p>A small system to store, search, and manage a list of contacts using Slices and Maps. This project teaches you how to handle data at scale.</p>
-        <blockquote class="callout">Analogy: This is like building a "Digital Rolodex." It needs to be fast to search and easy to update.</blockquote>
+        <p>In this project, we'll combine Slices and Maps to build a "Digital Rolodex." We'll use a Slice to maintain the order of contacts and a Map for instant searching by Name.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: This project is your first "Business Engine."</strong> 
+          It's not just a script; it's a system designed to handle, search, and update data efficiently at scale.
+        </blockquote>
+
+        <p><strong>Implementation: Contact Manager</strong></p>
+        <pre><code>type Contact struct {
+    ID    int
+    Name  string
+    Email string
+}
+
+var (
+    contacts   []Contact
+    contactMap = make(map[string]int) // Maps Name to Slice Index
+)
+
+func AddContact(name, email string) {
+    newID := len(contacts) + 1
+    newContact := Contact{ID: newID, Name: name, Email: email}
+    
+    contacts = append(contacts, newContact)
+    contactMap[name] = len(contacts) - 1
+    fmt.Printf("Added: %s\n", name)
+}
+
+func GetContact(name string) {
+    index, exists := contactMap[name]
+    if !exists {
+        fmt.Println("Error: Contact not found")
+        return
+    }
+    
+    c := contacts[index]
+    fmt.Printf("Found: %s (Email: %s)\n", c.Name, c.Email)
+}
+
+func main() {
+    AddContact("Alice", "alice@example.com")
+    AddContact("Bob", "bob@example.com")
+    
+    GetContact("Alice") // O(1) Search!
+    GetContact("Charlie") // Error Handling
+}</code></pre>
+
+        <p><strong>Logic Analysis:</strong></p>
+        <ul>
+          <li><strong>O(1) Search:</strong> By using a map to store the indices of our slice, we can find any contact instantly, no matter how many thousands of entries we have.</li>
+          <li><strong>Data Consistency:</strong> We maintain the primary data in a slice to preserve order and use the map only as a "speed index."</li>
+        </ul>
       </section>
 
       <!-- ==================== BAB D ==================== -->
@@ -698,19 +806,102 @@ func getUserName(users map[string]*User, id string) (string, error) {
         <h2>BAB D. Functions & Error Handling</h2>
 
         <h3>D.1 Functions</h3>
-        <p>Go functions are powerful. They can return multiple values, have variadic parameters, and are "First-Class" elements you can pass to other functions.</p>
-        <blockquote class="callout">Analogy: A Go function is like a "High-End Kitchen Appliance." It can do multiple things at once and even output two different results—like a machine that makes coffee AND grinds the extra beans for later.</blockquote>
+        <p>Go functions are the primary building blocks of your application. Unlike many other languages, Go functions support multiple return values, variadic parameters (accepting any number of arguments), and are "First-Class" citizens—meaning they can be stored in variables and passed as arguments to other functions.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: A Go Function is like a High-End Kitchen Appliance.</strong> 
+          It can do multiple things at once and even output two different results—like a machine that makes your coffee and simultaneously grinds the extra beans for later. It's efficient, versatile, and highly reliable.
+        </blockquote>
 
-        <h3>D.2 Error Handling</h3>
-        <p>Go doesn't use `try-catch`. It uses explicit error returns. This makes your code more predictable and prevents hidden failures from crashing your system.</p>
-        <blockquote class="callout">Analogy: Error handling in Go is like a "Pilot's Checklist." You don't wait for the plane to crash to see what's wrong; you check every single step consciously before you proceed.</blockquote>
-        <pre><code>if err != nil {
-    return fmt.Errorf("Oops: %w", err)
+        <p><strong>Example: Multiple Returns and Variadic Parameters</strong></p>
+        <pre><code>// Multiple returns (result and error)
+func Divide(a, b float64) (float64, error) {
+    if b == 0 {
+        return 0, errors.New("division by zero")
+    }
+    return a / b, nil
+}
+
+// Variadic parameters (accepts any number of ints)
+func Sum(nums ...int) int {
+    total := 0
+    for _, n := range nums {
+        total += n
+    }
+    return total
 }</code></pre>
 
+        <ul>
+          <li><strong>Anonymous Functions:</strong> You can define functions inside other functions. These are often used for "Closures" to capture the surrounding state.</li>
+          <li><strong>Higher-Order Functions:</strong> Since functions are types, you can write functions that take other functions as input—the foundation of flexible, modular code.</li>
+        </ul>
+
+        <h3>D.2 Error Handling</h3>
+        <p>Go's philosophy on errors is simple: they are values. There is no `try-catch` mechanism. Instead, functions that might fail return an `error` as their last return value. This forces developers to handle edge cases explicitly, leading to much more robust and predictable code.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Error Handling in Go is like a Pilot's Checklist.</strong> 
+          A pilot doesn't wait for the plane to crash to see what went wrong. They check every single instrument and step consciously before proceeding. In Go, you check every "err" value before moving to the next line.
+        </blockquote>
+
+        <p><strong>Example: Error Wrapping and Sentinel Errors</strong></p>
+        <pre><code>var ErrDivideByZero = errors.New("cannot divide by zero")
+
+func Calculate(a, b float64) (float64, error) {
+    result, err := Divide(a, b)
+    if err != nil {
+        // %w wraps the original error, preserving its context
+        return 0, fmt.Errorf("calculation failed: %w", err)
+    }
+    return result, nil
+}</code></pre>
+
+        <ul>
+          <li><strong>Explicit vs. Implicit:</strong> By making errors explicit, Go prevents "Silent Failures" where an exception crashes the program ten layers deep in the call stack.</li>
+          <li><strong>Custom Error Types:</strong> You can create your own error structs that carry extra data (like error codes or timestamps) for better debugging.</li>
+        </ul>
+
         <h3>D.3 Mini Project: Math Library</h3>
-        <p>Build a robust library that handles complex calculations with custom error handling for edge cases (like dividing by zero or overflow).</p>
-        <blockquote class="callout">Analogy: This library is your "Precision Instrument." It needs to be perfect, or the whole building (your app) will fall down.</blockquote>
+        <p>In this project, we'll build a precision Math Library that handles operations like Factorials and Averages, with robust custom error handling for invalid inputs and potential overflows.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: This Library is your "Precision Instrument."</strong> 
+          If your math isn't perfect, the entire building (your application) will eventually fall down. This project teaches you how to write code that other developers can trust completely.
+        </blockquote>
+
+        <p><strong>Implementation: Math Library</strong></p>
+        <pre><code>func Factorial(n int) (int, error) {
+    if n < 0 {
+        return 0, fmt.Errorf("negative input %d not allowed", n)
+    }
+    if n > 20 { // Prevent overflow for int
+        return 0, errors.New("input too large, will cause overflow")
+    }
+    
+    result := 1
+    for i := 1; i <= n; i++ {
+        result *= i
+    }
+    return result, nil
+}
+
+func Average(nums []float64) (float64, error) {
+    if len(nums) == 0 {
+        return 0, errors.New("cannot calculate average of empty slice")
+    }
+    
+    sum := 0.0
+    for _, n := range nums {
+        sum += n
+    }
+    return sum / float64(len(nums)), nil
+}</code></pre>
+
+        <p><strong>Logic Analysis:</strong></p>
+        <ul>
+          <li><strong>Guard Clauses:</strong> We use "Early Returns" to handle invalid inputs immediately, keeping the main logic clean and unindented.</li>
+          <li><strong>Contextual Errors:</strong> Using `fmt.Errorf` allows us to include the specific input value that caused the failure, making debugging much easier.</li>
+        </ul>
       </section>
 
       <!-- ==================== BAB E ==================== -->
@@ -718,20 +909,117 @@ func getUserName(users map[string]*User, id string) (string, error) {
         <h2>BAB E. Object-Oriented Programming in Go</h2>
 
         <h3>E.1 Structs & Methods</h3>
-        <p>Go doesn't have "Classes." It has <code>Structs</code>. We'll learn how to attach behavior to data using receiver methods.</p>
-        <blockquote class="callout">Analogy: A Struct is like a "Custom Lego Block." You define its shape, and a Method is like a feature you snap onto it—like a block that can also light up or rotate.</blockquote>
+        <p>Go doesn't have "Classes" in the traditional sense. Instead, it has `Structs` to hold data and `Methods` to define behavior. You attach a method to a struct using a "Receiver." This approach promotes composition and keeps data structures lean and focused.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: A Struct is like a Custom Lego Block.</strong> 
+          You define its shape (the fields), and a Method is like a specific feature you snap onto it—like a block that can also light up or rotate. You build your application by snapping these blocks together.
+        </blockquote>
+
+        <p><strong>Example: Structs and Receiver Methods</strong></p>
+        <pre><code>type Rectangle struct {
+    Width, Height float64
+}
+
+// Value Receiver: Does not modify the original struct
+func (r Rectangle) Area() float64 {
+    return r.Width * r.Height
+}
+
+// Pointer Receiver: Can modify the original struct
+func (r *Rectangle) Scale(factor float64) {
+    r.Width *= factor
+    r.Height *= factor
+}</code></pre>
+
+        <ul>
+          <li><strong>Data Encapsulation:</strong> By starting a field name with a lowercase letter, you make it "private" to the package. Uppercase letters make them "public."</li>
+          <li><strong>Constructor Idiom:</strong> Go uses simple functions (usually named `NewType`) as constructors to initialize complex structs.</li>
+        </ul>
 
         <h3>E.2 Interfaces</h3>
-        <p>Interfaces in Go are "implicit," making them incredibly flexible. They define *what* a Type can do, not *what* it is. This is the secret to Go's powerful polymorphism.</p>
-        <blockquote class="callout">Analogy: An Interface is like a "Standard Socket." Any device that has the right plug (Implements the methods) can draw power, regardless of whether it's a lamp or a high-end server.</blockquote>
+        <p>Interfaces in Go are "implicit," which is one of the language's most powerful features. You don't say "this class implements this interface." Instead, if your type has the required methods, it automatically implements the interface. This allows for extreme flexibility and decouples your code modules.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: An Interface is like a Standard Socket.</strong> 
+          Any device that has the right plug (implements the methods) can draw power from the wall, regardless of whether it's a simple lamp or a high-end server. The wall doesn't care *what* you are; it only cares that you can *plug in*.
+        </blockquote>
+
+        <p><strong>Example: Implicit Interface Implementation</strong></p>
+        <pre><code>type Shape interface {
+    Area() float64
+}
+
+// Rectangle automatically implements Shape because it has an Area() method
+func PrintArea(s Shape) {
+    fmt.Printf("Area: %0.2f\n", s.Area())
+}</code></pre>
 
         <h3>E.3 Generics (Modern Go)</h3>
-        <p>Modern Go includes Generics, allowing you to write one piece of logic that works for *any* type while keeping full speed and safety.</p>
-        <blockquote class="callout">Analogy: A Generic is like a "Standardized Shipping Container." It doesn't care if it's carrying cars, TVs, or toys—the container handles the transport in exactly the same way.</blockquote>
+        <p>Introduced in Go 1.18, Generics allow you to write functions and types that work with any set of types you define, without sacrificing type safety or performance. This eliminates the need for redundant code or excessive use of `interface{}` (any).</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: A Generic is like a Standardized Shipping Container.</strong> 
+          The crane (the function) doesn't care if the container is carrying cars, TVs, or toys. The container handles the transport in exactly the same way, keeping the contents safe and organized regardless of what's inside.
+        </blockquote>
+
+        <p><strong>Example: A Generic Stack</strong></p>
+        <pre><code>type Stack[T any] struct {
+    elements []T
+}
+
+func (s *Stack[T]) Push(v T) {
+    s.elements = append(s.elements, v)
+}
+
+func (s *Stack[T]) Pop() T {
+    v := s.elements[len(s.elements)-1]
+    s.elements = s.elements[:len(s.elements)-1]
+    return v
+}</code></pre>
 
         <h3>E.4 Mini Project: Payroll System</h3>
-        <p>Build a system that handles different types of employees (Full-time, Freelance) using Interfaces to calculate their unique pay structures.</p>
-        <blockquote class="callout">Analogy: The HR department doesn't care if you're a designer or an engineer; as long as you have a "CalculatePay" method, you're getting your salary!</blockquote>
+        <p>In this project, we'll build a Payroll System that handles different types of employees (Full-time, Freelance) using an Interface to calculate their unique pay structures. This demonstrates real-world polymorphism in Go.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: The HR Department only cares about the Result.</strong> 
+          They don't care if you're a designer or an engineer; as long as you satisfy the "Employee" interface and have a "CalculatePay" method, you're getting your salary!
+        </blockquote>
+
+        <p><strong>Implementation: Payroll System</strong></p>
+        <pre><code>type Employee interface {
+    GetID() int
+    CalculatePay() float64
+}
+
+type FullTime struct {
+    ID     int
+    Salary float64
+}
+
+func (f FullTime) GetID() int { return f.ID }
+func (f FullTime) CalculatePay() float64 { return f.Salary / 12 }
+
+type Contractor struct {
+    ID        int
+    HourlyRate float64
+    Hours      float64
+}
+
+func (c Contractor) GetID() int { return c.ID }
+func (c Contractor) CalculatePay() float64 { return c.HourlyRate * c.Hours }
+
+func ProcessPayroll(employees []Employee) {
+    for _, e := range employees {
+        fmt.Printf("Paying Employee %d: $%0.2f\n", e.GetID(), e.CalculatePay())
+    }
+}</code></pre>
+
+        <p><strong>Logic Analysis:</strong></p>
+        <ul>
+          <li><strong>Decoupling:</strong> The `ProcessPayroll` function doesn't need to know anything about `FullTime` or `Contractor` structs. It only interacts with the `Employee` interface.</li>
+          <li><strong>Extensibility:</strong> If we add a new employee type (e.g., `Intern`), we just need to implement the two interface methods, and the payroll system will work without changing a single line of existing logic.</li>
+        </ul>
       </section>
 
       <!-- ==================== BAB F ==================== -->
@@ -739,16 +1027,103 @@ func getUserName(users map[string]*User, id string) (string, error) {
         <h2>BAB F. Composition & Design</h2>
 
         <h3>F.1 Composition Over Inheritance</h3>
-        <p>Go rejects complex class hierarchies. Instead, it uses "Composition"—embedding smaller structs inside larger ones to build complex behaviors.</p>
-        <blockquote class="callout">Analogy: Composition is like a "Snap-On Tool System." You don't have a giant "Super-Tool"; you have a handle and you snap on exactly the modules you need for the job.</blockquote>
+        <p>Go explicitly rejects complex class hierarchies and inheritance. Instead, it uses "Composition" through **Struct Embedding**. This allows you to build complex types by combining smaller, focused structs, promoting code reuse and making your system architecture much more modular and easier to reason about.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Composition is like a Snap-On Tool System.</strong> 
+          You don't buy a single, giant "Super-Tool" that's hard to carry and fix. Instead, you have a solid handle and you snap on exactly the modules you need for the specific job. It's lighter, more flexible, and each part can be replaced individually.
+        </blockquote>
+
+        <p><strong>Example: Struct Embedding</strong></p>
+        <pre><code>type Logger struct {}
+func (l Logger) Log(msg string) { fmt.Println("LOG:", msg) }
+
+type User struct {
+    Logger // Embedding Logger into User
+    Name   string
+}
+
+func main() {
+    u := User{Name: "Alice"}
+    u.Log("User created") // Methods from Logger are promoted to User
+}</code></pre>
+
+        <ul>
+          <li><strong>Method Promotion:</strong> When you embed a struct, its methods become directly accessible on the outer struct. This looks like inheritance but is actually just a convenient way to delegate calls.</li>
+          <li><strong>Avoiding Deep Nesting:</strong> Composition encourages "Flat" hierarchies, which are much easier to maintain than 10-layer deep inheritance trees found in Java or C++.</li>
+        </ul>
 
         <h3>F.2 Design Patterns in Go</h3>
-        <p>Every language has its "Idioms." We'll explore the patterns that make Go code feel native, clean, and professional.</p>
-        <blockquote class="callout">Analogy: Design patterns are the "Shortcuts of a Grandmaster." They are the most efficient ways to solve recurring problems so you don't waste time on the basics.</blockquote>
+        <p>Go has its own set of idiomatic patterns that prioritize simplicity and safety. One of the most popular is the **Functional Options** pattern, which provides a clean way to handle complex configuration without resorting to multiple constructors or confusing parameter lists.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Design Patterns are the "Shortcuts of a Grandmaster."</strong> 
+          They aren't just rules; they are the most efficient ways to solve recurring problems. Using them ensures your code feels native, clean, and professional—like a master craftsman who knows exactly where to make the cut.
+        </blockquote>
+
+        <p><strong>Example: Functional Options Pattern</strong></p>
+        <pre><code>type Server struct {
+    Port int
+    Timeout int
+}
+
+type Option func(*Server)
+
+func WithPort(p int) Option {
+    return func(s *Server) { s.Port = p }
+}
+
+func NewServer(opts ...Option) *Server {
+    s := &Server{Port: 8080, Timeout: 30} // Defaults
+    for _, opt := range opts {
+        opt(s)
+    }
+    return s
+}</code></pre>
 
         <h3>F.3 Mini Project: Bank Account System</h3>
-        <p>Build a multi-layered banking system that uses struct embedding to share common logic (like audit logs) across different account types.</p>
-        <blockquote class="callout">Analogy: Every vault (Account) in the bank is unique, but every single one needs the same "Security Camera System" (Embedded struct) watching it.</blockquote>
+        <p>In this project, we'll build a multi-layered banking system. We'll use struct embedding to share common logic—like an `AuditLog`—across different account types (`Savings`, `Checking`), ensuring that every transaction is automatically recorded.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Every Vault needs the same Security System.</strong> 
+          Every single account in the bank is unique, but they all need the same "Security Camera System" (the Embedded Logger struct) watching over them. You don't build a new camera for every vault; you just install the standard model.
+        </blockquote>
+
+        <p><strong>Implementation: Bank System</strong></p>
+        <pre><code>type TransactionLog struct{}
+func (t TransactionLog) Record(msg string) {
+    fmt.Printf("[AUDIT]: %s\n", msg)
+}
+
+type BaseAccount struct {
+    TransactionLog // Embedded logger
+    ID      string
+    Balance float64
+}
+
+func (a *BaseAccount) Deposit(amount float64) {
+    a.Balance += amount
+    a.Record(fmt.Sprintf("Deposited %0.2f to account %s", amount, a.ID))
+}
+
+type SavingsAccount struct {
+    BaseAccount // Embedded base account
+    InterestRate float64
+}
+
+func main() {
+    sa := SavingsAccount{
+        BaseAccount: BaseAccount{ID: "SA-123", Balance: 1000},
+        InterestRate: 0.05,
+    }
+    sa.Deposit(500) // Calls BaseAccount.Deposit, which calls TransactionLog.Record
+}</code></pre>
+
+        <p><strong>Logic Analysis:</strong></p>
+        <ul>
+          <li><strong>Shared Logic:</strong> The `Deposit` method and the `Record` method are shared across all account types through embedding, preventing code duplication.</li>
+          <li><strong>Clean Hierarchy:</strong> We've built a complex system using simple, swappable parts rather than a rigid inheritance tree.</li>
+        </ul>
       </section>
 
       <!-- ==================== BAB G ==================== -->
@@ -756,20 +1131,92 @@ func getUserName(users map[string]*User, id string) (string, error) {
         <h2>BAB G. String Processing & Utilities</h2>
 
         <h3>G.1 Working with Strings</h3>
-        <p>Go was built with the modern web in mind. It has world-class support for string manipulation, formatting, and high-speed text processing.</p>
-        <blockquote class="callout">Analogy: String processing in Go is like a "High-Speed Label Maker." It can cut, join, and format thousands of labels in a split-second with perfect precision.</blockquote>
+        <p>Go treats strings as read-only slices of bytes. Because Go was designed for the modern web, its standard library (`strings` and `strconv`) is highly optimized for searching, replacing, and converting text with minimal memory overhead.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: String Processing in Go is like a High-Speed Label Maker.</strong> 
+          It can cut, join, and format thousands of labels in a split-second with perfect precision. It doesn't waste tape, and every label comes out exactly how you designed it.
+        </blockquote>
+
+        <p><strong>Example: String Manipulation and Conversion</strong></p>
+        <pre><code>// Efficiently joining strings
+parts := []string{"Go", "is", "awesome"}
+result := strings.Join(parts, " ")
+
+// Searching and replacing
+contains := strings.Contains(result, "Go")
+newStr := strings.ReplaceAll(result, "awesome", "fast")
+
+// Conversion
+val, _ := strconv.Atoi("123") // String to Int
+str := strconv.Itoa(456)      // Int to String</code></pre>
 
         <h3>G.2 Unicode & Text Processing</h3>
-        <p>Everything in Go is UTF-8 by default. Learn to handle symbols, emojis, and international text without breaking your system.</p>
-        <blockquote class="callout">Analogy: Go handles Unicode like a "Global Translator." It doesn't matter what language someone speaks; Go understands the characters perfectly without getting confused.</blockquote>
+        <p>Go is one of the few languages that handles Unicode correctly by default. It uses the `rune` type (an alias for `int32`) to represent a single Unicode code point. This is critical for building international applications that support symbols, emojis, and diverse languages.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Go handles Unicode like a Global Translator.</strong> 
+          It doesn't matter if someone speaks English, Japanese, or "Emoji"; Go understands the characters perfectly without getting confused or "breaking" the text into unreadable gibberish.
+        </blockquote>
+
+        <p><strong>Example: Iterating over Runes vs. Bytes</strong></p>
+        <pre><code>s := "Hello, 世界" // Contains 2 Japanese characters
+
+// WRONG: len(s) returns 13 (byte count, not character count)
+// RIGHT: Iterating with range gives you runes
+for i, r := range s {
+    fmt.Printf("Pos %d: %c\n", i, r)
+}</code></pre>
 
         <h3>G.3 Regex & Templates</h3>
-        <p>Master Regular Expressions for pattern matching and Go Templates for generating HTML or dynamic config files.</p>
-        <blockquote class="callout">Analogy: Regex is like a "Smart Search Filter" that can find a needle in a haystack of text. Templates are like a "Mad Libs Form"—you provide the blanks, and Go fills them in with data.</blockquote>
+        <p>Mastering Regular Expressions (`regexp`) allows you to validate and extract data from complex text. Go's `text/template` and `html/template` packages are then used to inject that data into dynamic documents, ensuring safety against cross-site scripting (XSS) in web apps.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Regex is a Smart Filter; Templates are Mad Libs.</strong> 
+          Regex is like a high-tech filter that can find a specific needle in a giant haystack of text. Templates are like a "Mad Libs" form—you provide the structure and the blanks, and Go fills them in with your data instantly.
+        </blockquote>
+
+        <p><strong>Example: Basic Regex Validation</strong></p>
+        <pre><code>re := regexp.MustCompile(`^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$`)
+isValid := re.MatchString("user@example.com")</code></pre>
 
         <h3>G.4 Mini Project: Config Parser</h3>
-        <p>Build a utility that reads text-based configuration files, validates them with Regex, and transforms them into a structured Go object.</p>
-        <blockquote class="callout">Analogy: This is like a "System Brain." Your app needs to know its settings before it can start thinking.</blockquote>
+        <p>In this project, we'll build a utility that reads a text-based configuration file (Key=Value format), validates the data using Regex, and transforms it into a structured Go object. This is a common task in backend engineering.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: This is the System's "Brain Initialization."</strong> 
+          Your application needs to know its environment and settings before it can start processing data. A good config parser ensures the brain starts with healthy, valid information.
+        </blockquote>
+
+        <p><strong>Implementation: Simple Config Parser</strong></p>
+        <pre><code>type Config struct {
+    AppID   string
+    Port    int
+}
+
+func ParseConfig(data string) (Config, error) {
+    conf := Config{}
+    lines := strings.Split(data, "\n")
+    re := regexp.MustCompile(`^(\w+)=(.+)$`)
+
+    for _, line := range lines {
+        matches := re.FindStringSubmatch(line)
+        if len(matches) == 3 {
+            key, val := matches[1], matches[2]
+            switch key {
+            case "APP_ID": conf.AppID = val
+            case "PORT": conf.Port, _ = strconv.Atoi(val)
+            }
+        }
+    }
+    return conf, nil
+}</code></pre>
+
+        <p><strong>Logic Analysis:</strong></p>
+        <ul>
+          <li><strong>Regex Extraction:</strong> We use capture groups in our regex to separate the "Key" from the "Value" in one pass.</li>
+          <li><strong>Type Safety:</strong> We convert the string value from the file into the correct Go type (`int` for Port) during parsing.</li>
+        </ul>
       </section>
 
       <!-- ==================== BAB H ==================== -->
@@ -777,20 +1224,106 @@ func getUserName(users map[string]*User, id string) (string, error) {
         <h2>BAB H. Concurrency (Core Strength of Go)</h2>
 
         <h3>H.1 Goroutines</h3>
-        <p>Goroutines are lightweight threads managed by Go, not the OS. You can run millions of them on a single laptop without breaking a sweat.</p>
-        <blockquote class="callout">Analogy: A Goroutine is like a "Junior Assistant." While you're working on the main task, you can hire 1,000 assistants to handle the small details in parallel for almost no cost.</blockquote>
+        <p>Goroutines are the "secret sauce" that makes Go the premier choice for backend engineering. They are lightweight threads managed by the Go runtime, not the Operating System. While a standard OS thread can take 1MB of memory, a Goroutine starts at just 2KB, allowing you to run hundreds of thousands—or even millions—of them on a single laptop.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: A Goroutine is like a Junior Assistant.</strong> 
+          While you're working on the main task (the main function), you can hire 1,000 assistants to handle the small details in parallel for almost no cost. They are fast, cheap, and get out of the way when their job is done.
+        </blockquote>
+
+        <p><strong>Example: Spawning Goroutines</strong></p>
+        <pre><code>func sayHello() {
+    fmt.Println("Hello from Goroutine!")
+}
+
+func main() {
+    go sayHello() // Spawns a new concurrent task
+    time.Sleep(time.Millisecond * 10) // Wait briefly for it to finish
+}</code></pre>
 
         <h3>H.2 Channels</h3>
-        <p>Don't communicate by sharing memory; share memory by communicating. Channels are the "pipes" through which goroutines send data to each other.</p>
-        <blockquote class="callout">Analogy: A Channel is like a "Secure Pneumatic Tube" between two desks. One side puts in a message, and it stays safe until the other person pulls it out. No mess, no confusion.</blockquote>
+        <p>Go's motto for concurrency is: "Don't communicate by sharing memory; share memory by communicating." Channels are the typed "pipes" through which Goroutines send data to each other. They provide a safe way to synchronize tasks and pass information without the messy "Race Conditions" found in other languages.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: A Channel is like a Secure Pneumatic Tube.</strong> 
+          Imagine two desks in a large office. One person puts a message in the tube (the channel), and it stays safe inside the tube until the person on the other side pulls it out. There's no risk of both people trying to read the same piece of paper at once.
+        </blockquote>
+
+        <p><strong>Example: Communication via Channels</strong></p>
+        <pre><code>func worker(done chan bool) {
+    fmt.Println("Working...")
+    time.Sleep(time.Second)
+    done <- true // Send a signal back
+}
+
+func main() {
+    done := make(chan bool)
+    go worker(done)
+    <-done // Block until signal is received
+}</code></pre>
 
         <h3>H.3 Synchronization (Mutex & WaitGroups)</h3>
-        <p>When multiple goroutines need to touch the same data, you need "Locks" (Mutex) and "Counters" (WaitGroups) to keep everyone in sync.</p>
-        <blockquote class="callout">Analogy: A Mutex is like a "Bathroom Key." If you have the key, you're the only one who can use the room (the data). Everyone else has to wait in line until you give the key back.</blockquote>
+        <p>Sometimes you *must* share memory (like a global counter). For these cases, Go provides `sync.Mutex` for exclusive locking and `sync.WaitGroup` to wait for a collection of Goroutines to finish their work.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: A Mutex is like a Bathroom Key.</strong> 
+          If you have the key, you're the only one who can use the room (access the shared data). Everyone else has to wait in line outside until you come out and give the key back to the next person.
+        </blockquote>
 
-        <h3>H.4 Real-world Concurrency</h3>
-        <p>Build a high-performance system that processes thousands of tasks concurrently—the bread and butter of modern backend engineering.</p>
-        <blockquote class="callout">Analogy: This is like managing a "Busy Airport Control Tower." You're handling 100 planes (tasks) at once, making sure everything is moving and nothing crashes.</blockquote>
+        <p><strong>Example: Using WaitGroups</strong></p>
+        <pre><code>var wg sync.WaitGroup
+
+func downloadFile(url string) {
+    defer wg.Done() // Signal completion when done
+    fmt.Println("Downloading:", url)
+}
+
+func main() {
+    urls := []string{"file1.zip", "file2.zip"}
+    for _, u := range urls {
+        wg.Add(1) // Increment counter
+        go downloadFile(u)
+    }
+    wg.Wait() // Block until counter is zero
+}</code></pre>
+
+        <h3>H.4 Real-world Concurrency: Worker Pool</h3>
+        <p>In a real production environment, you don't just spawn infinite Goroutines. You use a "Worker Pool" to process thousands of tasks (like image processing or email sending) using a fixed number of workers to manage system resources efficiently.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Managing a Busy Airport Control Tower.</strong> 
+          You're handling 100 planes (tasks) at once, but you only have 5 runways (workers). Your job is to coordinate them so that everything keeps moving and nothing crashes.
+        </blockquote>
+
+        <p><strong>Implementation: Worker Pool</strong></p>
+        <pre><code>func workerPool(id int, jobs <-chan int, results chan<- int) {
+    for j := range jobs {
+        fmt.Printf("Worker %d processing job %d\n", id, j)
+        time.Sleep(time.Second)
+        results <- j * 2
+    }
+}
+
+func main() {
+    jobs := make(chan int, 100)
+    results := make(chan int, 100)
+
+    // Start 3 workers
+    for w := 1; w <= 3; w++ {
+        go workerPool(w, jobs, results)
+    }
+
+    // Send 5 jobs
+    for j := 1; j <= 5; j++ {
+        jobs <- j
+    }
+    close(jobs) // No more jobs coming
+
+    // Collect results
+    for a := 1; a <= 5; a++ {
+        <-results
+    }
+}</code></pre>
       </section>
 
       <!-- ==================== BAB I ==================== -->
@@ -798,20 +1331,74 @@ func getUserName(users map[string]*User, id string) (string, error) {
         <h2>BAB I. Web Development with Go</h2>
 
         <h3>I.1 REST API Development</h3>
-        <p>Building a high-speed HTTP server is baked into the Go standard library. We'll build robust, JSON-based APIs from scratch.</p>
-        <blockquote class="callout">Analogy: An API is like a "Waiter" at a restaurant. They take your order (Request), go to the kitchen (The Server), and bring you back a plate of JSON data.</blockquote>
+        <p>Go is the language of the cloud. Building high-speed, scalable HTTP servers is baked directly into the standard library via the `net/http` package. We'll learn how to handle routes, parse JSON requests, and send structured responses without needing a heavy framework.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: An API is like a Waiter at a Restaurant.</strong> 
+          They take your order (the HTTP Request), go to the kitchen (the Server logic/Database), and bring you back a plate of fresh data (the JSON Response). In Go, the waiter is extremely fast and never forgets an order.
+        </blockquote>
+
+        <p><strong>Example: A Basic JSON API</strong></p>
+        <pre><code>func handleHello(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(map[string]string{"message": "Hello, Go!"})
+}
+
+func main() {
+    http.HandleFunc("/hello", handleHello)
+    log.Fatal(http.ListenAndServe(":8080", nil))
+}</code></pre>
 
         <h3>I.2 Authentication (JWT)</h3>
-        <p>Secure your systems with JSON Web Tokens. Learn to handle logins, protected routes, and user sessions like a pro.</p>
-        <blockquote class="callout">Analogy: A JWT is like a "High-Security VIP Badge." Once you show it to the bouncer (The Bouncer), you can access all the restricted rooms without having to show your ID again.</blockquote>
+        <p>Securing your web services is paramount. We'll implement JSON Web Tokens (JWT) to handle stateless authentication, allowing users to log in once and securely access protected routes across your entire infrastructure.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: A JWT is like a High-Security VIP Badge.</strong> 
+          Once you show your ID at the front door (Login), you receive a badge. For the rest of the night, you just show that badge to the bouncer (the Middleware) to access restricted rooms without having to show your ID over and over again.
+        </blockquote>
+
+        <ul>
+          <li><strong>Claims:</strong> Store user info (like user ID or role) directly inside the token safely.</li>
+          <li><strong>Middleware:</strong> Write a focused piece of code that intercepts every request to check for a valid token before allowing access to the route.</li>
+        </ul>
 
         <h3>I.3 GraphQL APIs</h3>
-        <p>Modern apps often need GraphQL's flexibility. We'll integrate it into Go for powerful, client-driven data fetching.</p>
-        <blockquote class="callout">Analogy: GraphQL is like a "Buffet Table." instead of the waiter bringing you a set meal (REST), you just pick exactly what you want on your plate.</blockquote>
+        <p>For modern, data-heavy frontends (like React or Mobile apps), GraphQL offers a powerful alternative to REST. We'll explore how to integrate GraphQL into Go, allowing clients to request exactly the data they need and nothing more.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: GraphQL is like a Buffet Table.</strong> 
+          Instead of the waiter bringing you a set meal (REST), you walk up to the table with your plate and pick exactly what you want. No "over-fetching" unnecessary food, and no "under-fetching" needing a second trip to the kitchen.
+        </blockquote>
 
         <h3>I.4 Full Project: Bookmarking Web App</h3>
-        <p>Build a complete backend for saving and managing links, complete with user accounts, search, and a beautiful JSON API.</p>
-        <blockquote class="callout">Analogy: This is your "Full System Design Practice." Every piece we've learned comes together here.</blockquote>
+        <p>In this final project for the Web chapter, we'll build a complete backend for a Link Management system. It will feature User Registration, Secure Login (JWT), and a full set of CRUD operations to save and search your favorite bookmarks.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: This is your "Full System Design Practice."</strong> 
+          Every single piece of Go knowledge we've learned—structs, interfaces, concurrency, and error handling—comes together to build a real-world, production-ready machine.
+        </blockquote>
+
+        <p><strong>Implementation: Bookmarking API Structure</strong></p>
+        <pre><code>type Bookmark struct {
+    ID    string `json:"id"`
+    Title string `json:"title"`
+    URL   string `json:"url"`
+    Owner string `json:"owner"`
+}
+
+// Protected Route Handler
+func CreateBookmark(w http.ResponseWriter, r *http.Request) {
+    // 1. Authenticate user from JWT
+    // 2. Decode JSON body into Bookmark struct
+    // 3. Save to database
+    // 4. Return success JSON
+}</code></pre>
+
+        <p><strong>Architectural Analysis:</strong></p>
+        <ul>
+          <li><strong>Statelessness:</strong> By using JWT, our server doesn't need to store session data, making it easy to scale horizontally across multiple servers.</li>
+          <li><strong>Standard Library First:</strong> We prioritize Go's `net/http` to keep the app lightweight and free from external dependency bloat.</li>
+        </ul>
       </section>
 
       <!-- ==================== BAB J ==================== -->
@@ -819,16 +1406,77 @@ func getUserName(users map[string]*User, id string) (string, error) {
         <h2>BAB J. Database Integration</h2>
 
         <h3>J.1 SQL Databases (PostgreSQL)</h3>
-        <p>Connect Go to the "Gold Standard" of relational databases. Master CRUD operations and relational data modeling.</p>
-        <blockquote class="callout">Analogy: A Database is like a "Reinforced Vault." Go is the "Electronic Keypad" that lets you put things in and pull them out safely.</blockquote>
+        <p>Go's standard library provides a powerful `database/sql` package that serves as a generic interface for SQL databases. When paired with a driver for PostgreSQL (the industry standard for relational data), you gain the ability to perform high-speed CRUD operations while maintaining full control over your SQL queries.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: A Database is like a Reinforced Vault.</strong> 
+          Your data is locked away safely. Go is the "Electronic Keypad" and the "Robotic Arm" that lets you put things in, organize them, and pull them out with perfect precision without ever needing to enter the vault yourself.
+        </blockquote>
+
+        <p><strong>Example: Connecting and Querying with SQL</strong></p>
+        <pre><code>db, err := sql.Open("postgres", connStr)
+defer db.Close()
+
+// Querying a single row
+var name string
+err = db.QueryRow("SELECT name FROM users WHERE id = $1", 1).Scan(&name)
+if err != nil {
+    log.Fatal(err)
+}</code></pre>
+
+        <ul>
+          <li><strong>Connection Pooling:</strong> Go automatically manages a pool of connections to the database, ensuring your app stays fast even under heavy traffic.</li>
+          <li><strong>Type Safety:</strong> We use the `.Scan()` method to map database columns directly to Go variables, catching data mismatches at runtime.</li>
+        </ul>
 
         <h3>J.2 ORM Usage (GORM)</h3>
-        <p>Sometimes you want speed and convenience. We'll use GORM to map our Go structs directly to database tables.</p>
-        <blockquote class="callout">Analogy: An ORM is like a "Personal Organizer." You give them your items (Structs), and they handle exactly where they go in the filing cabinet (The Database) for you.</blockquote>
+        <p>While standard SQL is powerful, Object-Relational Mapping (ORM) libraries like **GORM** can significantly speed up development. GORM allows you to map your Go structs directly to database tables, handling common tasks like migrations, associations, and complex queries with a clean, fluent API.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: An ORM is like a Personal Organizer.</strong> 
+          Instead of you manually placing every item into a filing cabinet (writing SQL), you just give your items (Structs) to the organizer. They know exactly which folder they go in and how to retrieve them when you ask, saving you hours of tedious work.
+        </blockquote>
+
+        <p><strong>Example: GORM Model and Query</strong></p>
+        <pre><code>type Product struct {
+    gorm.Model
+    Code  string
+    Price uint
+}
+
+// Auto Migration: Creates the table automatically
+db.AutoMigrate(&Product{})
+
+// Create and Read
+db.Create(&Product{Code: "D42", Price: 100})
+var product Product
+db.First(&product, "code = ?", "D42")</code></pre>
 
         <h3>J.3 Advanced Database Features</h3>
-        <p>Learn to implement Full-text Search for your apps and optimize your queries to handle millions of rows without lagging.</p>
-        <blockquote class="callout">Analogy: Query optimization is like "Tuning a Racing Engine." You're making sure every drop of fuel (Resources) turns into maximum speed (Performance).</blockquote>
+        <p>To build production-grade systems, you must master advanced concepts like **Database Migrations** (tracking schema changes) and **ACID Transactions** (ensuring multiple operations succeed or fail together).</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Transactions are like a "Blood Oath."</strong> 
+          Either every single step of the deal happens perfectly, or the whole thing is called off as if it never happened. This prevents "half-finished" data from corrupting your system (like taking money from one account but failing to add it to the other).
+        </blockquote>
+
+        <p><strong>Implementation: Database Transactions</strong></p>
+        <pre><code>tx := db.Begin()
+if err := tx.Create(&User{Name: "Alice"}).Error; err != nil {
+    tx.Rollback() // Undo everything if it fails
+    return err
+}
+if err := tx.Create(&Account{UserID: 1, Balance: 100}).Error; err != nil {
+    tx.Rollback()
+    return err
+}
+tx.Commit() // Save all changes at once</code></pre>
+
+        <p><strong>Logic Analysis:</strong></p>
+        <ul>
+          <li><strong>Migrations:</strong> Using tools like `golang-migrate`, we can version our database schema just like our code, allowing for safe deployments and rollbacks.</li>
+          <li><strong>Query Optimization:</strong> Learn to use `EXPLAIN ANALYZE` in Postgres to find slow queries and add proper "Indexes" to keep your app responsive even with millions of rows.</li>
+        </ul>
       </section>
 
       <!-- ==================== BAB K ==================== -->
@@ -836,50 +1484,190 @@ func getUserName(users map[string]*User, id string) (string, error) {
         <h2>BAB K. Testing & Code Quality</h2>
 
         <h3>K.1 Unit Testing</h3>
-        <p>If it isn't tested, it's probably broken. Learn Go's built-in testing framework to ensure your code works under every condition.</p>
-        <blockquote class="callout">Analogy: A Unit Test is like a "Smoke Alarm." You want it to go off the second something small is wrong so you can fix it before the whole house is on fire.</blockquote>
+        <p>Go has testing built into its DNA. The `testing` package and the `go test` command provide everything you need to write and run high-speed unit tests. By following the "Table-Driven Tests" idiom, you can test dozens of inputs and expected outputs in a single, clean function.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: A Unit Test is like a Smoke Alarm.</strong> 
+          You don't want to wait until the whole house is on fire to realize there's a problem. A smoke alarm (your test) goes off the second something small is wrong in a single room, allowing you to fix it before the fire spreads to the rest of the building.
+        </blockquote>
+
+        <p><strong>Example: Table-Driven Unit Test</strong></p>
+        <pre><code>func TestAdd(t *testing.T) {
+    tests := []struct {
+        a, b, want int
+    }{
+        {1, 1, 2},
+        {10, 20, 30},
+        {-1, 1, 0},
+    }
+
+    for _, tt := range tests {
+        got := Add(tt.a, tt.b)
+        if got != tt.want {
+            t.Errorf("Add(%d, %d) = %d; want %d", tt.a, tt.b, got, tt.want)
+        }
+    }
+}</code></pre>
 
         <h3>K.2 Integration Testing</h3>
-        <p>Test the "connections." Make sure your API, Database, and Logic work together in perfect harmony before you ship to production.</p>
-        <blockquote class="callout">Analogy: Integration testing is like a "Dress Rehearsal." The individual actors are ready; now let's see how the whole show looks with the lights and sound.</blockquote>
+        <p>While unit tests isolate individual functions, Integration Tests ensure that all your components—your API, your Database, and your business logic—work together in perfect harmony. In Go, we often use "Test Main" or specialized environment variables to set up temporary test databases for these runs.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Integration Testing is like a Dress Rehearsal.</strong> 
+          The individual actors (the functions) have practiced their lines, but now we need to see if the lights, sound, and costumes all work together on stage. If the actor speaks but the microphone is off, the show is still a failure, even if the acting was perfect.
+        </blockquote>
 
-        <h3>K.3 Mocking</h3>
-        <p>Learn to simulate "messy" real-world dependencies (like an external API that's often down) so your tests stay fast and reliable.</p>
-        <blockquote class="callout">Analogy: Mocking is like a "Crash Test Dummy." You don't use real people (Real data/systems) to test a car's safety; you use a perfect simulation.</blockquote>
+        <h3>K.3 Mocking with Interfaces</h3>
+        <p>Go's implicit interfaces make mocking incredibly powerful. You can simulate complex, "messy" real-world dependencies—like a third-party payment API that is slow or often down—by creating a "Mock" that implements the same interface as the real service. This keeps your tests fast, predictable, and isolated from external failures.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Mocking is like a Crash Test Dummy.</strong> 
+          You don't use a real person (a real production database or payment gateway) to test a car's safety at 60mph. You use a perfect, reusable simulation (the Mock) that gives you all the data you need without any of the danger or cost of a real accident.
+        </blockquote>
+
+        <p><strong>Example: Mocking an Interface</strong></p>
+        <pre><code>type Database interface {
+    GetUser(id int) string
+}
+
+// Mock implementation for testing
+type MockDB struct {}
+func (m MockDB) GetUser(id int) string { return "Mock User" }
+
+func GetUserInfo(db Database, id int) string {
+    return "User: " + db.GetUser(id)
+}
+
+func TestGetUserInfo(t *testing.T) {
+    mock := MockDB{}
+    result := GetUserInfo(mock, 1)
+    if result != "User: Mock User" {
+        t.Error("Failed to use mock database")
+    }
+}</code></pre>
+
+        <p><strong>Logic Analysis:</strong></p>
+        <ul>
+          <li><strong>Code Coverage:</strong> Use `go test -cover` to see exactly which parts of your code are being tested and which are being ignored.</li>
+          <li><strong>Benchmarking:</strong> Go also supports high-precision benchmarks (`func BenchmarkX(b *testing.B)`) to measure the performance of your functions down to the nanosecond.</li>
+        </ul>
       </section>
 
       <!-- ==================== BAB L ==================== -->
       <section class="node section">
         <h2>BAB L. DevOps & Deployment</h2>
 
-        <h3>L.1 Docker Basics</h3>
-        <p>Contain everything your app needs. Docker ensures that if it runs on your machine, it runs perfectly on the server.</p>
-        <blockquote class="callout">Analogy: Docker is like a "Standard Shipping Container." It doesn't matter if you're on a ship (Linux) or a train (Windows); if the box is standard, it fits perfectly.</blockquote>
+        <h3>L.1 Docker Basics (Multi-Stage Builds)</h3>
+        <p>Go is famous for compiling into a single, static binary. We can leverage **Docker Multi-Stage Builds** to compile our app in a heavy environment (with all the Go tools) and then ship only the tiny binary in a lightweight "Alpine" or "Scratch" image. This results in production images that are 20MB instead of 800MB.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Docker is like a Standard Shipping Container.</strong> 
+          It doesn't matter if you're on a ship (Linux), a train (Windows), or a truck (macOS); if the box is a standard 20ft container, it fits perfectly everywhere. You pack your app into the container once, and it travels across the globe without ever needing to be unpacked or reconfigured.
+        </blockquote>
+
+        <p><strong>Example: Professional Go Dockerfile</strong></p>
+        <pre><code># Build Stage
+FROM golang:1.21-alpine AS builder
+WORKDIR /app
+COPY . .
+RUN go build -o main .
+
+# Final Stage (Production)
+FROM alpine:latest
+WORKDIR /root/
+COPY --from=builder /app/main .
+CMD ["./main"]</code></pre>
 
         <h3>L.2 Docker Compose</h3>
-        <p>Coordinate multiple services (like your Go app and its PostgreSQL database) into one single command start.</p>
-        <blockquote class="callout">Analogy: Docker Compose is like an "Orchestra Conductor." It makes sure the violin (Web) and the drums (Database) start at exactly the right time.</blockquote>
+        <p>Real applications don't live alone; they need databases, caches, and message brokers. **Docker Compose** allows you to define and run multi-container applications with a single YAML file, ensuring that your Go app and its PostgreSQL database start up together in perfect harmony.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Docker Compose is like an Orchestra Conductor.</strong> 
+          It makes sure the violin (your Web service) and the drums (your Database) start at exactly the right time. If the drums aren't ready, the conductor tells the violin to wait, ensuring the music (your application) never sounds out of sync.
+        </blockquote>
 
-        <h3>L.3 Deployment Strategies</h3>
-        <p>Learn to build "Production-Ready" apps that are secure, logged, and ready for the real-world traffic.</p>
-        <blockquote class="callout">Analogy: This is the "Grand Launch." You've built the rocket; now it's time to actually fly it into orbit.</blockquote>
+        <p><strong>Example: docker-compose.yml</strong></p>
+        <pre><code>version: '3.8'
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: secret</code></pre>
+
+        <h3>L.3 Deployment Strategies & Health Checks</h3>
+        <p>Building "Production-Ready" apps means more than just writing logic. You must implement **Health Checks** (so your orchestrator knows if your app is alive), structured logging, and graceful shutdowns to ensure zero-downtime deployments.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: This is the "Grand Launch."</strong> 
+          You've spent months building the rocket (your app); now it's time to actually fly it into orbit. A successful launch requires thousands of sensors (Health Checks) and a mission control (Monitoring) that knows exactly what's happening at every second of the flight.
+        </blockquote>
+
+        <p><strong>Pro-Tip: Implementing a Health Check</strong></p>
+        <pre><code>func HealthCheck(w http.ResponseWriter, r *http.Request) {
+    // Check DB connection, disk space, etc.
+    if dbIsDown() {
+        w.WriteHeader(http.StatusServiceUnavailable)
+        return
+    }
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("OK"))
+}</code></pre>
       </section>
 
       <!-- ==================== BAB M ==================== -->
       <section class="node section">
         <h2>BAB M. Microservices & Cloud</h2>
 
-        <h3>M.1 Microservices Architecture</h3>
-        <p>Break your "Giant Monolith" into smaller, focused services that talk to each other. This is how platforms like Netflix and Amazon survive at scale.</p>
-        <blockquote class="callout">Analogy: A Microservice is like a "Department in a Large Factory." The paint shop only paints; the engine shop only builds engines. They are separate but work towards one goal.</blockquote>
+        <h3>M.1 Microservices Architecture (gRPC & Protobuf)</h3>
+        <p>As systems grow, the "Giant Monolith" becomes impossible to manage. We break it into smaller, focused **Microservices** that communicate over high-speed protocols like **gRPC**. Using Protocol Buffers (Protobuf), we can define our service contracts once and generate Go code that handles all the serialization and networking automatically.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: A Microservice is like a specialized Department in a Factory.</strong> 
+          The paint shop only paints; the engine shop only builds engines. They are separate rooms with their own tools, but they work towards building one car. If the paint shop has a problem, the engine shop can keep working independently.
+        </blockquote>
+
+        <p><strong>Example: Protobuf Definition</strong></p>
+        <pre><code>service UserService {
+    rpc GetUser (UserRequest) returns (UserResponse) {}
+}
+
+message UserRequest {
+    int32 id = 1;
+}</code></pre>
 
         <h3>M.2 AWS Integration (S3 & SQS)</h3>
-        <p>Connect your Go apps to the cloud. We'll handle file storage and high-speed message queues using AWS.</p>
-        <blockquote class="callout">Analogy: Using AWS is like "Renting a Massive Cloud Warehouse." instead of building your own, you just pay for exactly the space you use.</blockquote>
+        <p>Modern apps live in the cloud. We'll use the **AWS SDK for Go** to integrate with services like **S3** (for durable, infinitely scalable file storage) and **SQS** (for decouple message queuing), ensuring our application can handle massive spikes in traffic without failing.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: AWS is like "Renting a Massive Cloud Warehouse."</strong> 
+          Instead of building your own storage shed (your own server) that might run out of space, you just pay a small fee to use exactly as much space as you need in a world-class warehouse that never runs out of room.
+        </blockquote>
 
-        <h3>M.3 Event-driven Systems</h3>
-        <p>Learn to build systems that react to "Events" rather than just waiting for instructions. This is the heart of low-latency architecture.</p>
-        <blockquote class="callout">Analogy: Event-driven is like a "Smart Home." When someone opens the door (The Event), the lights turn on automatically without anyone having to press a switch.</blockquote>
+        <p><strong>Pro-Tip: Uploading to S3</strong></p>
+        <pre><code>_, err := s3Client.PutObject(context.TODO(), &s3.PutObjectInput{
+    Bucket: aws.String("my-bucket"),
+    Key:    aws.String("photo.jpg"),
+    Body:   file,
+})</code></pre>
+
+        <h3>M.3 Event-Driven Systems (Pub/Sub)</h3>
+        <p>In high-scale systems, we move away from "Request/Response" toward **Event-Driven Architecture**. Using message brokers like RabbitMQ or Kafka, services react to "Events" (e.g., "UserSignedUp") rather than waiting for direct instructions. This allows for massive horizontal scaling and extremely low-latency responses.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Event-Driven is like a "Smart Home."</strong> 
+          When someone opens the door (The Event), the lights turn on, the thermostat adjusts, and the security camera starts recording automatically. No one has to go around pressing three separate switches; the entire house just "reacts" to the event of the door opening.
+        </blockquote>
+
+        <ul>
+          <li><strong>Loose Coupling:</strong> The "User" service doesn't need to know that the "Email" service exists. It just shouts "User Created!" into the message broker, and anyone interested (the Email service, the Analytics service) listens and reacts.</li>
+          <li><strong>Resilience:</strong> If the Email service is temporarily down, the "User Created" message stays safe in the queue until the service comes back online.</li>
+        </ul>
       </section>
 
       <!-- ==================== BAB N ==================== -->
@@ -887,33 +1675,75 @@ func getUserName(users map[string]*User, id string) (string, error) {
         <h2>BAB N. Advanced Engineering Concepts</h2>
 
         <h3>N.1 Clean Architecture</h3>
-        <p>Learn to layer your code so the business logic stays "clean" even if you swap out your database or web framework later.</p>
-        <blockquote class="callout">Analogy: Clean Architecture is like "Standardized Furniture with Swappable Covers." You can change the look (The Framework) without ever changing the structure (The Logic).</blockquote>
+        <p>Clean Architecture is about the **Separation of Concerns**. By layering your code—Entities at the center, then Use Cases, then Interface Adapters—you ensure that your business logic remains "clean" and independent of any external factors like web frameworks, databases, or UI. This makes your application extremely easy to test and maintain over decades.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Clean Architecture is like Furniture with Swappable Covers.</strong> 
+          You have a high-quality sofa (your Business Logic). You can change the covers (the Web Framework or Database) to follow the latest fashion without ever needing to rebuild the sofa itself. The structure remains solid while the look stays modern.
+        </blockquote>
 
-        <h3>N.2 Incremental Development</h3>
-        <p>Don't build everything at once. Learn the professional way to build complex systems one solid piece at a time.</p>
-        <blockquote class="callout">Analogy: This is like "Building a Skyscraper floor by floor." If the first floor (The Foundation) isn't perfect, you don't build the second.</blockquote>
+        <ul>
+          <li><strong>Independence:</strong> If you decide to switch from PostgreSQL to MongoDB, you only change the outer database layer. The core logic of "How a User buys a product" remains completely untouched.</li>
+          <li><strong>Testability:</strong> You can test your business logic in isolation without needing to start a database or a web server, making your tests blazing fast and reliable.</li>
+        </ul>
+
+        <h3>N.2 Incremental Development (The MVP Way)</h3>
+        <p>Professional engineering isn't about building a "perfect" system all at once. It's about building a **Minimum Viable Product (MVP)** and then iterating. We learn to deliver value floor by floor, ensuring that each piece is solid before moving to the next level of complexity.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: Building a Skyscraper Floor by Floor.</strong> 
+          You don't start by building the penthouse. You start with a perfect foundation (the core logic). If the foundation isn't perfect, you don't build the first floor. You ensure each level is structurally sound before adding more weight on top of it.
+        </blockquote>
 
         <h3>N.3 System Design Thinking</h3>
-        <p>Design for millions. Understand how to design scalable, concurrent services that don't fall down when the traffic hits.</p>
-        <blockquote class="callout">Analogy: This is our "Grandmaster Level Training." You're not just thinking about the next move (coding); you're thinking about the entire match (architecture).</blockquote>
+        <p>System Design is the art of designing for millions. It goes beyond coding and focuses on high-level architecture: Load Balancing, Caching, Database Sharding, and ensuring High Availability. A senior engineer doesn't just ask "How do I code this?" but "How will this handle 100,000 requests per second?"</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: This is our Grandmaster Level Training.</strong> 
+          You're not just thinking about the next move (the code); you're thinking about the entire match (the Architecture). You're designing the board, the pieces, and anticipating how every interaction will play out when the pressure is at its peak.
+        </blockquote>
+
+        <p><strong>The Senior Engineer's Mental Model:</strong></p>
+        <ul>
+          <li><strong>Scalability:</strong> Can the system handle more load by adding more servers (Horizontal Scaling)?</li>
+          <li><strong>Reliability:</strong> If one database goes down, does the whole app crash, or is there a backup ready to take over instantly?</li>
+          <li><strong>Observability:</strong> Do we have the logs and metrics to know *why* a system is slow before a customer even notices?</li>
+        </ul>
       </section>
 
       <!-- ==================== BAB O ==================== -->
       <section class="node section">
         <h2>BAB O. AI-Ready Systems & Future</h2>
 
-        <h3>O.1 MCP Protocol</h3>
-        <p>Build systems that are "AI-Ready." We'll explore the Modern Context Protocol to allow AI agents to interact with your backends seamlessly.</p>
-        <blockquote class="callout">Analogy: MCP is like "Giving your System a Voice." Now, not just humans but AI agents can talk to your backend and get work done.</blockquote>
+        <h3>O.1 Model Context Protocol (MCP)</h3>
+        <p>The future of backend engineering is not just about building for humans, but building for AI agents. The **Model Context Protocol (MCP)** is a standardized way for AI agents to interact with your system's data and tools securely and efficiently. We'll learn how to design "AI-First" backends that allow agents to reason over your data and perform actions on behalf of users.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: MCP is like "Giving your System a Voice."</strong> 
+          Previously, your system was like a library where only humans could read the books. With MCP, you've hired a brilliant librarian (the AI Agent) who can instantly find the right book, summarize it, and even write new chapters for you. You've given your backend the ability to participate in intelligent conversations.
+        </blockquote>
 
-        <h3>O.2 Modern Backend Trends</h3>
-        <p>A look at the future of engineering: where Go is going and how high-performance systems are evolving.</p>
-        <blockquote class="callout">Analogy: This is your "Look into the Crystal Ball." You're staying ahead of the curve so you're ready for the industry next year, not just today.</blockquote>
+        <ul>
+          <li><strong>Agentic Workflows:</strong> Design APIs that aren't just for fetching data, but for enabling AI agents to execute complex, multi-step tasks autonomously.</li>
+          <li><strong>Contextual Awareness:</strong> Learn how to provide the right "Context" (the exact data the AI needs right now) so the agent can make the best decisions without overwhelming it with useless information.</li>
+        </ul>
 
-        <h3>O.3 Future of Go Engineering</h3>
-        <p>The industry is moving toward highly concurrent, cloud-native systems. Go is the king of this territory.</p>
-        <blockquote class="callout">Analogy: This is your "Graduation Day." You are now an Engineer equipped with the most powerful tools in the modern backend market. Go build something incredible!</blockquote>
+        <h3>O.2 Modern Backend Trends (Serverless & WASM)</h3>
+        <p>The industry is moving toward "Zero-Infrastructure" systems. We'll explore how Go is leading the way in **Serverless** (AWS Lambda) and **WebAssembly (WASM)**, allowing your code to run at the edge—closer to your users than ever before—with near-instant startup times and minimal cost.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: This is your "Look into the Crystal Ball."</strong> 
+          You're staying ahead of the curve so you're ready for the industry next year, not just today. You're learning to build systems that don't just sit in a server room, but live everywhere at once, reacting instantly to the entire world.
+        </blockquote>
+
+        <h3>O.3 Future of Go Engineering (Graduation)</h3>
+        <p>Go has matured into the "King of Concurrent Systems." From Kubernetes to Docker to Terraform, the modern infrastructure of the world is written in Go. By mastering this language, you aren't just learning a syntax; you're joining the elite ranks of engineers who build the backbone of the internet.</p>
+        
+        <blockquote class="callout">
+          <strong>Analogy: This is your "Graduation Day."</strong> 
+          You are now an Engineer equipped with the most powerful tools in the modern backend market. The world is moving toward highly concurrent, cloud-native, and AI-integrated systems—and you are now standing at the very center of that territory. Go build something incredible!
+        </blockquote>
+      </section>
 
       <section class="node">
         <h1>🚀 Tips</h1>
