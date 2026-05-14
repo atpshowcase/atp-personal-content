@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASP.NET Core 10 | True Ultimate Guide - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">ASP.NET Core 10 | True Ultimate Guide - Bootcamp Roadmap</p>
+      <h1>Asp.Net Core 10 (.NET 10) | True Ultimate Guide — Real Project Bootcamp</h1>
+      <p class="subtitle">A massive end-to-end ASP.NET Core bootcamp covering MVC, Web API, EF Core, Clean Architecture, and real-world project development.</p>
+
+      <div class="summary">
+        <strong>Map Cepat Section:</strong>
+        <p>BAB A Introduction, BAB B HTTP Basics, BAB C Middleware, BAB D Controllers, BAB E Model Binding, BAB F Razor Views, BAB G EF Core, BAB H DI & Architecture, BAB I Authentication, BAB J Web API, BAB K Logging & Testing, BAB L Portfolio Project, BAB M Interview Prep.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction to ASP.NET Core</h2>
+
+        <h3>A.1 Understanding ASP.NET Core</h3>
+        <p>Alright folks, let's start with the big picture. Imagine you're building a restaurant. Old ASP.NET was like a kitchen fixed in one specific building. ASP.NET Core 10 is like a high-tech, modular food truck. You can park it on Windows, Linux, or macOS, and it just works—fast, lean, and ready to serve millions.</p>
+        <blockquote class="callout">Analogy: It's like switching from a heavy, old-school diesel truck to a sleek, modular electric van. It's built for the modern world where speed and flexibility are everything.</blockquote>
+        <ul>
+          <li>What is ASP.NET Core: The modern, cross-platform rewrite of .NET web development.</li>
+          <li>Evolution: How we moved from WebForms/MVC to the unified ASP.NET Core ecosystem.</li>
+          <li>The .NET 10 Advantage: Performance boosts, better minimal APIs, and enhanced cloud support.</li>
+        </ul>
+
+        <h3>A.2 ASP.NET Core Architecture</h3>
+        <p>Think of the architecture as the internal workflow of your food truck. When a customer (browser) places an order (request), it goes through a specific sequence. We call this the middleware pipeline. Each station in the truck handles one thing—one checks the ID, one takes the payment, and finally, the chef (Controller) prepares the meal.</p>
+        <blockquote class="callout">Analogy: Like a production line at a car factory. The request enters as raw parts and exits as a finished car (response) after passing through several specialized robots (middleware).</blockquote>
+        <ul>
+          <li>MVC Pattern: Model (Data), View (UI), Controller (Logic) separation.</li>
+          <li>Middleware Pipeline: The secret sauce that handles requests in a specific order.</li>
+          <li>Request-Response Lifecycle: Exactly how data travels from the internet to your code and back.</li>
+        </ul>
+
+        <h3>A.3 Course Setup & Environment</h3>
+        <p>Before you start cooking, you need a clean kitchen. We're going to set up Visual Studio 2022—your ultimate workstation—and install the .NET 10 SDK. It's like getting the best knives and the most powerful stove before you start your first shift.</p>
+        <blockquote class="callout">Analogy: Installing the SDK is like stocking your pantry with the base ingredients. Visual Studio is your professional chef's kitchen where all the magic happens.</blockquote>
+        <ul>
+          <li>Visual Studio 2022: The gold standard for .NET development.</li>
+          <li>.NET 10 SDK: The core engine that runs everything.</li>
+          <li>Your First App: Running the classic "Hello World" to make sure the pipes are connected.</li>
+        </ul>
+        <pre><code>// Program.cs - The entry point of your app
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+app.MapGet("/", () => "Hello World! Welcome to the Food Truck.");
+
+app.Run();</code></pre>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. HTTP & Web Fundamentals</h2>
+
+        <h3>B.1 HTTP Basics</h3>
+        <p>Listen up, bro. If you want to be a web dev, you have to speak the language of the internet: HTTP (HyperText Transfer Protocol). It's basically just two computers having a chat across the wire. One computer (the Client) asks for something, and the other one (the Server) answers. If you don't know the status codes or headers, it's like trying to order coffee in a country where you don't speak the language—you'll just end up confused, thirsty, and with a "404 Not Found" for your latte.</p>
+        <blockquote class="callout">Analogy: HTTP is exactly like ordering at a drive-thru. You talk into the box (the Request), you tell them exactly what you want and how you want it (the Headers), and they give you a bag of food with a receipt (the Response). If they say "404," it means they're fresh out of burgers today.</blockquote>
+        <p>The most important thing to remember is that HTTP is "stateless." The server doesn't remember who you are once the conversation is over. Every time you ask for a new page, it's like meeting for the first time. We use things like Cookies and Tokens to help the server remember our face.</p>
+        <ul>
+          <li><strong>Request-Response Lifecycle:</strong> The journey of your click from your mouse to a server half-way across the world and back in milliseconds.</li>
+          <li><strong>Headers & Status Codes:</strong> The secret metadata. 200 OK means "we're good," 401 means "who are you?", and 500 means "the server just exploded."</li>
+          <li><strong>Verbs (GET vs POST):</strong> GET is like looking at the menu through the window; POST is like actually walking in and handing over your cash to make things happen.</li>
+        </ul>
+        <pre><code>// A raw HTTP Request looks like this:
+GET /index.html HTTP/1.1
+Host: www.example.com
+User-Agent: Mozilla/5.0
+Accept: text/html
+
+// And the Response looks like this:
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1234
+
+&lt;html&gt;Hello World!&lt;/html&gt;</code></pre>
+
+        <h3>B.2 Working with Requests</h3>
+        <p>Sometimes you need to give the server more details, like searching for "vintage sneakers" or filling out a login form. We do this through query strings, route parameters, or form data. It's all about how we pack the info so the server knows exactly which "sneakers" you're talking about. It's like adding special notes to your order so the chef knows you want extra cheese and absolutely zero onions.</p>
+        <blockquote class="callout">Analogy: Query strings are like Post-it notes stuck on the outside of an envelope. Route parameters are like the address written clearly on the front. Form data is the actual letter hidden safely inside the envelope.</blockquote>
+        <p>In ASP.NET Core, we have magical "Attributes" that pull this data out of the request and hand it to us on a silver platter. We don't have to go digging through the raw text anymore; we just ask for the variables we need, and the framework handles the rest.</p>
+        <ul>
+          <li><strong>Query Strings:</strong> The stuff you see after the "?" in a URL. Perfect for filtering lists or searching for specific items.</li>
+          <li><strong>Route Parameters:</strong> Clean, professional URLs like "/products/123." It looks much better to users and search engines alike.</li>
+          <li><strong>Form Handling:</strong> How we capture what users type into those boxes and send it securely to our backend for processing.</li>
+        </ul>
+        <pre><code>// Handling different request types in a Controller
+[HttpGet("/search")]
+public IActionResult Search([FromQuery] string query) { 
+    return Ok($"You searched for: {query}"); 
+}
+
+[HttpGet("/product/{id}")]
+public IActionResult Details([FromRoute] int id) { 
+    return Ok($"Showing product ID: {id}"); 
+}
+
+[HttpPost("/register")]
+public IActionResult Register([FromForm] string username) { 
+    return Ok($"Registered: {username}"); 
+}</code></pre>
+
+        <h3>B.3 API Testing Tools</h3>
+        <p>You don't want to build a whole frontend (React, Vue, etc.) just to see if your backend code works. That's a waste of time and energy. Instead, we use tools like "Postman" or "Insomnia." It's like having a universal remote control that can talk to any server in the world. You can fire off requests and see exactly what the server says back in real-time, including all those hidden headers and status codes.</p>
+        <blockquote class="callout">Analogy: Postman is like a diagnostic test-bench for a mechanic. You can rev the engine, check all the sensors, and see the fuel pressure without ever having to take the car out for a drive.</blockquote>
+        <ul>
+          <li><strong>Postman Essentials:</strong> Creating "Collections" to organize your API requests like a pro.</li>
+          <li><strong>JSON Syntax:</strong> The universal language of data. If you can read JSON, you can talk to any modern app or service.</li>
+          <li><strong>Troubleshooting:</strong> Using the "Console" to find out exactly why a request failed before you start blaming the frontend team.</li>
+        </ul>
+        <pre><code>// Example of a JSON Response Body
+{
+  "id": 101,
+  "status": "Success",
+  "message": "Order received! Your burger is on the way.",
+  "items": ["Classic Burger", "Large Fries"]
+}</code></pre>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Middleware & Routing</h2>
+
+        <h3>C.1 Middleware Fundamentals</h3>
+        <p>Think of middleware as the security guards standing in a line at the entrance of a high-end club. Before a request (the guest) can ever reach the "VIP Section" (your Controller), it has to pass through each guard in order. One guard checks if you're on the list (Authentication), one logs your name in the guest book (Logging), and another might check if you're carrying any "bad data" (Security). If any guard says "stop," the request is dead in its tracks and never reaches your code.</p>
+        <blockquote class="callout">Analogy: Middleware is like a high-tech water filtration system. The raw, dirty request enters at the top and passes through several specialized filters. Each filter either cleans the water, adds minerals (data), or stops the flow entirely if it detects something dangerous. By the time it reaches the tap (your logic), it's exactly how you want it.</blockquote>
+        <p>The sequence matters! If you put the "Static Files" middleware at the very end, your CSS and images will never load because other guards might block them first. We call this the <strong>Request Pipeline</strong>, and mastering the order is the key to a bug-free backend.</p>
+        <ul>
+          <li><strong>The Request Pipeline:</strong> How ASP.NET Core chains these handlers together. It's a "First-In, Last-Out" system where the response travels back through the same guards on its way out.</li>
+          <li><strong>Short-circuiting:</strong> Why a "401 Unauthorized" guard is a hero—it stops the request immediately to protect your server from wasting resources on a bad actor.</li>
+          <li><strong>Built-in Middleware:</strong> Using the heavy-duty tools Microsoft already built, like <code>app.UseRouting()</code>, <code>app.UseAuthentication()</code>, and <code>app.UseStaticFiles()</code>.</li>
+        </ul>
+        <pre><code>// The Order of the Pipeline in Program.cs
+var app = builder.Build();
+
+app.UseHttpsRedirection(); // Guard 1: Force SSL
+app.UseStaticFiles();      // Guard 2: Serve images/CSS
+app.UseRouting();          // Guard 3: Find the route
+app.UseAuthentication();   // Guard 4: Who are you?
+app.UseAuthorization();    // Guard 5: What can you do?
+
+app.MapControllers();      // The VIP Section</code></pre>
+
+        <h3>C.2 Custom Middleware</h3>
+        <p>Sometimes the standard guards just don't cut it. Maybe you need a guard that specifically checks if a request is coming from a competitor's IP address, or you want to add a custom "Thank You" header to every single response your server sends. This is where you build your own! It's like hiring a specialized security detail that follows your exact instructions to the letter.</p>
+        <blockquote class="callout">Analogy: Custom middleware is like adding a specialized smart-alarm system to your house. You decide exactly what triggers the alarm (the logic) and what the system does next (continue or block). It gives you total control over the "vibe" of your application's entrance.</blockquote>
+        <p>You can write middleware inline using <code>app.Use()</code> for quick tasks, but for real-world projects, we use <strong>Middleware Classes</strong>. This keeps your <code>Program.cs</code> file clean and makes your custom logic easy to test and reuse in other projects.</p>
+        <ul>
+          <li><strong>Inline vs Class-based:</strong> <code>app.Use()</code> is great for a quick log, but classes allow you to use Dependency Injection to bring in databases or other services.</li>
+          <li><strong>The 'next' Delegate:</strong> This is the key to the whole system. If you don't call <code>await next()</code>, the request stops with you and never moves to the next guard.</li>
+          <li><strong>Pipeline Ordering:</strong> Always remember: if you put the "Check Ticket" guard *after* the person has already entered the theater, the guard is useless!</li>
+        </ul>
+        <pre><code>// Class-based Custom Middleware
+public class LoggingMiddleware {
+    private readonly RequestDelegate _next;
+    public LoggingMiddleware(RequestDelegate next) => _next = next;
+
+    public async Task InvokeAsync(HttpContext context) {
+        // Logic BEFORE the next middleware
+        Console.WriteLine($"Guest arrived: {context.Request.Path}");
+        
+        await _next(context); // Pass to the next guard
+        
+        // Logic AFTER the next middleware (on the way out)
+        Console.WriteLine("Guest is leaving!");
+    }
+}</code></pre>
+
+        <h3>C.3 Routing System</h3>
+        <p>Routing is the GPS of your application. When a request hits your server for <code>/api/v1/buy</code>, the routing system looks at its internal map and says, "Okay, I know where this goes—SalesController, Action 'Buy'." It's the traffic controller that ensures no request gets lost in the sauce. Without it, your application would just be a pile of code with no way for the outside world to talk to it.</p>
+        <blockquote class="callout">Analogy: Routing is like the mail sorting room at a giant corporate office. They look at the name and department on the envelope (the URL) and put it in the correct bin (the Controller) so it reaches the right person to handle the task.</blockquote>
+        <p>In modern .NET, we use <strong>Endpoint Routing</strong>. It's fast, flexible, and allows you to add "Constraints" so that a URL like <code>/user/abc</code> won't even try to hit a method that expects a numeric ID. It saves time and prevents errors before they even happen.</p>
+        <ul>
+          <li><strong>Endpoint Mapping:</strong> The modern way to connect URLs to your C# methods. It's clean, descriptive, and very easy to manage.</li>
+          <li><strong>Route Constraints:</strong> Adding rules like <code>{id:int}</code> or <code>{name:alpha}</code> so the router knows exactly what kind of data is allowed.</li>
+          <li><strong>Attribute Routing:</strong> The professional's choice. You put the URL route directly on top of your method so you never have to guess which URL triggers which piece of code.</li>
+        </ul>
+        <pre><code>// Advanced Routing in a Controller
+[ApiController]
+[Route("api/[controller]")] // Route: api/products
+public class ProductsController : ControllerBase {
+    
+    [HttpGet("{id:int}")] // Only matches if ID is an integer
+    public IActionResult GetById(int id) {
+        return Ok($"Fetching product {id}");
+    }
+
+    [HttpGet("search/{name:alpha}")] // Only matches if name is letters
+    public IActionResult Search(string name) {
+        return Ok($"Searching for {name}");
+    }
+}</code></pre>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Controllers & MVC Architecture</h2>
+
+        <h3>D.1 Controllers</h3>
+        <p>The Controller is the "Captain" of your feature. It's the brain that coordinates the entire workflow. It doesn't do the heavy lifting itself—it doesn't talk directly to the database or calculate complex math—but it knows exactly who to call. It takes the incoming request, asks the right <strong>Service</strong> for data, and then decides whether to hand that data to a <strong>View</strong> or return it as raw data. It's the essential middleman that ensures your business logic stays clean and separated from the messy UI stuff.</p>
+        <blockquote class="callout">Analogy: The waiter at a busy restaurant. You don't walk into the kitchen to talk to the chef yourself. You tell the waiter what you want (the Request), they take that info to the kitchen (the Service/Logic), and then they bring the finished plate (the Response) back to your table. The waiter is the face of the operation, but the magic happens behind the scenes.</blockquote>
+        <p>In ASP.NET Core, controllers are just C# classes that inherit from <code>Controller</code> or <code>ControllerBase</code>. This gives them "superpowers" like the ability to return views, files, or JSON with just a single line of code.</p>
+        <ul>
+          <li><strong>Action Methods:</strong> These are the public functions inside your controller that handle specific tasks like "Create," "Update," or "Delete." Each action usually maps to a specific URL.</li>
+          <li><strong>Base Controller Power:</strong> By inheriting from <code>Controller</code>, you get access to helper methods like <code>Ok()</code>, <code>NotFound()</code>, <code>View()</code>, and <code>Redirect()</code> that make your code look professional and clean.</li>
+          <li><strong>Separation of Concerns:</strong> A professional controller should be "thin." If your controller has 500 lines of database logic, it's doing too much. Keep the logic in services and let the controller just manage the flow.</li>
+        </ul>
+
+        <h3>D.2 IActionResult Types</h3>
+        <p>Once a Controller finishes its job, it has to give something back to the user. But what? Should it be a beautiful web page? A piece of raw JSON data for a mobile app? Or maybe a PDF file? In ASP.NET Core, we have the <strong>IActionResult</strong> interface. It's a flexible, polymorphic way to say "Return whatever I need right now." It's like a universal output port that can handle anything you plug into it.</p>
+        <blockquote class="callout">Analogy: Like a high-tech vending machine. You press a button, and depending on what you selected, the machine might give you a cold soda (JSON), a bag of chips (a View), or even a small toy (a File). The interface is the same, but the result is exactly what the user asked for.</blockquote>
+        <ul>
+          <li><strong>ViewResult:</strong> The classic way to return a beautiful Razor page. This is what you use for traditional websites.</li>
+          <li><strong>JsonResult:</strong> The gold standard for modern Web APIs. It sends raw data that React, Angular, or iPhone apps can understand and display.</li>
+          <li><strong>StatusCodeResult:</strong> Sometimes you don't need to return data; you just need to signal a result—like "204 No Content" (everything worked) or "400 Bad Request" (you messed up the form).</li>
+        </ul>
+
+        <h3>D.3 Redirects & Responses</h3>
+        <p>Web development isn't always a straight line. Sometimes you need to tell the user, "Hey, you shouldn't be here, go to the login page first" or "Your order was successful, let me show you your receipt." That's where <strong>Redirects</strong> come in. They are like helpful guides at a stadium, pointing users to the right section so they never get stuck on a dead-end page. It keeps the user experience feeling smooth and professional.</p>
+        <blockquote class="callout">Analogy: Like a "Detour" sign on a road. You can't go straight because there's logic (construction) in the way, so we point you to a better, safer path to get where you're going without getting lost.</blockquote>
+        <ul>
+          <li><strong>RedirectToAction:</strong> The most common way to move a user from one part of your app to another (e.g., from "Submit Order" to "View Order History").</li>
+          <li><strong>Local vs External:</strong> Knowing how to safely send a user to another page on your own site vs. redirecting them to an external site like PayPal for payment.</li>
+          <li><strong>Response Customization:</strong> How to manually tweak the headers or append cookies to the response before it leaves the server and travels to the user's browser.</li>
+        </ul>
+        <pre><code>// Professional Controller with Dependency Injection
+public class OrdersController : Controller {
+    private readonly IOrderService _orderService;
+
+    // Injecting a service to handle the 'heavy lifting'
+    public OrdersController(IOrderService orderService) {
+        _orderService = orderService;
+    }
+
+    [HttpGet("/orders/{id}")]
+    public IActionResult GetOrder(int id) {
+        var order = _orderService.FindById(id);
+        
+        if (order == null) return NotFound("Order does not exist!"); // 404
+        
+        // Return JSON data for an API call
+        return Ok(order); // 200 OK
+    }
+
+    [HttpPost("/orders/create")]
+    public IActionResult Create(Order newOrder) {
+        _orderService.Save(newOrder);
+        // Redirect the user to their new order details
+        return RedirectToAction("GetOrder", new { id = newOrder.Id });
+    }
+}</code></pre>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Model Binding & Validation</h2>
+
+        <h3>E.1 Model Binding</h3>
+        <p>Model binding is basically magic for lazy (but smart) developers. It takes the messy, raw data from a URL or a form and automatically "binds" it to a neat C# object. You don't have to manually pull strings out of the request and convert them to numbers anymore. ASP.NET Core looks at the request, sees what you're asking for in your method signature, and does the heavy lifting of matching the pieces together so you can focus on the fun stuff.</p>
+        <blockquote class="callout">Analogy: Like a smart coin-sorting machine. You dump a bucket of mixed coins (raw request data) into the top, and the machine automatically puts the quarters, dimes, and nickels into their own perfect, labeled piles (C# objects). It's fast, accurate, and saves you from a lot of manual sorting.</blockquote>
+        <p>You can tell the framework exactly where to look for data using <strong>Binding Attributes</strong>. This gives you total control over whether a piece of info should come from the URL, the query string, or the body of a JSON request.</p>
+        <ul>
+          <li><strong>FromQuery & FromRoute:</strong> Pulling specific data points right out of the URL. <code>FromQuery</code> looks for things after the "?", while <code>FromRoute</code> looks for things baked into the URL path itself.</li>
+          <li><strong>FromBody:</strong> The essential skill for modern APIs. It takes a JSON block from the request body and turns it into a full C# Class instantly.</li>
+          <li><strong>Complex Objects:</strong> How to bind nested objects and lists (like a shopping cart with multiple items) without ever having to write a single line of parsing code.</li>
+        </ul>
+
+        <h3>E.2 Validation System</h3>
+        <p>Never, ever trust a user. They will try to put their name in the "Age" box, leave the "Email" blank, or try to submit a password that's just "123." <strong>Validation</strong> is your application's first line of defense. We use <strong>Data Annotations</strong> to set the rules right on the model. If the data is bad, we stop it right at the door before it can ever touch our database or mess up our logic.</p>
+        <blockquote class="callout">Analogy: Like a strict bouncer at a high-end club checking IDs. If you don't have your ID (Required), if you're under 18 (Range), or if you're wearing flip-flops (bad format), you're not getting in. Simple as that. The bouncer protects the club from chaos.</blockquote>
+        <ul>
+          <li><strong>Required & Range:</strong> The basic building blocks for making sure your data is sensible (e.g., "Price must be greater than 0").</li>
+          <li><strong>ModelState:</strong> The internal "Report Card" of the request. It tells your controller exactly what rules the user broke so you can respond appropriately.</li>
+          <li><strong>Error Messages:</strong> How to give the user helpful, human-friendly feedback so they know exactly what they need to fix to get past the bouncer.</li>
+        </ul>
+
+        <h3>E.3 Advanced Validation</h3>
+        <p>Sometimes basic rules aren't enough. What if you need to check if a "Return Date" is actually *after* a "Departure Date"? You can't do that with a simple <code>[Required]</code> tag. That's when we use <strong>IValidatableObject</strong> or custom attributes. It's like having a specialized inspector for complex cases who can look at the whole picture instead of just one field at a time.</p>
+        <blockquote class="callout">Analogy: Like a bank checking a mortgage application. They don't just check your ID; they cross-reference your income, your debt-to-income ratio, and your credit history to see if the whole application makes sense together. It's about validating the <strong>relationship</strong> between data points.</blockquote>
+        <ul>
+          <li><strong>Custom Attributes:</strong> Writing your own reusable rules (like "Must be a company email") that you can stick on any property across your entire project.</li>
+          <li><strong>IValidatableObject:</strong> The best way to handle complex logic that involves multiple fields. You write a single <code>Validate</code> method that checks everything at once.</li>
+          <li><strong>Client-side vs Server-side:</strong> Why you need to validate in both places—JavaScript for a fast user experience, and C# to ensure your data is actually 100% bulletproof.</li>
+        </ul>
+        <pre><code>// Advanced Model with Validation
+public class UserRegistration : IValidatableObject {
+    [Required(ErrorMessage = "You gotta have a name, bro!")]
+    public string Username { get; set; }
+    
+    [EmailAddress]
+    public string Email { get; set; }
+    
+    [Range(18, 99)]
+    public int Age { get; set; }
+
+    [DataType(DataType.Password)]
+    public string Password { get; set; }
+
+    [Compare("Password")]
+    public string ConfirmPassword { get; set; }
+
+    // Custom logic for complex cases
+    public IEnumerable&lt;ValidationResult&gt; Validate(ValidationContext vc) {
+        if (Username == "admin") {
+            yield return new ValidationResult("You can't be the admin, nice try!", new[] { "Username" });
+        }
+    }
+}
+
+// Handling validation in the Controller
+[HttpPost]
+public IActionResult Register(UserRegistration model) {
+    if (!ModelState.IsValid) {
+        return BadRequest(ModelState); // Send back the errors
+    }
+    return Ok("Welcome aboard!");
+}</code></pre>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Razor Views & Frontend Rendering</h2>
+
+        <h3>F.1 Razor Syntax</h3>
+        <p>Razor is the secret bridge between C# and HTML. It lets you write real, powerful C# code right inside your web pages. You want to loop through a list of products and show them as beautiful HTML cards? Easy. You want to hide a "Delete" button if the user isn't an Admin? Done. It makes your static HTML feel alive and dynamic without you ever having to write tons of complex JavaScript for simple tasks.</p>
+        <blockquote class="callout">Analogy: Like a "Mad Libs" book. You have a story with blanks (the HTML structure), and you use C# to fill in those blanks with real data like names, prices, and dates. You provide the template, and Razor fills in the reality.</blockquote>
+        <p>The beauty of Razor is its "Context Awareness." It knows when you're writing HTML and when you're writing C#. You just use the <code>@</code> symbol to switch modes, and the framework handles the rest. It's clean, intuitive, and incredibly fast to write.</p>
+        <ul>
+          <li><strong>Expressions (@):</strong> The simplest way to output a variable, a property, or even the result of a calculation directly into your page.</li>
+          <li><strong>Control Flow:</strong> Using <code>@if</code> for logic and <code>@foreach</code> for loops to build complex, data-driven layouts in seconds.</li>
+          <li><strong>Tag Helpers:</strong> The "Modern Way." These special attributes (like <code>asp-for</code> or <code>asp-action</code>) make your HTML look like normal HTML while giving it full C# superpowers behind the scenes.</li>
+        </ul>
+
+        <h3>F.2 View Communication</h3>
+        <p>How does the data get from the Controller to the View? We have a few ways. You can use <code>ViewData</code> or <code>ViewBag</code> for small, quick bits of info, but the pro way is **Strongly Typed Views**. It's like the difference between sending a random box of parts vs. a specialized kit with a manual. It prevents errors, gives you "IntelliSense" (autocompletion), and makes your life so much easier.</p>
+        <blockquote class="callout">Analogy: <code>ViewData</code> is like a sticky note slapped on a plate. It works, but it's messy and easy to lose. A Strongly Typed View is like a custom-molded tray that only fits specific types of dishes. If you try to put a bowl in a flat-plate slot, you'll know immediately that it's wrong.</blockquote>
+        <ul>
+          <li><strong>ViewBag & ViewData:</strong> Quick, "dirty" ways to pass small bits of info like a page title, a success message, or a temporary flag.</li>
+          <li><strong>Models in Views:</strong> How to pass entire objects (like a User or Product) directly into the view so the page has everything it needs to render.</li>
+          <li><strong>ViewModels:</strong> The architecture secret. You create special classes just for the UI (e.g., <code>ProfileViewModel</code>) to keep your database models safe and hidden from the outside world.</li>
+        </ul>
+
+        <h3>F.3 Shared UI Components</h3>
+        <p>If you're copy-pasting your navigation bar or your footer on every single page, you're doing it wrong. Razor gives us <strong>Layouts</strong> and <strong>Partial Views</strong> so we can write the code once and use it everywhere. It's all about keeping your project "DRY" (Don't Repeat Yourself). It's the difference between a messy, unorganized garage and a professional workshop where everything has a place.</p>
+        <blockquote class="callout">Analogy: Layouts are like the frame, roof, and foundation of a house. The content (your specific Views) is the furniture and wallpaper. Every room looks different, but they all share the same solid, consistent structure.</blockquote>
+        <ul>
+          <li><strong>Layout Views:</strong> Defining the consistent look and feel (Header, Footer, Nav) for your entire site in one single file (<code>_Layout.cshtml</code>).</li>
+          <li><strong>Partial Views:</strong> Reusable snippets of UI like a "Latest News" widget, a "Login Box," or a "Product Card" that you can drop anywhere on your site with one line of code.</li>
+          <li><strong>View Imports:</strong> Setting up common tools and namespaces in <code>_ViewImports.cshtml</code> so you don't have to re-type the same imports on every single page.</li>
+        </ul>
+        <pre><code>&lt;!-- Razor View Snippet with Tag Helpers --&gt;
+@model IEnumerable&lt;Product&gt;
+
+&lt;div class="product-list"&gt;
+    @foreach (var p in Model) {
+        &lt;div class="card"&gt;
+            &lt;h2&gt;@p.Name&lt;/h2&gt;
+            &lt;p&gt;Price: $@p.Price&lt;/p&gt;
+            
+            @if (p.IsOnSale) {
+                &lt;span class="badge"&gt;SALE!&lt;/span&gt;
+            }
+
+            &lt;!-- Tag Helper for the Link --&gt;
+            &lt;a asp-controller="Products" 
+               asp-action="Details" 
+               asp-route-id="@p.Id"&gt;View Details&lt;/a&gt;
+        &lt;/div&gt;
+    }
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Entity Framework Core & Database Access</h2>
+
+        <h3>G.1 Introduction to EF Core</h3>
+        <p>Writing raw SQL (like <code>SELECT * FROM Users</code>) directly in your C# code is like building a car by hand-forging every single bolt. It's slow, boring, and extremely prone to errors. <strong>Entity Framework Core (EF Core)</strong> is like a high-end, automated factory. You describe what you want in clean C#, and it handles all the messy, low-level database talk for you. It's the most powerful ORM (Object-Relational Mapper) in the .NET world, and it will save you thousands of hours of headache.</p>
+        <blockquote class="callout">Analogy: EF Core is like a world-class professional translator. You speak fluent C#, the database speaks complex SQL, and EF Core makes sure you both understand each other perfectly without you ever having to learn a single word of "database-ese." It keeps the conversation flowing smoothly.</blockquote>
+        <p>At the center of it all is the <strong>DbContext</strong>. This is your application's "Control Center" for the database. It manages connections, tracks changes to your objects, and knows exactly how to save those changes back to the tables.</p>
+        <ul>
+          <li><strong>DbContext:</strong> The heart of your database connection. It's the bridge that allows your C# classes to talk to your SQL tables.</li>
+          <li><strong>Migrations:</strong> The ultimate "Time-Travel" tool. It records every change you make to your C# models and generates the SQL to update your database tables automatically.</li>
+          <li><strong>CRUD Basics:</strong> How to Save, Find, Update, and Delete data using nothing but intuitive C# logic—no SQL required!</li>
+        </ul>
+
+        <h3>G.2 Database Relationships</h3>
+        <p>In the real world, data is rarely isolated. A "Customer" has multiple "Orders." A "Post" has hundreds of "Comments." Managing these connections manually in a database can be a nightmare of foreign keys and complex joins, but EF Core makes it feel natural. You just define the relationship in your C# classes, and EF Core handles the "plumbing" behind the scenes. It's like building a family tree where everyone is linked together automatically.</p>
+        <blockquote class="callout">Analogy: Database relationships are like the "Speed Dial" or "Contacts" on your phone. You have a "Person," and they are linked to their "Phone Numbers." You don't have to look them up in separate books; you just tap the name and the linked data appears instantly.</blockquote>
+        <ul>
+          <li><strong>One-to-Many:</strong> The most common link in the world. Think of one "Author" having many "Books."</li>
+          <li><strong>Many-to-Many:</strong> The complex stuff made simple. Think of "Students" and the many different "Classes" they are enrolled in.</li>
+          <li><strong>Navigation Properties:</strong> The magic that lets you say <code>user.Orders</code> in your code and instantly get a list of everything that user has ever bought.</li>
+        </ul>
+
+        <h3>G.3 Advanced EF Core</h3>
+        <p>When your application starts getting thousands of users, speed is everything. You don't want to download 10,000 user profiles just to show one person's name. Learning advanced techniques like <strong>Eager Loading</strong> and <strong>LINQ</strong> is the difference between a lightning-fast app and a slow, laggy mess that users will hate. We'll learn how to write smart, optimized queries that only pull the data you actually need, keeping your server fast and your users happy.</p>
+        <blockquote class="callout">Analogy: Eager loading is like ordering a "Combo Meal" at a fast-food joint—you get the burger, the fries, and the drink all at once in one bag. Lazy loading is like ordering the burger, then calling the waiter back twice for the fries and then the drink. The Combo (Eager Loading) is always faster and more efficient!</blockquote>
+        <ul>
+          <li><strong>LINQ Queries:</strong> The incredibly powerful way to filter, sort, and search your data directly in C# code. It's like having SQL superpowers inside your IDE.</li>
+          <li><strong>Loading Strategies:</strong> Balancing speed and memory usage by choosing between "Eager Loading" (give me everything now) and "Lazy Loading" (give it to me only when I ask).</li>
+          <li><strong>Repository Pattern:</strong> The architectural "gold standard." It wraps your database logic in a clean layer, making your code easier to test, maintain, and swap out later if needed.</li>
+        </ul>
+        <pre><code>// Advanced EF Core Setup & Query
+public class AppDbContext : DbContext {
+    public DbSet&lt;Author&gt; Authors { get; set; }
+    public DbSet&lt;Book&gt; Books { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder mb) {
+        // Defining a One-to-Many relationship
+        mb.Entity&lt;Author&gt;()
+          .HasMany(a => a.Books)
+          .WithOne(b => b.Author);
+    }
+}
+
+// Eager Loading with LINQ
+var authorWithBooks = context.Authors
+    .Include(a => a.Books) // The "Combo Meal"
+    .Where(a => a.Name.StartsWith("J"))
+    .OrderBy(a => a.Name)
+    .ToList();</code></pre>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Dependency Injection & Clean Architecture</h2>
+
+        <h3>H.1 Dependency Injection</h3>
+        <p>Dependency Injection (DI) sounds like a scary college term, but it's actually just about being a "good neighbor." Instead of a class building its own tools from scratch (which makes it rigid and hard to test), it just "asks" for them. "Hey, I need a database connection, can someone give me one?" This makes your code incredibly flexible, easy to swap out, and simple to test. It is the absolute secret to writing professional, scalable software that doesn't break when you change one small thing.</p>
+        <blockquote class="callout">Analogy: DI is like a universal power outlet. Your toaster doesn't care if the electricity comes from a coal plant, a wind turbine, or a solar panel; it just expects a plug that fits the standard. Because of the "standard" (the Interface), you can swap the entire power grid without ever having to take apart the toaster.</blockquote>
+        <p>In ASP.NET Core, the "Inversion of Control" (IoC) container handles this for you. You just register your services in <code>Program.cs</code>, and the framework automatically "injects" them wherever they're needed.</p>
+        <ul>
+          <li><strong>Service Lifetimes:</strong> <strong>Transient</strong> (new one every time), <strong>Scoped</strong> (one per request—perfect for databases), and <strong>Singleton</strong> (one for the entire life of the app).</li>
+          <li><strong>Constructor Injection:</strong> The professional standard. You define what you need in the constructor, and the system ensures those tools are ready to use the moment your class is created.</li>
+          <li><strong>Loose Coupling:</strong> By depending on "Interfaces" instead of actual classes, you can swap a "RealEmailService" for a "MockEmailService" during testing in just one line of code.</li>
+        </ul>
+
+        <h3>H.2 SOLID Principles</h3>
+        <p>SOLID is the set of five golden rules that separate "spaghetti code" from "architectural masterpieces." It's your guide for writing code that is easy to read, easy to fix, and easy to extend. If you follow these rules, your projects won't fall apart as they grow. It's the difference between building a house out of Lego bricks (where you can swap a piece anytime) vs. carving the whole house out of a single, giant block of wood.</p>
+        <blockquote class="callout">Analogy: SOLID is like the blueprint for a high-quality modular car engine. Every part has exactly one job (Single Responsibility), and you can replace the spark plugs (Dependency Inversion) without having to take apart the entire transmission or the seats.</blockquote>
+        <ul>
+          <li><strong>Single Responsibility (S):</strong> Making sure every class has "one reason to change." If your <code>UserService</code> is also sending emails and generating PDFs, it's doing too much!</li>
+          <li><strong>Dependency Inversion (D):</strong> The "big one." High-level logic should never depend on low-level tools. They should both depend on <strong>Interfaces</strong>. This keeps your core logic "clean" and independent.</li>
+          <li><strong>Maintainability:</strong> Writing code that your "future self" (or your teammates) will actually understand six months from now without wanting to quit their jobs.</li>
+        </ul>
+
+        <h3>H.3 Clean Architecture</h3>
+        <p>Clean Architecture (or Onion Architecture) is about putting your "Business Logic" at the center of the universe. Your core code shouldn't care—and shouldn't even <em>know</em>—if you're using SQL Server, Postgres, or a simple text file. This layers-of-an-onion approach keeps your project organized and prevents a change in the database or UI from breaking your entire system. It's how enterprise-level software is built to last for decades.</p>
+        <blockquote class="callout">Analogy: Like a medieval castle. The King (your Business Rules) lives in the safest, innermost room. The walls (Application Layer) protect him, and the guards (Infrastructure/UI) handle the messy outside world. The King doesn't care what the guards are wearing; he only cares about the rules of the kingdom.</blockquote>
+        <ul>
+          <li><strong>Layered Design:</strong> Separating your <strong>Domain</strong> (the rules), <strong>Application</strong> (the tasks), and <strong>Infrastructure</strong> (the tools like DBs and APIs) into distinct zones.</li>
+          <li><strong>Decoupling:</strong> Ensuring that a change in the "View" (e.g., switching from HTML to a Mobile App) doesn't force you to rewrite a single line of your database logic.</li>
+          <li><strong>Project Scalability:</strong> Building a foundation that can grow from a tiny prototype to a massive system serving millions of users without becoming a nightmare to manage.</li>
+        </ul>
+        <pre><code>// 1. Define an Interface (The Blueprint)
+public interface IEmailService {
+    void Send(string to, string subject);
+}
+
+// 2. Implement the Service (The Tool)
+public class SendGridEmailService : IEmailService {
+    public void Send(string to, string subject) { /* Logic */ }
+}
+
+// 3. Register in Program.cs
+builder.Services.AddScoped&lt;IEmailService, SendGridEmailService&gt;();
+
+// 4. Use via Constructor Injection
+public class AccountController(IEmailService emailService) : Controller {
+    public IActionResult Register() {
+        emailService.Send("user@test.com", "Welcome!");
+        return Ok();
+    }
+}</code></pre>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Authentication & Authorization</h2>
+
+        <h3>I.1 ASP.NET Core Identity</h3>
+        <p>Security is notoriously hard to get right. One small mistake can leak thousands of passwords. That's why you should <strong>never build your own security system</strong> from scratch. <strong>ASP.NET Core Identity</strong> is a professional-grade, battle-tested security framework that's built right into .NET. It handles everything: user registration, secure login, password hashing (using the best industry algorithms), and even complex features like "Forgot Password" emails and Two-Factor Authentication (2FA). It's like hiring a top-tier global security firm to guard your building so you can focus on running the business without worrying about the locks.</p>
+        <blockquote class="callout">Analogy: Identity is like a world-class professional locksmith and security company. They provide the armored doors, the high-security keys, and the encrypted database of who's allowed in. You don't have to forge your own keys or weld your own safes; you just tell the company who is allowed to enter, and they handle the rest.</blockquote>
+        <ul>
+          <li><strong>User Management:</strong> How to easily handle sign-ups, profile updates, and password resets without writing hundreds of lines of complex, risky code.</li>
+          <li><strong>Security Best Practices:</strong> Leveraging Microsoft's logic for account lockout (to prevent hackers) and salted password hashing.</li>
+          <li><strong>Identity UI:</strong> Using the "Scaffolded" pre-built pages to get a fully functional, professional-looking login system up and running in under five minutes.</li>
+        </ul>
+
+        <h3>I.2 Authentication Systems</h3>
+        <p>Authentication is the simple process of proving: "I am exactly who I say I am." On the modern web, we usually do this in two ways. We use **Cookies** for traditional websites (where the server "remembers" you) or **JWT** (JSON Web Tokens) for modern APIs and mobile apps. It's the difference between a membership card you keep in your physical wallet vs. a digital ticket on your phone that you have to scan at every single door. We'll learn how to implement both so your app is ready for any platform.</p>
+        <blockquote class="callout">Analogy: Cookies are like a invisible hand-stamp at a nightclub—once you've shown your ID at the front door, the bouncer just checks your hand every time you walk back in from the patio. JWT is like a high-tech VIP pass that contains your name and clearance level; you have to show it every single time you want to order a drink, enter a new room, or talk to a different bartender.</blockquote>
+        <ul>
+          <li><strong>Cookie Auth:</strong> The "Gold Standard" for traditional web applications. It's secure, automatic, and handled by the browser for you.</li>
+          <li><strong>JWT Tokens:</strong> How modern apps stay "stateless." The server doesn't have to remember you; the token you carry contains everything the server needs to know.</li>
+          <li><strong>Claims-Based Auth:</strong> Adding extra "Claims" to your ID card—like your email, your subscription level, or even your favorite theme color. It's more than just a name; it's a full digital profile.</li>
+        </ul>
+
+        <h3>I.3 Authorization</h3>
+        <p>Authorization is the next step: "Now that I'm in the building, what am I actually allowed to do?" Just because you have a ticket to the stadium doesn't mean you can go into the CEO's private box or walk onto the field. We use <strong>Roles</strong> (like Admin, Moderator, or Member) and <strong>Policies</strong> (more complex, flexible rules) to control exactly who sees what. It is the final piece of the security puzzle that makes your application professional, secure, and ready for the real world.</p>
+        <blockquote class="callout">Analogy: Like a giant theme park. Everyone has a ticket (Authentication), but only the people with the "Fast Pass" or "VIP Badge" (Roles/Policies) can skip the long lines or enter the restricted back-stage areas. The ticket gets you in; the badge tells you where you can go.</blockquote>
+        <ul>
+          <li><strong>Role-Based Access:</strong> The simple, classic way to lock down parts of your app. One line of code like <code>[Authorize(Roles = "Admin")]</code> can protect an entire feature from non-admins.</li>
+          <li><strong>Policy-Based Auth:</strong> The "Big Brain" way to handle complex business rules—like "The user must be over 18 AND have a 'Premium' subscription level AND be logged in from a trusted IP address."</li>
+          <li><strong>Custom Requirements:</strong> Writing your own specialized logic to decide exactly who gets access to your most sensitive data.</li>
+        </ul>
+        <pre><code>// 1. Defining a Policy in Program.cs
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("AtLeast18", policy => 
+        policy.RequireClaim("Age", "18", "19", "20", "21+"));
+});
+
+// 2. Securing a Controller Action
+[Authorize(Policy = "AtLeast18")]
+public IActionResult SecretClub() {
+    return Ok("Welcome to the adults-only section!");
+}
+
+// 3. Simple Role Check
+[Authorize(Roles = "Admin")]
+[HttpDelete("/users/{id}")]
+public IActionResult DeleteUser(int id) {
+    // Only an Admin can reach this line
+    return Ok($"User {id} has been deleted.");
+}</code></pre>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. RESTful Web API Development</h2>
+
+        <h3>J.1 Building APIs</h3>
+        <p>Web APIs are how modern applications talk to each other. Your React frontend, your iPhone app, and even your smart fridge all communicate with your ASP.NET Core backend using the "REST" architectural style. It's the universal language of the modern web. If you know how to build a clean, reliable API, you can build the backend for literally anything. It's the single most in-demand skill for web developers in today's market.</p>
+        <blockquote class="callout">Analogy: An API is like a menu at a fancy restaurant. It tells you exactly what you can order (the Endpoints) and what you'll get back (the Response), without you ever needing to see the messy kitchen, know the chef's name, or understand how the stove works.</blockquote>
+        <p>In ASP.NET Core, we use specialized <strong>API Controllers</strong>. These are like regular controllers but they are optimized for sending raw data (JSON) instead of heavy HTML pages. By using the <code>[ApiController]</code> attribute, you get automatic features like model validation and better error messages for free.</p>
+        <ul>
+          <li><strong>REST Principles:</strong> The "Rules of the Road." Following standards like using the right HTTP verbs (GET, POST, PUT, DELETE) so other developers can use your API without needing a manual.</li>
+          <li><strong>JSON Serialization:</strong> The magic of turning your complex C# objects into lightweight text that can travel across the internet in milliseconds.</li>
+          <li><strong>Statelessness:</strong> The secret to scaling. Your API shouldn't "remember" the user; every request should contain everything the server needs to fulfill it.</li>
+        </ul>
+
+        <h3>J.2 CRUD APIs</h3>
+        <p>Most APIs are built around managing data: <strong>C</strong>reate, <strong>R</strong>ead, <strong>U</strong>pdate, and <strong>D</strong>elete. We'll build a full system that handles all of these securely. We'll learn how to handle "GET" to fetch data, "POST" to create it, and "DELETE" to get rid of it. It's like managing a high-tech digital filing cabinet where every piece of data has its own unique, logical address (URL).</p>
+        <blockquote class="callout">Analogy: Like managing a massive warehouse. You can check the current inventory (GET), add new boxes to the shelf (POST), fix a label on a damaged box (PUT/PATCH), or throw away old, expired junk (DELETE). Each shelf has a unique number (ID) so you never get confused.</blockquote>
+        <ul>
+          <li><strong>Resource Modeling:</strong> Designing URLs that make sense (e.g., <code>/api/products/123</code>). It should be intuitive for both humans and machines.</li>
+          <li><strong>HTTP Status Codes:</strong> Returning the perfect signal—like <strong>201 Created</strong> when a new item is born, or <strong>404 Not Found</strong> when something is missing—so the frontend knows exactly what happened.</li>
+          <li><strong>Request Validation:</strong> Checking the data <em>before</em> it touches your database. If a user tries to send a negative price, your API should stop them immediately with a <strong>400 Bad Request</strong>.</li>
+        </ul>
+
+        <h3>J.3 API Best Practices</h3>
+        <p>A "good" API is easy to use, but a "great" API is hard to break and even harder to misunderstand. We'll cover <strong>Versioning</strong> (so you don't break old apps when you update your code) and <strong>Swagger</strong> (the industry-standard tool that builds your documentation for you). We want to build APIs that are fast, secure, and so well-documented that other developers will think you're a senior engineer from day one.</p>
+        <blockquote class="callout">Analogy: Like building a standardized electrical plug. You want to make sure it's the same everywhere so people can plug in their devices (their apps) without getting an electric shock, blowing a fuse, or needing a box of expensive adapters.</blockquote>
+        <ul>
+          <li><strong>API Versioning:</strong> How to evolve your API (v1 to v2) without breaking your users' existing apps. It's like building a new highway without closing the old one.</li>
+          <li><strong>Swagger / OpenAPI:</strong> Automatically generating a live, interactive "User Manual" for your API. Other developers can actually <em>test</em> your API directly from this manual.</li>
+          <li><strong>DTOs (Data Transfer Objects):</strong> The professional secret. You never send your raw database models to the internet. You create "Slim" versions of your objects that only contain the data the user actually needs to see.</li>
+        </ul>
+        <pre><code>// Professional API Controller with DTOs
+[ApiController]
+[Route("api/v1/[controller]")]
+public class ProductsController : ControllerBase {
+    private readonly IProductService _service;
+    public ProductsController(IProductService service) => _service = service;
+
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult GetById(int id) {
+        var product = _service.Get(id);
+        if (product == null) return NotFound();
+        
+        // Return a DTO instead of the raw Model
+        return Ok(new ProductDto(product.Name, product.Price));
+    }
+
+    [HttpPost]
+    public IActionResult Create(CreateProductRequest req) {
+        var newId = _service.Create(req.Name, req.Price);
+        return CreatedAtAction(nameof(GetById), new { id = newId }, req);
+    }
+}</code></pre>
+      </section>
+
+      <!-- ==================== BAB K ==================== -->
+      <section class="node section">
+        <h2>BAB K. Logging, Testing & Professional Practices</h2>
+
+        <h3>K.1 Logging</h3>
+        <p>When your application is live and something goes wrong, you can't just "debug" it on the server using your IDE. You need to know exactly what happened <em>after</em> the fact. That's what <strong>Logging</strong> is for. We use <strong>Serilog</strong> to record every important event, every error, and every weird thing that happens in your app. It's like having a high-definition security camera system installed in your code that captures everything so you can solve the mystery when things inevitably break.</p>
+        <blockquote class="callout">Analogy: Logging is like the "Black Box" flight recorder on an airplane. You hope you never have to look at it, but if the plane crashes, it's the only way to find out exactly what went wrong so you can make sure it never happens again. It turns a "mystery" into a "solvable problem."</blockquote>
+        <p>A professional log isn't just a pile of text. It's <strong>Structured</strong>. This means you can search for "Show me every error that happened for User #123 in the last 10 minutes" and get an answer instantly. This is the difference between a junior developer and a senior who can fix bugs in minutes.</p>
+        <ul>
+          <li><strong>Structured Logging:</strong> Recording data as searchable objects (JSON) rather than messy, unorganized text files that are impossible to read.</li>
+          <li><strong>Sinks:</strong> Telling Serilog where to send your info—to the console (for you), to a file (for history), or to a cloud service like Seq or Azure (for the whole team).</li>
+          <li><strong>Log Levels:</strong> Mastering the hierarchy: <strong>Information</strong> (regular events), <strong>Warning</strong> (something is suspicious), and <strong>Error</strong> (the building is on fire).</li>
+        </ul>
+
+        <h3>K.2 Testing</h3>
+        <p>Professional developers don't just "hope" their code works; they prove it with math and logic. We use <strong>xUnit</strong> and <strong>Moq</strong> to write automated tests that check our code every single time we make a change. It's the ultimate safety net. If you accidentally break a feature while adding a new one, the tests will "scream" at you before your users ever see the bug. It's the only way to sleep peacefully at night as a developer.</p>
+        <blockquote class="callout">Analogy: Like a car manufacturer crash-testing a new model in a lab. You want to find the weak spots in a controlled, safe environment, not when there's a family of four driving it at 70mph on the highway. Testing is about finding failures early, when they're cheap to fix.</blockquote>
+        <ul>
+          <li><strong>Unit Testing:</strong> Testing tiny, isolated pieces of logic (like a tax calculation) to ensure they are 100% correct in every possible scenario.</li>
+          <li><strong>Mocking:</strong> The art of "faking" your database or external APIs so your tests are lightning-fast and don't depend on a real internet connection or a live server.</li>
+          <li><strong>TDD (Test-Driven Development):</strong> The elite mindset of writing the test <em>before</em> you even write the code. It forces you to think about the design before you start typing logic.</li>
+        </ul>
+
+        <h3>K.3 Developer Best Practices</h3>
+        <p>Writing code that "works" is just step one. Writing code that is clean, organized, and easy for other humans to read is what makes you a true **Senior** engineer. We'll learn the industry-standard folder structures, naming conventions, and refactoring techniques that the top 1% of developers use daily. It's about being a craftsman, not just a coder who throws text at a screen.</p>
+        <blockquote class="callout">Analogy: Like a professional chef's kitchen. Everything is labeled, every knife has a specific place, and every surface is spotless. Any other chef could walk in and start cooking a five-course meal without ever having to ask where the salt is. Clean code is about respect for your future self and your teammates.</blockquote>
+        <ul>
+          <li><strong>Folder Organization:</strong> How to structure your project (e.g., Controllers, Models, Services, DTOs) so it doesn't become a "junk drawer" of random, lost files.</li>
+          <li><strong>Clean Code Principles:</strong> Writing variable and method names that explain themselves so clearly that you don't even need to write comments.</li>
+          <li><strong>Refactoring:</strong> The constant process of cleaning, polishing, and improving your code as you build. Great code isn't written; it's rewritten.</li>
+        </ul>
+        <pre><code>// 1. Serilog Setup in Program.cs
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.Seq("http://localhost:5341") // Professional Log Viewer
+    .CreateLogger();
+
+// 2. Unit Test with Moq (Mocking)
+public class ProductServiceTests {
+    [Fact]
+    public void GetProduct_ShouldReturnCorrectData() {
+        // Arrange: Fake the database
+        var mockRepo = new Mock&lt;IProductRepository&gt;();
+        mockRepo.Setup(repo => repo.Find(1))
+                .Returns(new Product { Id = 1, Name = "Espresso" });
+        
+        var service = new ProductService(mockRepo.Object);
+
+        // Act: Run the logic
+        var result = service.Get(1);
+
+        // Assert: Prove it worked
+        Assert.Equal("Espresso", result.Name);
+    }
+}</code></pre>
+      </section>
+
+      <!-- ==================== BAB L ==================== -->
+      <section class="node section">
+        <h2>BAB L. Real-World Portfolio Project</h2>
+
+        <h3>L.1 Stock Trading Application</h3>
+        <p>This is it. The final boss. We're going to build a high-performance Stock Trading Application from scratch. This isn't just a "Hello World" app; it's a real-world system with complex business logic, external API integrations, and a professional architecture. By the time you're done, you'll have a project that will make any hiring manager stop and stare at your portfolio.</p>
+        <blockquote class="callout">Analogy: This is your graduation ceremony. You've learned how to use the hammer, the saw, and the drill; now it's time to build a whole house that people can actually live in.</blockquote>
+        <ul>
+          <li><strong>Real-Time Data:</strong> Fetching live stock prices from external financial APIs so your app always has the latest info.</li>
+          <li><strong>Clean Architecture Implementation:</strong> Applying everything we learned about layers and DI to build a project that's easy to test and maintain.</li>
+          <li><strong>Project Setup:</strong> Starting from a blank screen and slowly building up the foundation for a massive application.</li>
+        </ul>
+
+        <h3>L.2 Real-Time Features</h3>
+        <p>In the world of trading, even a one-second delay can cost millions. We'll use "SignalR" to push live price updates directly to the user's screen without them ever having to refresh the page. This is the kind of high-tech feature that separates the "juniors" from the "seniors." It makes your app feel alive, fast, and incredibly professional.</p>
+        <blockquote class="callout">Analogy: Like a live scoreboard at a soccer match. You don't have to check the newspaper the next day to see the score; you see it change the exact moment a goal is scored.</blockquote>
+        <ul>
+          <li><strong>SignalR Hubs:</strong> The central station for real-time communication between your server and all your users.</li>
+          <li><strong>Dynamic UI Updates:</strong> Using JavaScript to update charts and tables instantly as data flows in from the backend.</li>
+          <li><strong>Low-Latency Design:</strong> Ensuring your app stays fast and responsive even when thousands of people are using it at once.</li>
+        </ul>
+
+        <h3>L.3 Authentication & User Features</h3>
+        <p>Every trader needs their own secure "Dashboard" to track their portfolio. We'll implement a full login system, secure storage for user trades, and personalized views. We'll wrap it all up by deploying your app to the cloud so you can show it off to the entire world. This is the moment your project becomes a real product.</p>
+        <blockquote class="callout">Analogy: Like giving every user their own private bank vault. Only they have the key, and everything inside is tailored specifically to their wealth and their history.</blockquote>
+        <ul>
+          <li><strong>User Portfolios:</strong> Managing complex database relationships to keep track of every user's stocks and cash.</li>
+          <li><strong>Profile Security:</strong> Ensuring that no one can peek into another user's data or mess with their trades.</li>
+          <li><strong>Cloud Deployment:</strong> Getting your app out of your laptop and onto the internet so anyone, anywhere, can see your work.</li>
+        </ul>
+        <pre><code>// SignalR Hub Example
+public class ChatHub : Hub {
+    public async Task SendMessage(string user, string msg) {
+        await Clients.All.SendAsync("ReceiveMessage", user, msg);
+    }
+}</code></pre>
+      </section>
+
+      <!-- ==================== BAB M ==================== -->
+      <section class="node section">
+        <h2>BAB M. Interview Preparation & Career Readiness</h2>
+
+        <h3>M.1 ASP.NET Core Interview Questions</h3>
+        <p>Knowing how to code is one thing; knowing how to talk about it in a high-pressure interview is another. We'll go through the most common (and toughest) interview questions about Middleware, EF Core, and Clean Architecture. We'll learn how to explain complex technical choices in a way that makes you look like an expert. It's about having the confidence to say, "I know exactly why we do it this way."</p>
+        <blockquote class="callout">Analogy: This is like rehearsing for a big play. You've already learned the script (the code); now it's time to practice your performance so you can deliver your lines with total confidence when the spotlight is on you.</blockquote>
+        <ul>
+          <li><strong>The "Under the Hood" Questions:</strong> Explaining exactly how the Request Pipeline and Dependency Injection work in .NET 10.</li>
+          <li><strong>Architectural Deep Dives:</strong> How to defend your choice of Clean Architecture vs. a simple Monolith to a hiring manager.</li>
+          <li><strong>Soft Skills for Engineers:</strong> How to explain technical "debt" and "trade-offs" to bosses who only care about the bottom line.</li>
+        </ul>
+
+        <h3>M.2 Assignments & Exercises</h3>
+        <p>Watching videos is easy; actually writing code is where the real growth happens. Throughout this course, you've had specific "Missions" to complete. We'll review those challenges and look at the "Senior" way to solve them. This isn't just about finishing the course; it's about building the muscle memory you need to be a professional. No shortcuts here, just pure growth.</p>
+        <blockquote class="callout">Analogy: Like going to the gym. You don't get muscles by watching a fitness influencer lift weights; you have to pick up the weights yourself and put in the work.</blockquote>
+        <ul>
+          <li><strong>Coding Challenges:</strong> Reviewing the logic puzzles and real-world tasks you've completed.</li>
+          <li><strong>Independent Feature Building:</strong> How to take the Stock Trading app and add your own unique features to stand out.</li>
+          <li><strong>Code Review Mindset:</strong> Learning how to look at your own code critically and find ways to make it even better.</li>
+        </ul>
+
+        <h3>M.3 Becoming a Senior Developer</h3>
+        <p>Being a "Senior" isn't just about how many years you've been coding; it's a mindset. It's about thinking about the "Long Game"—making decisions today that will make the project easier to maintain three years from now. We'll talk about mentorship, continuous learning, and how to stay ahead of the curve in the fast-moving .NET ecosystem. Your journey doesn't end here; it's just beginning.</p>
+        <blockquote class="callout">Analogy: A Junior developer is like a plumber who fixes a leak. A Senior developer is the engineer who designs a plumbing system that doesn't leak in the first place. Be the engineer.</blockquote>
+        <ul>
+          <li><strong>Strategic Thinking:</strong> Understanding "Trade-offs"—when to prioritize speed and when to prioritize perfect code.</li>
+          <li><strong>Mentorship & Leadership:</strong> How to help your team grow and become a "force multiplier" for your company.</li>
+          <li><strong>Lifelong Learning:</strong> Setting up a system to keep your skills sharp as .NET 11, 12, and beyond are released.</li>
+        </ul>
+        <pre><code>// Senior Mindset: Focus on Abstraction
+public interface IDataRepository {
+    Task&lt;IEnumerable&lt;Data&gt;&gt; GetAllAsync();
+}
+// You depend on the blueprint, not the brick.</code></pre>
+      </section>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2" || current.tagName === "SECTION") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Judul " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Judul " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Isi " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Isi " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

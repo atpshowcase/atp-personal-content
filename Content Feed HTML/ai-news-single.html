@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI News - Single Post Style</title>
+    <!-- Font Setup: League Spartan, Sora, Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=League+Spartan:wght@700;800&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #000000;
+            --text: #ffffff;
+            --gray: #888888;
+            --light-gray: #444444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .feed-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            width: 100%;
+            max-width: 1400px;
+        }
+
+        /* === SLIDE CONTAINER === */
+        .slide {
+            width: 1080px;
+            height: 1080px;
+            background-color: var(--bg);
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 80px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .slide:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        /* === CONTENT === */
+        .content {
+            text-align: center;
+            max-width: 900px;
+        }
+
+        /* === HEADLINE === */
+        .headline {
+            font-family: 'League Spartan', sans-serif;
+            font-size: 88px;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 0.95;
+            letter-spacing: -3px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        /* === SUB HEADLINE === */
+        .sub-headline {
+            font-family: 'Sora', sans-serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--gray);
+            line-height: 1.4;
+            margin-bottom: 60px;
+        }
+
+        /* === SMALL TEXT === */
+        .small-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--light-gray);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: auto;
+        }
+
+        /* === DECORATIVE ELEMENTS === */
+        .accent-line {
+            width: 80px;
+            height: 4px;
+            background: var(--text);
+            margin: 0 auto 40px;
+        }
+
+        /* === CAPTION BOX === */
+        .caption-box {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            right: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--gray);
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .caption-box strong {
+            color: var(--text);
+        }
+
+        .source {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 12px;
+            color: var(--light-gray);
+        }
+
+        .source a {
+            color: var(--gray);
+            text-decoration: none;
+        }
+
+        .source a:hover {
+            color: var(--text);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="feed-grid">
+
+        <!-- POST 1: OPENAI SOCIAL NETWORK -->
+        <div class="slide">
+            <div class="content">
+                <div class="accent-line"></div>
+                <div class="headline">OPENAI IS BUILDING<br>A SOCIAL NETWORK</div>
+                <div class="sub-headline">Sam Altman reportedly wants to compete directly with X.</div>
+                <div class="small-text">13 MAY 2026 • AI NEWS</div>
+            </div>
+            <div class="caption-box">
+                <strong>Instagram Caption:</strong><br>
+                OpenAI is reportedly developing a social platform to compete with X. This could change how we interact with AI in social spaces. The move signals OpenAI's expansion beyond chatbots into social networking.<br><br>
+                <div class="source">Source: TechCrunch • <a href="#">Read More</a></div>
+            </div>
+        </div>
+
+        <!-- POST 2: META AI GLASSES -->
+        <div class="slide">
+            <div class="content">
+                <div class="accent-line"></div>
+                <div class="headline">META IS BUILDING<br>AI GLASSES</div>
+                <div class="sub-headline">Next-gen smart glasses with real-time AI processing and AR capabilities.</div>
+                <div class="small-text">13 MAY 2026 • HARDWARE</div>
+            </div>
+            <div class="caption-box">
+                <strong>Instagram Caption:</strong><br>
+                Meta's new AI glasses promise real-time translation, object recognition, and AR overlays. This could be the first mainstream AR device that actually works.<br><br>
+                <div class="source">Source: The Verge • <a href="#">Read More</a></div>
+            </div>
+        </div>
+
+        <!-- POST 3: GOOGLE VS AI -->
+        <div class="slide">
+            <div class="content">
+                <div class="accent-line"></div>
+                <div class="headline">GOOGLE IS LOSING<br>TO AI</div>
+                <div class="sub-headline">Search market share drops as AI-powered alternatives gain ground.</div>
+                <div class="small-text">13 MAY 2026 • SEARCH</div>
+            </div>
+            <div class="caption-box">
+                <strong>Instagram Caption:</strong><br>
+                Google's search dominance is being challenged by AI-powered alternatives. Users are increasingly turning to AI for direct answers instead of traditional search results.<br><br>
+                <div class="source">Source: Bloomberg Tech • <a href="#">Read More</a></div>
+            </div>
+        </div>
+
+        <!-- POST 4: THIS CHANGES EVERYTHING -->
+        <div class="slide">
+            <div class="content">
+                <div class="accent-line"></div>
+                <div class="headline">THIS CHANGES<br>EVERYTHING</div>
+                <div class="sub-headline">New AI breakthrough enables real-time video generation at 4K resolution.</div>
+                <div class="small-text">13 MAY 2026 • AI BREAKTHROUGH</div>
+            </div>
+            <div class="caption-box">
+                <strong>Instagram Caption:</strong><br>
+                A new AI model can generate 4K video in real-time. This could revolutionize content creation, gaming, and entertainment industries overnight.<br><br>
+                <div class="source">Source: OpenAI Blog • <a href="#">Read More</a></div>
+            </div>
+        </div>
+
+        <!-- POST 5: AI REPLACING -->
+        <div class="slide">
+            <div class="content">
+                <div class="accent-line"></div>
+                <div class="headline">AI IS REPLACING<br>CONTENT WRITERS</div>
+                <div class="sub-headline">Study shows 60% of companies now use AI for content creation.</div>
+                <div class="small-text">13 MAY 2026 • CONTENT</div>
+            </div>
+            <div class="caption-box">
+                <strong>Instagram Caption:</strong><br>
+                The content writing landscape is shifting dramatically. 60% of companies now use AI tools for content creation, but human writers still bring unique value in strategy and emotion.<br><br>
+                <div class="source">Source: Medium AI • <a href="#">Read More</a></div>
+            </div>
+        </div>
+
+        <!-- POST 6: AI IN HEALTHCARE -->
+        <div class="slide">
+            <div class="content">
+                <div class="accent-line"></div>
+                <div class="headline">AI JUST SAVED<br>1000 LIVES</div>
+                <div class="sub-headline">New AI diagnostic system detects cancer 3 years earlier than traditional methods.</div>
+                <div class="small-text">13 MAY 2026 • HEALTHCARE</div>
+            </div>
+            <div class="caption-box">
+                <strong>Instagram Caption:</strong><br>
+                AI-powered diagnostic systems are now detecting cancer up to 3 years earlier than traditional methods. This breakthrough could save millions of lives globally.<br><br>
+                <div class="source">Source: Nature Medicine • <a href="#">Read More</a></div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

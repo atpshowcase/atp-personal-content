@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate News | Minimalist Instagram Grid</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Inter:wght@200;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #555555;
+            --accent: #ff4d00;
+            --grid-line: #eeeeee;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        .controls {
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            position: sticky;
+            top: 20px;
+            z-index: 1000;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: #fff;
+            color: #111;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        /* Responsive Wrapper */
+        .canvas-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 0;
+        }
+
+        .canvas-scaler {
+            transform-origin: top center;
+        }
+
+        /* Instagram Canvas */
+        .instagram-canvas {
+            width: 1080px;
+            height: 1080px;
+            background-color: var(--bg-color);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            position: relative;
+            box-shadow: 0 100px 200px rgba(0,0,0,0.1);
+            border: 1px solid var(--grid-line);
+        }
+
+        /* Grid Layout */
+        .grid-post {
+            padding: 0;
+            border: 0.5px solid var(--grid-line);
+            background: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Post 1: Overlapping Hero Cover */
+        .post-hero {
+            width: 100%;
+            height: 100%;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            background: #fff;
+        }
+
+        .hero-title {
+            font-size: 84px;
+            font-weight: 900;
+            line-height: 0.85;
+            letter-spacing: -5px;
+            color: #000;
+            z-index: 2;
+            margin-top: 10px;
+            max-width: 300px; /* Prevent text from spanning too wide */
+        }
+
+        .hero-image-box {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 75%;
+            height: 60%;
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+            box-shadow: -20px -20px 60px rgba(0,0,0,0.05);
+        }
+
+        /* Split Layouts (2-9) */
+        .post-split {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+
+        .split-text {
+            padding: 30px 25px 15px 25px; /* Reduced padding significantly */
+            height: 65%; /* Fixed height for text section */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .split-image {
+            height: 35%; /* Fixed height for image section */
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+            border-top: 1px solid var(--grid-line);
+        }
+
+        .branding-header {
+            font-size: 14px; /* Slightly smaller branding */
+            font-weight: 900;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+            color: #000;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .branding-header span {
+            padding-bottom: 2px;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .header-main {
+            font-size: 40px; /* Reduced from 56px to prevent cutoff */
+            font-weight: 900;
+            line-height: 0.95;
+            letter-spacing: -2px;
+            margin-bottom: 12px;
+            color: #000;
+        }
+
+        .sub-header-text {
+            font-size: 13.5px; /* Reduced from 15px */
+            line-height: 1.4;
+            color: var(--text-secondary);
+            font-weight: 500;
+            max-width: 100%;
+        }
+
+        .sub-header-text ul {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .sub-header-text li {
+            position: relative;
+            padding-left: 15px;
+            margin-bottom: 5px;
+            font-size: 12.5px;
+        }
+
+        .sub-header-text li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 5px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        /* Seamless View */
+        .instagram-canvas.seamless .grid-post {
+            border-color: transparent;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <button onclick="document.getElementById('canvas').classList.toggle('seamless')">Toggle Canvas View</button>
+        <button onclick="downloadGrid()">Download Feed (3x3)</button>
+        <button onclick="downloadSlices()">Download Slides (1-9)</button>
+    </div>
+
+    <div class="canvas-container">
+        <div class="canvas-scaler" id="scaler">
+            <div class="instagram-canvas seamless" id="canvas">
+                <!-- Post 1: Hero Cover -->
+                <div class="grid-post" id="p1">
+                    <div class="post-hero">
+                        <div class="branding-header"><span>ATP</span> TEKNO</div>
+                        <h1 class="hero-title">Internet<br>Masuk<br>Pelosok</h1>
+                        <div class="hero-image-box" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1080&auto=format&fit=crop');"></div>
+                    </div>
+                </div>
+
+                <!-- Post 2: Capacity -->
+                <div class="grid-post" id="p2">
+                    <div class="post-split">
+                        <div class="split-text">
+                            <div class="branding-header"><span>ATP</span> TEKNOLOGI</div>
+                            <h2 class="header-main">160 Gbps</h2>
+                            <div class="sub-header-text">
+                                <p style="margin-bottom: 12px;">Satelit Nusantara Lima (N5) membawa kapasitas raksasa sebesar 160 Gbps, menjadikannya salah satu satelit terbesar di Asia.</p>
+                                <p>Infrastruktur ini mendukung target pemerintah untuk meningkatkan kecepatan internet nasional menjadi 100 Mbps pada 2029.</p>
+                            </div>
+                        </div>
+                        <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1517976487492-5750f3195933?q=80&w=1080&auto=format&fit=crop');"></div>
+                    </div>
+                </div>
+
+                <!-- Post 3: ULO Success -->
+                <div class="grid-post" id="p3">
+                    <div class="post-split">
+                        <div class="split-text">
+                            <div class="branding-header"><span>ATP</span> REGULASI</div>
+                            <h2 class="header-main">Lolos ULO</h2>
+                            <div class="sub-header-text">
+                                <p>Satelit N5 resmi lolos Uji Laik Operasi (ULO) yang digelar di Gateway Banjarbaru. Pengujian mencakup poin krusial:</p>
+                                <ul>
+                                    <li>Standar keamanan sistem satelit</li>
+                                    <li>Keandalan layanan komersial</li>
+                                    <li>Kepatuhan spektrum frekuensi</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1080&auto=format&fit=crop');"></div>
+                    </div>
+                </div>
+
+                <!-- Post 4: Coverage -->
+                <div class="grid-post" id="p4">
+                    <div class="post-split">
+                        <div class="split-text">
+                            <div class="branding-header"><span>ATP</span> CAKUPAN</div>
+                            <h2 class="header-main">Cakup ASEAN</h2>
+                            <div class="sub-header-text">
+                                <p>Menggunakan platform Boeing 702MP dengan 101 spot beam Ka-band, jangkauan satelit ini sangat luas:</p>
+                                <ul>
+                                    <li>Seluruh Wilayah Indonesia</li>
+                                    <li>Semenanjung Malaysia</li>
+                                    <li>Filipina & Negara Tetangga</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1526772662000-3f88f10405ff?q=80&w=1080&auto=format&fit=crop');"></div>
+                    </div>
+                </div>
+
+                <!-- Post 5: Platform -->
+                <div class="grid-post" id="p5">
+                    <div class="post-split">
+                        <div class="split-text">
+                            <div class="branding-header"><span>ATP</span> SPEK</div>
+                            <h2 class="header-main">Boeing 702</h2>
+                            <div class="sub-header-text">
+                                <p style="margin-bottom: 12px;">Satelit N5 mengusung teknologi Very High Throughput Satellite (VHTS) yang dirancang khusus untuk kebutuhan bandwidth besar.</p>
+                                <p>Satelit ini menempati slot orbit 113° Bujur Timur setelah melalui tahapan Electric Orbit Raising (EOR) yang presisi.</p>
+                            </div>
+                        </div>
+                        <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?q=80&w=1080&auto=format&fit=crop');"></div>
+                    </div>
+                </div>
+
+                <!-- Post 6: Ground Station -->
+                <div class="grid-post" id="p6">
+                    <div class="post-split">
+                        <div class="split-text">
+                            <div class="branding-header"><span>ATP</span> INFRA</div>
+                            <h2 class="header-main">7 Gateway</h2>
+                            <div class="sub-header-text">
+                                <p>Pengoperasian Satelit N5 ditopang oleh tujuh stasiun bumi yang tersebar strategis di berbagai titik:</p>
+                                <ul>
+                                    <li>Aceh & Medan</li>
+                                    <li>Jakarta & Banjarbaru</li>
+                                    <li>Tarakan & Wilayah Timur</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1516110833967-0b5716ca1387?q=80&w=1080&auto=format&fit=crop');"></div>
+                    </div>
+                </div>
+
+                <!-- Post 7: Digital Transformation -->
+                <div class="grid-post" id="p7">
+                    <div class="post-split">
+                        <div class="split-text">
+                            <div class="branding-header"><span>ATP</span> DIGITAL</div>
+                            <h2 class="header-main">Era Baru</h2>
+                            <div class="sub-header-text">
+                                <p style="margin-bottom: 12px;">Satelit N5 menjadi tulang punggung baru dalam memperkuat ekosistem digital nasional dan mempercepat transformasi digital.</p>
+                                <p>Komdigi berharap kapasitas 160 Gbps ini dimanfaatkan optimal untuk memperkuat layanan publik di daerah terpencil.</p>
+                            </div>
+                        </div>
+                        <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1080&auto=format&fit=crop');"></div>
+                    </div>
+                </div>
+
+                <!-- Post 8: Longevity -->
+                <div class="grid-post" id="p8">
+                    <div class="post-split">
+                        <div class="split-text">
+                            <div class="branding-header"><span>ATP</span> INVESTASI</div>
+                            <h2 class="header-main">15 Tahun</h2>
+                            <div class="sub-header-text">
+                                <p>Satelit ini dirancang untuk menopang kebutuhan konektivitas digital Indonesia dalam jangka panjang:</p>
+                                <ul>
+                                    <li>Operasional 15 Tahun ke Atas</li>
+                                    <li>Konektivitas Wilayah 3T</li>
+                                    <li>Investasi Strategis PSN</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1506450966953-2416b77af642?q=80&w=1080&auto=format&fit=crop');"></div>
+                    </div>
+                </div>
+
+                <!-- Post 9: CTA -->
+                <div class="grid-post" id="p9">
+                    <div class="post-split" style="background: var(--accent); color: #fff;">
+                        <div class="split-text">
+                            <div class="branding-header" style="color: #fff;"><span style="border-color: #fff;">ATP</span> SHOWCASE</div>
+                            <h2 class="header-main" style="color: #fff;">Cek Detail</h2>
+                            <div class="sub-header-text" style="color: rgba(255,255,255,0.9);">
+                                <p>Jangan lewatkan update terbaru mengenai infrastruktur teknologi Indonesia:</p>
+                                <ul style="color: #fff;">
+                                    <li>Link Berita di Bio</li>
+                                    <li>Follow untuk Update Rutin</li>
+                                    <li>Analisis Mendalam di Website</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1504333638930-c8787321eba0?q=80&w=1080&auto=format&fit=crop'); opacity: 0.3;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Responsive Scaling Logic
+        function scaleCanvas() {
+            const scaler = document.getElementById('scaler');
+            const container = document.querySelector('.canvas-container');
+            const canvasWidth = 1080;
+            const padding = 40;
+            const availableWidth = container.offsetWidth - padding;
+            
+            if (availableWidth < canvasWidth) {
+                const scale = availableWidth / canvasWidth;
+                scaler.style.transform = `scale(${scale})`;
+                container.style.height = `${canvasWidth * scale}px`;
+            } else {
+                scaler.style.transform = 'scale(1)';
+                container.style.height = `${canvasWidth}px`;
+            }
+        }
+
+        window.addEventListener('resize', scaleCanvas);
+        window.addEventListener('load', scaleCanvas);
+
+        function downloadGrid() {
+            const canvas = document.getElementById('canvas');
+            html2canvas(canvas, {
+                scale: 2,
+                backgroundColor: '#ffffff'
+            }).then(canvasImage => {
+                const link = document.createElement('a');
+                link.download = 'atp-satellite-news-grid.png';
+                link.href = canvasImage.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        function downloadSlices() {
+            const posts = document.querySelectorAll('.grid-post');
+            posts.forEach((post, index) => {
+                html2canvas(post, {
+                    scale: 3,
+                    backgroundColor: '#ffffff'
+                }).then(canvasImage => {
+                    const link = document.createElement('a');
+                    link.download = `atp-satellite-slide-${index + 1}.png`;
+                    link.href = canvasImage.toDataURL('image/png');
+                    link.click();
+                });
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+    <script>
+        function downloadGrid() {
+            const canvas = document.getElementById('canvas');
+            html2canvas(canvas, {
+                scale: 2,
+                backgroundColor: '#ffffff'
+            }).then(canvasImage => {
+                const link = document.createElement('a');
+                link.download = 'bangkok-heat-full-grid.png';
+                link.href = canvasImage.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        function downloadSlices() {
+            const posts = document.querySelectorAll('.grid-post');
+            posts.forEach((post, index) => {
+                html2canvas(post, {
+                    scale: 3,
+                    backgroundColor: '#ffffff'
+                }).then(canvasImage => {
+                    const link = document.createElement('a');
+                    link.download = `bangkok-heat-post-${index + 1}.png`;
+                    link.href = canvasImage.toDataURL('image/png');
+                    link.click();
+                });
+            });
+        }
+    </script>
+</body>
+</html>

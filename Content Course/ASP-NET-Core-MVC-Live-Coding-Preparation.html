@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASP.NET Core MVC Live Coding Preparation - Guide</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+      font-size: 1.5rem;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.8rem 0;
+    }
+
+    ul, ol {
+      margin: 0.8rem 0 1.2rem 1.6rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    .node {
+      margin-top: 32px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    blockquote.callout {
+      border-left: 4px solid #9b8f7b;
+      margin: 1.2rem 0;
+      padding: 0.6rem 1.2rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 4px solid #9b8f7b;
+      padding: 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1.2rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.95rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    .copy-controls {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline, .copy-controls { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Ready to copy content.</span>
+    </div>
+
+    <article class="doc" id="mainDoc">
+      <p class="meta">Live Coding Strategy - ASP.NET Core MVC</p>
+      <h1>ASP.NET Core MVC Live Coding Preparation</h1>
+      <p class="subtitle">A strategic roadmap to crush your live coding sessions, from environment setup to a complete CRUD implementation in 30 minutes.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Environment Preparation, BAB B Project Setup, BAB C Database Configuration, BAB D MVC Development, BAB E CRUD Implementation, BAB F Best Practices, BAB G 30-Minute Flow.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section" id="bab-a">
+        <div class="copy-controls">
+          <button class="copy-btn" onclick="copyBab('bab-a')">Copy BAB A</button>
+        </div>
+        <h2>BAB A — Environment Preparation</h2>
+
+        <div id="sub-a-1">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('A.1')">A.1</button>
+            <button class="copy-btn" onclick="copyTitle('sub-a-1')">Title A.1</button>
+            <button class="copy-btn" onclick="copyContent('sub-a-1')">Content A.1</button>
+          </div>
+          <h3>A.1 Hardware & Development Setup</h3>
+          <p>Before you even think about writing code, your hardware needs to be in tip-top shape. You don't want your laptop to sound like a jet engine or freeze right when you're about to run a migration. Live coding is a stress test for both you and your machine. If your system is sluggish, your brain will follow suit. Ensure your SSD has enough breathing room (at least 20GB free) so Windows doesn't decide to start swapping memory in the middle of a build.</p>
+          
+          <blockquote class="callout">
+            <strong>Analogy: Prepping the Race Car.</strong> 
+            Think of this like a professional racer checking their tires, engine oil, and fuel levels before a big grand prix. If your car breaks down on the first lap because you didn't check the coolant, it doesn't matter how fast you can drive. Your laptop is your vehicle—make sure it's tuned for high performance.
+          </blockquote>
+
+          <ul>
+            <li><strong>RAM is King:</strong> Visual Studio is a memory hog. 16GB is the baseline for a smooth experience; 32GB is where the magic happens.</li>
+            <li><strong>SSD over HDD:</strong> If you're still on a mechanical hard drive, your build times will be your worst enemy. An NVMe SSD is a non-negotiable requirement for modern dev.</li>
+            <li><strong>Cooling:</strong> If your laptop throttles when it gets hot, your 5-second build will turn into a 30-second nightmare. Lift that laptop up or use a cooling pad.</li>
+            <li><strong>Stable Internet:</strong> Even for local coding, you might need to pull NuGet packages or look up a specific error on Stack Overflow. Don't let a "No Internet" icon ruin your flow.</li>
+          </ul>
+        </div>
+
+        <div id="sub-a-2">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('A.2')">A.2</button>
+            <button class="copy-btn" onclick="copyTitle('sub-a-2')">Title A.2</button>
+            <button class="copy-btn" onclick="copyContent('sub-a-2')">Content A.2</button>
+          </div>
+          <h3>A.2 Install Required Software</h3>
+          <p>You need the right tools for the job. ASP.NET Core is versatile, but having the latest SDK and a solid IDE is non-negotiable. Don't just install them—configure them. Set up your shortcuts, install your favorite themes, and make sure your extensions (like IntelliCode or C# Dev Kit) are actually enabled. A well-configured environment saves you hundreds of clicks during a live session.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: The Surgeon's Tray.</strong> 
+            Imagine a surgeon walking into the OR and then asking, "Hey, where's the scalpel?" That's a disaster. Every tool must be sterilized, sharpened, and laid out in the exact order of use. Your IDE should be just as organized so you can reach for a tool without even looking.
+          </blockquote>
+
+          <ul>
+            <li><strong>Visual Studio 2022:</strong> Make sure the "ASP.NET and web development" workload is installed. Don't forget the "Entity Framework Tools" component.</li>
+            <li><strong>.NET SDK:</strong> Always have the latest LTS (Long Term Support) version installed. Use <code>dotnet --list-sdks</code> in the terminal to verify.</li>
+            <li><strong>Browser & DevTools:</strong> Chrome or Edge are standard. Get comfortable with the Network and Console tabs—they are your best friends when things go sideways.</li>
+            <li><strong>API Testers:</strong> Postman or Bruno are great, but even the built-in Swagger UI in ASP.NET Core is powerful enough if you know how to use it.</li>
+          </ul>
+        </div>
+
+        <div id="sub-a-3">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('A.3')">A.3</button>
+            <button class="copy-btn" onclick="copyTitle('sub-a-3')">Title A.3</button>
+            <button class="copy-btn" onclick="copyContent('sub-a-3')">Content A.3</button>
+          </div>
+          <h3>A.3 Database Preparation</h3>
+          <p>Database setup can be a real time-sink during live coding. If you spend 10 minutes debugging a "Login failed for user" error, you've already lost the room. Decide early: SQLite is ultra-portable and requires zero setup, while SQL Server (LocalDB) feels more "pro." Choose the one you can set up in your sleep.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: Preparing the Spice Mix.</strong> 
+            Before a chef starts the fire, they already have their spices measured and mixed in small bowls. They don't start grinding pepper while the meat is burning. Preparing your database connection and schema is like having your "Mise en place" ready before you start the heat.
+          </blockquote>
+
+          <ul>
+            <li><strong>SQLite:</strong> Perfect for 30-minute sessions. It's just a file in your project folder. No services to start, no passwords to remember.</li>
+            <li><strong>SQL Server LocalDB:</strong> Great for demonstrating enterprise features, but make sure the service is actually running before you start.</li>
+            <li><strong>Seed Data:</strong> Have a plan for how you'll populate the DB. An empty app is a boring app. Be ready to add 3-5 "test" records immediately.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section" id="bab-b">
+        <div class="copy-controls">
+          <button class="copy-btn" onclick="copyBab('bab-b')">Copy BAB B</button>
+        </div>
+        <h2>BAB B — ASP.NET Core MVC Project Setup</h2>
+
+        <div id="sub-b-1">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('B.1')">B.1</button>
+            <button class="copy-btn" onclick="copyTitle('sub-b-1')">Title B.1</button>
+            <button class="copy-btn" onclick="copyContent('sub-b-1')">Content B.1</button>
+          </div>
+          <h3>B.1 Create New ASP.NET Core MVC Project</h3>
+          <p>Speed is everything in a 30-minute window. Use the official "ASP.NET Core Web App (Model-View-Controller)" template. Don't try to be a hero and build everything from a "Blank" template unless specifically asked. The goal is to show how you build *on top* of a professional foundation, not how well you can re-type boilerplate code.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: Picking the Right Plate.</strong> 
+            Creating the project is like picking the right size of plate for your dish. If you're serving a steak, you don't use a tiny saucer. The MVC template is a full-sized dinner plate—it's got space for everything you need and it's already polished.
+          </blockquote>
+
+          <ul>
+            <li><strong>Project Name:</strong> Keep it simple but descriptive (e.g., <code>InventoryManager</code>).</li>
+            <li><strong>HTTPS:</strong> Keep this checked. It's the modern standard.</li>
+            <li><strong>Docker:</strong> Uncheck this for live coding unless it's a DevOps role. It adds unnecessary complexity to your debugging cycle.</li>
+          </ul>
+        </div>
+
+        <div id="sub-b-2">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('B.2')">B.2</button>
+            <button class="copy-btn" onclick="copyTitle('sub-b-2')">Title B.2</button>
+            <button class="copy-btn" onclick="copyContent('sub-b-2')">Content B.2</button>
+          </div>
+          <h3>B.2 Configure Project Structure</h3>
+          <p>MVC is a convention-based framework. If you fight the convention, you lose. Keep your <code>Controllers</code>, <code>Models</code>, and <code>Views</code> in their designated folders. If you need a data access layer, create a <code>Data</code> folder. Consistency allows the interviewer to "read" your project without you explaining every single file location.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: The Master's Workshop.</strong> 
+            A master carpenter doesn't keep their hammer in the fridge and their nails in the garden. Everything has a place. When you walk into their workshop, you instantly know where to find the tools. Your project structure is your workshop—make it professional.
+          </blockquote>
+
+          <ul>
+            <li><strong>wwwroot:</strong> This is for your static assets (CSS, JS, Libs). Don't touch this unless you're styling.</li>
+            <li><strong>Models:</strong> Keep these focused on data. Don't put business logic here.</li>
+            <li><strong>Controllers:</strong> These are the "traffic cops." They should be thin and fast.</li>
+          </ul>
+        </div>
+
+        <div id="sub-b-3">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('B.3')">B.3</button>
+            <button class="copy-btn" onclick="copyTitle('sub-b-3')">Title B.3</button>
+            <button class="copy-btn" onclick="copyContent('sub-b-3')">Content B.3</button>
+          </div>
+          <h3>B.3 Run Initial Project</h3>
+          <p>The "First Run" is a psychological win. It proves that your environment is healthy. This is also when you'll handle the "Trust SSL Certificate" popup. Do it once, do it early, and then you don't have to worry about "Privacy Error" screens when you're trying to show off your features.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: The Engine Dry Run.</strong> 
+            Before a pilot takes off, they rev the engines while still on the ground. They're checking for weird noises or warning lights. Running your app immediately is your "revving the engine" moment. If it smokes now, better to fix it while you're still on the runway.
+          </blockquote>
+        </div>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section" id="bab-c">
+        <div class="copy-controls">
+          <button class="copy-btn" onclick="copyBab('bab-c')">Copy BAB C</button>
+        </div>
+        <h2>BAB C — Database Configuration</h2>
+
+        <div id="sub-c-1">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('C.1')">C.1</button>
+            <button class="copy-btn" onclick="copyTitle('sub-c-1')">Title C.1</button>
+            <button class="copy-btn" onclick="copyContent('sub-c-1')">Content C.1</button>
+          </div>
+          <h3>C.1 Database Connection Setup</h3>
+          <p>Your <code>appsettings.json</code> is the "address book" for your app's dependencies. When configuring your connection string, remember that modern SQL Server requires <code>TrustServerCertificate=True</code> if you're not using a real SSL cert locally. Forgetting this one flag is the #1 cause of "A connection was successfully established with the server, but then an error occurred during the login process."</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: The Private Hotline.</strong> 
+            Connecting to your database is like setting up a private hotline between two secret bases. If you don't have the right "handshake" (the connection string), the other side won't pick up, and you'll just be talking to a dial tone.
+          </blockquote>
+
+          <pre><code>"ConnectionStrings": {
+  "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=InterviewDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
+}</code></pre>
+        </div>
+
+        <div id="sub-c-2">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('C.2')">C.2</button>
+            <button class="copy-btn" onclick="copyTitle('sub-c-2')">Title C.2</button>
+            <button class="copy-btn" onclick="copyContent('sub-c-2')">Content C.2</button>
+          </div>
+          <h3>C.2 Entity Framework Core Setup</h3>
+          <p>EF Core is a powerful ORM, but it needs to be "introduced" to your application. In <code>Program.cs</code>, you register your <code>DbContext</code> using the connection string you just created. This is Dependency Injection in action. It tells the app: "Whenever someone needs to talk to the database, give them an instance of this specific context."</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: Mapping the Circuit Board.</strong> 
+            EF Core is like the wiring in a complex circuit board. You have your components (Classes) and your power source (Database). EF Core maps the connections so that when you flip a switch in your code, the right "light" turns on in the database.
+          </blockquote>
+
+          <pre><code>// In Program.cs
+builder.Services.AddDbContext&lt;ApplicationDbContext&gt;(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));</code></pre>
+        </div>
+
+        <div id="sub-c-3">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('C.3')">C.3</button>
+            <button class="copy-btn" onclick="copyTitle('sub-c-3')">Title C.3</button>
+            <button class="copy-btn" onclick="copyContent('sub-c-3')">Content C.3</button>
+          </div>
+          <h3>C.3 Initial Migration</h3>
+          <p>Migrations are your "Save Points." They record every change you make to your models so you can reproduce the database anywhere. The first migration is the most important—it's the baseline. After running <code>update-database</code>, always open SQL Server Object Explorer to verify that your tables were actually created. Don't just trust the console.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: The Foundation Inspection.</strong> 
+            Running a migration is like having a building inspector check the foundation of your house. They make sure the concrete is solid and the dimensions are correct before you start adding the heavy furniture. If the foundation is cracked, everything else will eventually lean.
+          </blockquote>
+
+          <pre><code># Package Manager Console
+Add-Migration InitialCreate
+Update-Database
+
+# .NET CLI
+dotnet ef migrations add InitialCreate
+dotnet ef database update</code></pre>
+        </div>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section" id="bab-d">
+        <div class="copy-controls">
+          <button class="copy-btn" onclick="copyBab('bab-d')">Copy BAB D</button>
+        </div>
+        <h2>BAB D — MVC Core Development</h2>
+
+        <div id="sub-d-1">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('D.1')">D.1</button>
+            <button class="copy-btn" onclick="copyTitle('sub-d-1')">Title D.1</button>
+            <button class="copy-btn" onclick="copyContent('sub-d-1')">Content D.1</button>
+          </div>
+          <h3>D.1 Creating Models</h3>
+          <p>Your models are more than just a list of properties. They are the "contract" between your backend and your users. Use Data Annotations not just for validation, but for presentation too. Attributes like <code>[Display(Name = "Product Name")]</code> will automatically set the label in your forms, saving you from hardcoding strings in your HTML.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: The Order Form.</strong> 
+            Your model is like a clean, well-designed order form at a high-end restaurant. If the form has clear boxes for "Special Requests" and "Allergies," the chef (the backend) can do their job perfectly. If the form is just a blank piece of paper, mistakes will happen.
+          </blockquote>
+
+          <ul>
+            <li><strong>Keep it Lean:</strong> Only include properties that represent your data. Avoid putting "View-specific" logic here—save that for a <code>ViewModel</code>.</li>
+            <li><strong>Validation is UX:</strong> Use <code>[Required]</code>, <code>[Range]</code>, and <code>[EmailAddress]</code>. It's better to catch a mistake on the client side than to have the database throw an ugly exception.</li>
+            <li><strong>Primary Keys:</strong> In EF Core, naming your property <code>Id</code> or <code>[EntityName]Id</code> will automatically make it the Primary Key. Stick to the convention!</li>
+          </ul>
+
+          <pre><code>public class Product
+{
+    public int Id { get; set; }
+    
+    [Required]
+    [StringLength(100)]
+    [Display(Name = "Product Name")]
+    public string Name { get; set; }
+
+    [Range(0.01, 10000)]
+    [DataType(DataType.Currency)]
+    public decimal Price { get; set; }
+}</code></pre>
+        </div>
+
+        <div id="sub-d-2">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('D.2')">D.2</button>
+            <button class="copy-btn" onclick="copyTitle('sub-d-2')">Title D.2</button>
+            <button class="copy-btn" onclick="copyContent('sub-d-2')">Content D.2</button>
+          </div>
+          <h3>D.2 Creating Controllers</h3>
+          <p>The controller is the orchestrator. In a professional MVC app, you use Constructor Injection to get your <code>DbContext</code>. This makes your controller testable and clean. Remember the mantra: "Fat Models, Thin Controllers." The controller should only handle routing and passing data; it shouldn't be doing heavy math or complex business logic.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: The Concierge.</strong> 
+            Think of the controller as a hotel concierge. They don't cook the food, they don't clean the rooms, and they don't drive the limo. They take your request and talk to the right department (the Database or a Service) to make sure you get what you need.
+          </blockquote>
+
+          <ul>
+            <li><strong>Dependency Injection:</strong> Always inject your context through the constructor. Never use the <code>new</code> keyword to create a database connection.</li>
+            <li><strong>Action Results:</strong> Understand when to return <code>View()</code>, <code>RedirectToAction()</code>, or <code>NotFound()</code>. Your response tells the browser exactly what happened.</li>
+            <li><strong>Scaffolding:</strong> During live coding, use Visual Studio's "Add Controller with views, using Entity Framework" to save 10 minutes of manual work. Just be ready to explain what the generated code does!</li>
+          </ul>
+        </div>
+
+        <div id="sub-d-3">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('D.3')">D.3</button>
+            <button class="copy-btn" onclick="copyTitle('sub-d-3')">Title D.3</button>
+            <button class="copy-btn" onclick="copyContent('sub-d-3')">Content D.3</button>
+          </div>
+          <h3>D.3 Creating Views</h3>
+          <p>Razor is the engine that renders your HTML. Use Tag Helpers (like <code>asp-for</code>, <code>asp-action</code>) to keep your views clean and strongly typed. Strongly typed views mean you get IntelliSense in your HTML, which is a lifesaver when you're typing fast under pressure.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: The Interior Designer.</strong> 
+            If the model is the blueprint and the controller is the builder, the view is the interior designer. They decide how to display the data so it's both functional and beautiful. They don't care how the plumbing works; they just care where the faucet is.
+          </blockquote>
+
+          <ul>
+            <li><strong>_Layout.cshtml:</strong> Put your common elements (header, footer, navbar) here. Don't repeat yourself across every page.</li>
+            <li><strong>Model Binding:</strong> Always use <code>@model YourProject.Models.YourModel</code> at the top of your view. It makes your code safer and easier to write.</li>
+            <li><strong>Partial Views:</strong> If you're repeating a piece of UI (like a product card), extract it into a <code>Partial View</code> to keep your main views readable.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section" id="bab-e">
+        <div class="copy-controls">
+          <button class="copy-btn" onclick="copyBab('bab-e')">Copy BAB E</button>
+        </div>
+        <h2>BAB E — CRUD Implementation (Live Coding Focus)</h2>
+
+        <div id="sub-e-1">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('E.1')">E.1</button>
+            <button class="copy-btn" onclick="copyTitle('sub-e-1')">Title E.1</button>
+            <button class="copy-btn" onclick="copyContent('sub-e-1')">Content E.1</button>
+          </div>
+          <h3>E.1 Create Feature</h3>
+          <p>The "Create" operation is your first real test of understanding the HTTP lifecycle. You need two distinct actions: a <code>GET</code> to show the blank form, and a <code>POST</code> to process the data. This is where you implement the **Post-Redirect-Get (PRG)** pattern. Never return a <code>View()</code> directly after a successful post; if the user hits "Refresh" in their browser, they'll get that annoying "Confirm Form Resubmission" dialog and might accidentally double-charge a credit card or create duplicate records. Always <code>RedirectToAction</code> to a safe page like the Index.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: The Gym Membership.</strong> 
+            Think of it like signing up for a gym. You fill out the form (the GET), hand it to the receptionist (the POST), and once they enter it in the system, they don't just stand there staring at you. They give you your keycard and tell you, "You're all set, the treadmill is that way" (the Redirect). The Redirect is what makes the transaction feel "finished" for the user.
+          </blockquote>
+
+          <pre><code>[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task&lt;IActionResult&gt; Create([Bind("Name,Price")] Product product)
+{
+    if (ModelState.IsValid)
+    {
+        _context.Add(product);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index)); // This is the 'R' in PRG
+    }
+    return View(product); // If invalid, go back to form with error messages
+}</code></pre>
+
+          <ul>
+            <li><strong>[ValidateAntiForgeryToken]:</strong> This isn't just "good practice"—it's your shield against Cross-Site Request Forgery (CSRF). It ensures the POST came from *your* form and not a malicious site.</li>
+            <li><strong>ModelState.IsValid:</strong> This checks the "Contract" you defined in your Model. If the user left a required field blank, EF Core won't even try to hit the database, saving you from a crash.</li>
+          </ul>
+        </div>
+
+        <div id="sub-e-2">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('E.2')">E.2</button>
+            <button class="copy-btn" onclick="copyTitle('sub-e-2')">Title E.2</button>
+            <button class="copy-btn" onclick="copyContent('sub-e-2')">Content E.2</button>
+          </div>
+          <h3>E.2 Read Feature</h3>
+          <p>Reading data is the most common interaction. For the <code>Index</code> page, you want a list; for <code>Details</code>, you want a deep dive. Pro tip: Use <code>.AsNoTracking()</code> for these read-only actions. It tells EF Core, "I'm just looking, I don't plan on changing anything," which stops the engine from wasting memory tracking object states. It’s a tiny performance win that shows you care about resource management.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: Checking the Flight Board.</strong> 
+            Reading data is like checking the "Departures" board at an airport. You're just a spectator looking for information. You can't reach into the board and change a flight time (that would be an Update). Because you're just looking, the system can handle thousands of people checking the same board without breaking a sweat.
+          </blockquote>
+
+          <pre><code>public async Task&lt;IActionResult&gt; Index()
+{
+    // AsNoTracking() makes this read-only and faster
+    var products = await _context.Products.AsNoTracking().ToListAsync();
+    return View(products);
+}</code></pre>
+
+          <ul>
+            <li><strong>Handling Nulls:</strong> If a user manually types a URL like <code>/Products/Details/999</code> and ID 999 doesn't exist, your app will crash if you're not careful. Always check <code>if (product == null)</code> and return <code>NotFound()</code>.</li>
+            <li><strong>Async All the Way:</strong> Never use <code>.ToList()</code> in a web app; always use <code>.ToListAsync()</code>. It keeps the thread pool free to handle other users while the database is working.</li>
+          </ul>
+        </div>
+
+        <div id="sub-e-3">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('E.3')">E.3</button>
+            <button class="copy-btn" onclick="copyTitle('sub-e-3')">Title E.3</button>
+            <button class="copy-btn" onclick="copyContent('sub-e-3')">Content E.3</button>
+          </div>
+          <h3>E.3 Update & Delete Feature</h3>
+          <p>Update and Delete are the "heavy hitters" where things can go wrong. For updates, you need to prevent **Over-posting attacks**. If your <code>Product</code> model has an <code>IsAdmin</code> property, a hacker could inject that into the form and give themselves admin rights. The <code>[Bind]</code> attribute or using a <code>ViewModel</code> is your security guard here. For deletes, **never delete on a GET request**. Deleting should always require a deliberate POST from a confirmation page.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: The "Are You Sure?" Pop-up.</strong> 
+            Updating is like editing your bio on social media—it's public and permanent. Deleting is like hitting "Empty Trash" on your desktop. In both cases, you want a safety rail. You don't want a "Delete" button to be a trap that someone can accidentally click while they're just trying to scroll past.
+          </blockquote>
+
+          <pre><code>[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task&lt;IActionResult&gt; Edit(int id, [Bind("Id,Name,Price")] Product product)
+{
+    if (id != product.Id) return NotFound();
+
+    if (ModelState.IsValid)
+    {
+        _context.Update(product);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+    return View(product);
+}</code></pre>
+
+          <ul>
+            <li><strong>The Bind Attribute:</strong> This specifies the "White List" of properties. Even if a user tries to send extra data, the <code>Bind</code> attribute tells the model binder to ignore everything else.</li>
+            <li><strong>Concurrency:</strong> In a real app, you'd check for <code>DbUpdateConcurrencyException</code>. It’s worth mentioning to an interviewer that you know what it is, even if you don't implement the full retry logic during the 30-minute demo.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section" id="bab-f">
+        <div class="copy-controls">
+          <button class="copy-btn" onclick="copyBab('bab-f')">Copy BAB F</button>
+        </div>
+        <h2>BAB F — Best Practices During Live Coding</h2>
+
+        <div id="sub-f-1">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('F.1')">F.1</button>
+            <button class="copy-btn" onclick="copyTitle('sub-f-1')">Title F.1</button>
+            <button class="copy-btn" onclick="copyContent('sub-f-1')">Content F.1</button>
+          </div>
+          <h3>F.1 Clean Coding</h3>
+          <p>Clean code isn't a luxury; it's a **Survival Skill** during a live coding interview. Interviewers don't expect a perfect enterprise architecture in 30 minutes, but they *do* want to see that you care about readability. Avoid "Magic Numbers" (e.g., <code>if (status == 1)</code>) and "Cryptic Names" (e.g., <code>var p = _context.P.First();</code>). If your code reads like a sentence, you've already won half the battle.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: The Master Carpenter.</strong> 
+            A master carpenter doesn't just build a chair; they keep their workshop clean as they work. They don't leave tools in a pile or sawdust covering their measurements. When you "clean as you code," you prevent the "Messy Shop" that leads to accidents and bad craftsmanship.
+          </blockquote>
+
+          <ul>
+            <li><strong>Expressive Naming:</strong> Use names that explain *Intent*. Instead of <code>var x = 10;</code>, use <code>var maxLoginAttempts = 10;</code>.</li>
+            <li><strong>Separation of Concerns:</strong> Don't put SQL queries inside your HTML Views. Keep the logic in the Controller (or a Service) and the data in the Model.</li>
+            <li><strong>DRY (Don't Repeat Yourself):</strong> If you find yourself copying and pasting a block of logic, that's a signal to extract it into a private helper method.</li>
+          </ul>
+        </div>
+
+        <div id="sub-f-2">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('F.2')">F.2</button>
+            <button class="copy-btn" onclick="copyTitle('sub-f-2')">Title F.2</button>
+            <button class="copy-btn" onclick="copyContent('sub-f-2')">Content F.2</button>
+          </div>
+          <h3>F.2 Communication During Coding</h3>
+          <p>This is the secret weapon of elite developers. **Think Out Loud.** When you're silent, the interviewer is guessing; when you speak, you're teaching. If you're stuck, say: "I'm experiencing a null reference here. My theory is the model binder isn't picking up the ID from the route. Let me check the View's form action." This shows that even if you're struggling, your *process* is sound.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: The Flight Instructor.</strong> 
+            Imagine being a student pilot with an instructor who never says a word. You'd be terrified. An interviewer wants to hear your "Flight Plan." They want to know you're in control of the aircraft, even when you hit a bit of turbulence.
+          </blockquote>
+
+          <ul>
+            <li><strong>Ask Clarifying Questions:</strong> "Should I implement basic validation now, or move straight to the database logic?" This shows you're thinking about time management.</li>
+            <li><strong>Explain Trade-offs:</strong> "I'm using SQLite for speed here, but in a production environment, we'd definitely use SQL Server or PostgreSQL."</li>
+          </ul>
+        </div>
+
+        <div id="sub-f-3">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('F.3')">F.3</button>
+            <button class="copy-btn" onclick="copyTitle('sub-f-3')">Title F.3</button>
+            <button class="copy-btn" onclick="copyContent('sub-f-3')">Content F.3</button>
+          </div>
+          <h3>F.3 Debugging Strategy</h3>
+          <p>When the app crashes (and it will), don't panic. **Stay Calm and Read the Stack Trace.** Modern .NET error pages are incredibly helpful—they usually highlight the exact line of code that failed. Use the "Immediate Window" in Visual Studio to test small snippets of code while the app is paused. Showing that you can systematically solve a bug is often more impressive than writing perfect code on the first try.</p>
+
+          <blockquote class="callout">
+            <strong>Analogy: The Detective.</strong> 
+            Debugging is a crime scene investigation. The crash is the "crime," and the Stack Trace is the "evidence" left behind. Don't start guessing suspects (the code); follow the evidence until it leads you directly to the culprit (the bug).
+          </blockquote>
+
+          <ul>
+            <li><strong>Breakpoints:</strong> Don't just "guess and check." Set a breakpoint and *inspect* the state of your variables.</li>
+            <li><strong>The Rubber Duck Method:</strong> Explain the bug to the interviewer. Often, just hearing yourself describe the problem will trigger the solution.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section" id="bab-g">
+        <div class="copy-controls">
+          <button class="copy-btn" onclick="copyBab('bab-g')">Copy BAB G</button>
+        </div>
+        <h2>BAB G — Suggested 30-Minute Live Coding Flow</h2>
+
+        <div id="sub-g-1">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('G.1')">G.1</button>
+            <button class="copy-btn" onclick="copyTitle('sub-g-1')">Title G.1</button>
+            <button class="copy-btn" onclick="copyContent('sub-g-1')">Content G.1</button>
+          </div>
+          <h3>G.1 The First 5 Minutes: Setup & Foundation</h3>
+          <p>Don't overthink. Create the project using the template, add your <code>appsettings</code> connection string, and run the app once. If you see the "Welcome" page, you're 20% done and your confidence is already high.</p>
+        </div>
+
+        <div id="sub-g-2">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('G.2')">G.2</button>
+            <button class="copy-btn" onclick="copyTitle('sub-g-2')">Title G.2</button>
+            <button class="copy-btn" onclick="copyContent('sub-g-2')">Content G.2</button>
+          </div>
+          <h3>G.2 Next 10 Minutes: Data & Backend</h3>
+          <p>Create your Model class, build the <code>DbContext</code>, and run the migration. This is the technical core. If you hit an error here, stay calm and check your connection string first. Once the tables are in the DB, the rest is just UI.</p>
+        </div>
+
+        <div id="sub-g-3">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('G.3')">G.3</button>
+            <button class="copy-btn" onclick="copyTitle('sub-g-3')">Title G.3</button>
+            <button class="copy-btn" onclick="copyContent('sub-g-3')">Content G.3</button>
+          </div>
+          <h3>G.3 Next 10 Minutes: Build the Features</h3>
+          <p>Scaffold or manually create the Controller and the main <code>Index</code> and <code>Create</code> views. Implement the logic to save and display data. This is the "meat" of the demo—make sure you can actually add a record and see it appear in the list.</p>
+        </div>
+
+        <div id="sub-g-4">
+          <div class="copy-controls">
+            <button class="copy-btn" onclick="copyLevel('G.4')">G.4</button>
+            <button class="copy-btn" onclick="copyTitle('sub-g-4')">Title G.4</button>
+            <button class="copy-btn" onclick="copyContent('sub-g-4')">Content G.4</button>
+          </div>
+          <h3>G.4 Last 5 Minutes: Polish & Explanation</h3>
+          <p>Verify the flow one last time. Refactor any ugly variable names. Use the remaining time to explain your architectural choices (like DI or MVC structure) and answer any follow-up questions from the interviewer.</p>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const statusMsg = document.getElementById('copyStatus');
+
+    function updateStatus(msg) {
+      statusMsg.innerText = msg;
+      setTimeout(() => { statusMsg.innerText = "Ready to copy content."; }, 3000);
+    }
+
+    function cleanForTiptap(html) {
+      // Remove all copy-controls blocks
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      const controls = div.querySelectorAll('.copy-controls');
+      controls.forEach(el => el.remove());
+      
+      // Basic cleanup
+      let cleaned = div.innerHTML;
+      // Remove multiple spaces and empty lines
+      cleaned = cleaned.replace(/\s\s+/g, ' ');
+      return cleaned.trim();
+    }
+
+    function copyToClipboard(text, isHtml = false) {
+      if (isHtml) {
+        const type = "text/html";
+        const blob = new Blob([text], { type });
+        const data = [new ClipboardItem({ [type]: blob })];
+        navigator.clipboard.write(data).then(() => {
+          updateStatus("HTML Copied to Clipboard!");
+        });
+      } else {
+        navigator.clipboard.writeText(text).then(() => {
+          updateStatus("Text Copied to Clipboard!");
+        });
+      }
+    }
+
+    // Main buttons
+    document.getElementById('copyRichHtmlBtn').addEventListener('click', () => {
+      const docHtml = document.getElementById('mainDoc').innerHTML;
+      copyToClipboard(cleanForTiptap(docHtml), true);
+    });
+
+    document.getElementById('copyTiptapSafeBtn').addEventListener('click', () => {
+      const docHtml = document.getElementById('mainDoc').innerHTML;
+      const cleaned = cleanForTiptap(docHtml);
+      // Further sanitize if needed for "Tiptap-Safe"
+      copyToClipboard(cleaned, false);
+    });
+
+    // Helper functions for individual buttons
+    function copyBab(id) {
+      const el = document.getElementById(id);
+      const html = el.innerHTML;
+      copyToClipboard(cleanForTiptap(html), true);
+    }
+
+    function copyLevel(level) {
+      copyToClipboard(level, false);
+    }
+
+    function copyTitle(containerId) {
+      const container = document.getElementById(containerId);
+      const h3 = container.querySelector('h3');
+      const title = h3.innerText.replace(/^[A-Z]\.\d+\s+/, '');
+      copyToClipboard(title, false);
+    }
+
+    function copyContent(containerId) {
+      const container = document.getElementById(containerId);
+      // Create a clone to manipulate
+      const clone = container.cloneNode(true);
+      // Remove controls
+      const controls = clone.querySelector('.copy-controls');
+      if (controls) controls.remove();
+      // Remove title (h3)
+      const h3 = clone.querySelector('h3');
+      if (h3) h3.remove();
+      
+      copyToClipboard(cleanForTiptap(clone.innerHTML), true);
+    }
+  </script>
+</body>
+</html>
