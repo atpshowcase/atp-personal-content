@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docker Mastery Complete Guide - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - Cloud Native Infrastructure</p>
+      <h1>Docker Mastery Complete Guide</h1>
+      <p class="subtitle">A comprehensive masterclass journey into world of containers—from basic isolation to multi-container orchestration with Swarm and Kubernetes.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Introduction to Containers, BAB B Environment Setup, BAB C Working with Containers, BAB D Docker Images & Dockerfile, BAB E Data Management, BAB F Advanced Dockerfile, BAB G Docker Compose, BAB H Docker Swarm, BAB I Kubernetes, BAB J CI/CD, BAB K Production, BAB L DevOps Workflow, BAB M Advanced Topics, BAB N Real-World Projects.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction to Containers & Docker</h2>
+
+        <h3>A.1 What is Docker</h3>
+        <p>Docker is the definitive platform for <strong>Containerization</strong>, a technology that has completely transformed the software supply chain. At its core, Docker allows developers to bundle an application along with every single thing it needs to run—libraries, system tools, settings, and code—into a single, immutable artifact called a <strong>Container</strong>.</p>
+        <blockquote class="callout">Analogy: Docker is like a <strong>"Standardized Shipping Container."</strong> Before these existed (around the 1950s), loading a ship with loose boxes, sacks of grain, and cars was a chaotic nightmare (and extremely slow). Today, everything goes into a standard 20ft steel box. Whether the ship is from Maersk or Evergreen, every crane and truck in every port knows exactly how to handle it. Docker does the same for code: your app is the cargo, and Docker is the universal box.</blockquote>
+        <p>Why is this a game-changer? Traditionally, moving code from a developer's laptop to a testing server, and then to production, was fraught with "Environment Mismatch" errors. Docker eliminates this by ensuring the environment inside the container is identical, no matter where it's running.</p>
+        <ul>
+          <li><strong>Container vs Virtual Machine:</strong> Unlike VMs that require a full Guest OS (taking up GBs of RAM and minutes to boot), containers share the host's <strong>OS Kernel</strong>. This makes them incredibly lightweight, starting in milliseconds and consuming minimal resources.</li>
+          <li><strong>The "It Works on My Machine" Solution:</strong> Since the container includes the exact version of Node.js, Python, or Java—plus all OS-level dependencies—if it runs on your machine, it is guaranteed to run exactly the same way in the Cloud or on a colleague's machine.</li>
+          <li><strong>Cloud-Native & Microservices:</strong> Docker is the backbone of modern microservices. It allows you to break a giant "monolith" app into small, independent services that can be scaled, updated, and managed individually without affecting the rest of the system.</li>
+        </ul>
+
+        <h3>A.2 Docker Concepts</h3>
+        <p>To master Docker, you must understand the "Holy Trinity" of its architecture: <strong>Images</strong>, <strong>Containers</strong>, and <strong>Registries</strong>. These components work together to move your application from code to a running service.</p>
+        <blockquote class="callout">Analogy: Think of it as a professional kitchen. An <strong>Image</strong> is the "Recipe" (the blueprint). A <strong>Container</strong> is the "Actual Dish" being served (the running instance of that recipe). A <strong>Registry</strong> is the "Global Cookbook" (like GitHub for recipes) where you store and share your best work.</blockquote>
+        <ul>
+          <li><strong>Images (The Blueprints):</strong> A Docker Image is a read-only template. It’s a snapshot of a filesystem at a specific point in time. Images are built in layers; for example, a "Base Layer" might be Ubuntu, the next layer adds Python, and the final layer adds your source code.</li>
+          <li><strong>Containers (The Running Process):</strong> A container is what you get when you "run" an image. It adds a thin <strong>Read/Write layer</strong> on top of the image. You can have 100 containers running from the same single image, each isolated and independent.</li>
+          <li><strong>Registries (The Warehouse):</strong> This is where you store your images. <strong>Docker Hub</strong> is the most famous public registry, but most companies use private registries (like Azure ACR, AWS ECR, or GitHub Packages) to keep their proprietary code safe.</li>
+        </ul>
+
+        <h3>A.3 Quick Start</h3>
+        <p>The best way to understand Docker is to see it in action. Even if you don't have a web server or a database installed on your computer, Docker can "spin up" an environment for you in seconds with a single command.</p>
+        <blockquote class="callout">Analogy: Running your first container is like <strong>"Instant Ramen."</strong> You don't need to know how the noodles were manufactured or how the seasoning was blended; you just add "hot water" (run the command), and you have a complete, working meal (a functional application) in front of you.</blockquote>
+        <p>When you run the command below, Docker checks if you have the <code>hello-world</code> image locally. If not, it pulls it from Docker Hub, creates a container, and executes the code inside it.</p>
+        <pre><code>docker run hello-world</code></pre>
+        <p><strong>Pro-Tip:</strong> After running this, try <code>docker ps -a</code> to see the container that just finished its job. You've officially started your journey into the world of containers.</p>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Environment Setup</h2>
+
+        <h3>B.1 Installing Docker</h3>
+        <p>Before you can build containers, you need the engine. Installation varies depending on whether you're building on a local developer machine or a production server. For most developers, <strong>Docker Desktop</strong> is the gold standard.</p>
+        <blockquote class="callout">Analogy: Installing Docker is like <strong>"Setting up a Game Console."</strong> Once the hardware (your OS) and the software (Docker Desktop) are connected, you can play any game (run any container)—whether it’s a Linux-based database or a Windows-based legacy app—regardless of who made it or what language it was written in.</blockquote>
+        <ul>
+          <li><strong>Windows/Mac:</strong> Download and install <strong>Docker Desktop</strong>. On Windows, ensure you enable <strong>WSL2 (Windows Subsystem for Linux)</strong> for the best performance and compatibility.</li>
+          <li><strong>Linux:</strong> Install the <strong>Docker Engine</strong> directly via your package manager (apt, yum, etc.). This is how most production servers are set up—lean, fast, and without a GUI.</li>
+          <li><strong>Verification:</strong> Open your terminal and type <code>docker --version</code>. If you see a version number, you're ready to rock.</li>
+        </ul>
+
+        <h3>B.2 Development Tools</h3>
+        <p>While Docker lives in the command line, modern development tools make managing complex container architectures much easier. You don't want to fly blind; you want a cockpit that gives you total visibility.</p>
+        <blockquote class="callout">Analogy: Development tools are like the <strong>"Dashboard in a Car."</strong> You *could* drive without them by listening to the engine and guessing your speed, but it’s much safer and more efficient when you can see your speed (logs), fuel levels (CPU/RAM usage), and engine health (container status) at a glance.</blockquote>
+        <ul>
+          <li><strong>VS Code Docker Extension:</strong> The #1 tool for Docker developers. It allows you to browse images, stop containers, and even "Remote into" a running container to edit code live, all without leaving your editor.</li>
+          <li><strong>Docker Dashboard:</strong> Built into Docker Desktop, it provides a clean UI for people who prefer clicking to typing. It’s great for seeing which containers are eating up your battery or disk space.</li>
+          <li><strong>CLI (The Source of Truth):</strong> Even with GUI tools, you must master the CLI. Commands like <code>docker logs</code> and <code>docker inspect</code> are the primary weapons for debugging when things go wrong in production.</li>
+        </ul>
+
+        <h3>B.3 System Configuration</h3>
+        <p>A default Docker installation works, but it isn't always optimized. Docker interacts deeply with your system's kernel and hardware resources. If you don't tune it, Docker might hog your RAM or leave "ghost" files that fill up your hard drive.</p>
+        <blockquote class="callout">Analogy: System configuration is like <strong>"Tuning your Car's Engine."</strong> You want to make sure the engine isn't taking up all the garage space (Disk Space) while still being powerful enough to carry the load (CPU/RAM) during peak traffic.</blockquote>
+        <ul>
+          <li><strong>Resource Allocation:</strong> In Docker Desktop settings, you can limit how much RAM and CPU Docker can use. If your computer starts lagging, this is the first place to look.</li>
+          <li><strong>Storage Hygiene:</strong> Docker doesn't automatically delete old images or stopped containers. Use <code>docker system prune</code> regularly to clear out the "junk" and reclaim your disk space.</li>
+          <li><strong>Kernel & Virtualization:</strong> Docker relies on hardware virtualization (VT-x or AMD-V). If Docker won't start, check your BIOS settings—it’s usually a hardware switch that needs to be flipped.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Working with Containers</h2>
+
+        <h3>C.1 Running Containers</h3>
+        <p>The <code>docker run</code> command is the "Swiss Army Knife" of Docker. It’s not just a start button; it’s an entire orchestration tool for a single process. Understanding its flags is the difference between a Docker amateur and a professional.</p>
+        <blockquote class="callout">Analogy: Running a container is like <strong>"Opening a Tab in a Browser."</strong> Each tab is isolated; you can open 20 tabs of the same website, and if one tab crashes because of a bad script, it doesn't take down the whole browser or your computer. They all share the same "Engine" (the browser), but they live in their own little worlds.</blockquote>
+        <ul>
+          <li><strong>Detached vs. Interactive:</strong> Use <code>-d</code> to run your app in the background (like a web server) and <code>-it</code> to "enter" the container immediately (like a bash shell).</li>
+          <li><strong>Port Mapping:</strong> Containers have their own private IP addresses. Use <code>-p 8080:80</code> to "tunnel" traffic from your computer's port 8080 to the container's internal port 80.</li>
+          <li><strong>Naming:</strong> Always use <code>--name my-app</code>. If you don't, Docker will assign a random (and often funny) name like <code>suspicious_hopper</code>, which is a nightmare to manage later.</li>
+        </ul>
+        <pre><code>docker run -d -p 80:80 --name web-server nginx</code></pre>
+
+        <h3>C.2 Container Management</h3>
+        <p>Managing containers is about keeping your development environment clean. A "Stale" container is a stopped process that still occupies disk space and holds onto specific resource names. Hygiene is non-negotiable in DevOps.</p>
+        <blockquote class="callout">Analogy: Container management is like <strong>"Managing a Fleet of Rental Cars."</strong> You need to know which ones are out on the road (Running), which ones are sitting in the lot (Stopped), and which ones are totaled and need to be sent to the scrapyard (Removed). If you keep too many cars in the lot without using them, you eventually run out of space for new ones.</blockquote>
+        <ul>
+          <li><strong>Monitoring:</strong> Use <code>docker ps</code> to see what's running and <code>docker ps -a</code> to see everything, including stopped containers.</li>
+          <li><strong>The Kill Switch:</strong> <code>docker stop</code> sends a "Graceful" signal (SIGTERM) to the app, giving it time to save data. <code>docker kill</code> is the "Hard" shutdown (SIGKILL).</li>
+          <li><strong>Cleaning Up:</strong> <code>docker rm -f $(docker ps -aq)</code> is the "Nuclear Option" to delete every container on your system. Use it with caution!</li>
+        </ul>
+
+        <h3>C.3 Networking Fundamentals</h3>
+        <p>Containers are useless if they can't talk to the world—or each other. Docker creates a virtual network interface for every container, allowing for seamless, isolated communication.</p>
+        <blockquote class="callout">Analogy: Docker Networking is like a <strong>"Private Intercom System"</strong> in a large office building. You can pick up the phone and dial "Room 101" (the Database container) from "Room 205" (the Web container). You don't need to walk out into the public street (the Public Internet) to talk to your coworker in the next room.</blockquote>
+        <ul>
+          <li><strong>The Bridge Network:</strong> This is the default. It allows containers on the same host to talk to each other using their internal IP addresses.</li>
+          <li><strong>DNS Resolution:</strong> In a custom Docker network, you don't need to know the IP address. You can just ping the container by its <code>--name</code>. Docker's internal DNS handles the rest.</li>
+          <li><strong>Exposing vs. Publishing:</strong> "Exposing" a port is just documentation; "Publishing" (using <code>-p</code>) is what actually opens the door to the outside world.</li>
+        </ul>
+
+        <h3>C.4 Shell Access & Debugging</h3>
+        <p>A container is not a "Black Box." Sometimes things go wrong—a config file is missing, or a permission is denied. You need to be able to "step inside" the running environment to investigate.</p>
+        <blockquote class="callout">Analogy: Shell access is like <strong>"Opening the Hood of a Car"</strong> while the engine is running. You aren't rebuilding the car from scratch; you're just looking inside with a flashlight to see why there's smoke or why a specific part isn't moving.</blockquote>
+        <ul>
+          <li><strong>The Power of Exec:</strong> Use <code>docker exec -it <name> bash</code> to open a terminal inside a running container. It’s like SSH, but without the overhead of an SSH server.</li>
+          <li><strong>Logs:</strong> Before you enter a container, always check <code>docker logs -f <name></code>. 90% of bugs are revealed in the standard output of the application.</li>
+          <li><strong>Temporary Changes:</strong> Remember: any file you edit inside a container via the shell will be <strong>LOST</strong> the moment the container is deleted. Always fix the problem in the Dockerfile, not the running container.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Docker Images & Dockerfile</h2>
+
+        <h3>D.1 Understanding Images & Layering (Under the Hood)</h3>
+        <p>Docker Images are built using a <strong>Union File System</strong> (typically <code>Overlay2</code>). They aren't monolithic files; they are a stack of read-only layers identified by unique <strong>SHA256 Hashes</strong>. This architecture is the secret behind Docker's lightning-fast startup and disk efficiency.</p>
+        <blockquote class="callout">Analogy: Image layers are like <strong>"Transparent Acetate Sheets"</strong> in an old-school overhead projector. Layer 1 is the background (Ubuntu). Layer 2 adds some text (Node.js). Layer 3 adds a drawing (Your Code). When you stack them up, the audience sees one final picture, but you can swap out the top sheet without touching the bottom ones. In Docker, these sheets are "glued" together into a single virtual view.</blockquote>
+        <ul>
+          <li><strong>Immutability & Hashes:</strong> Once a layer is created, it is cryptographically hashed and never changes. If you change a single character in a file, a brand-new layer is created with a new hash.</li>
+          <li><strong>Copy-on-Write (CoW):</strong> When a container starts, it adds a thin "Writable Layer" on top. If the app needs to modify a file from a read-only layer, Docker copies it up to the writable layer first. The original remains untouched.</li>
+          <li><strong>Layer Caching:</strong> Docker reuses layers. If 100 images use the same <code>node:alpine</code> base, that base layer is stored <strong>exactly once</strong> on your disk.</li>
+        </ul>
+        <p><strong>Pro-Tip:</strong> Run <code>docker history &lt;image-name&gt;</code> to see the size and command of every single layer in an image. It's the best way to find out why your image is unexpectedly large.</p>
+
+        <h3>D.2 Docker Hub & Registries (Global Distribution)</h3>
+        <p>Docker Hub is the "App Store" for infrastructure. It hosts millions of pre-built images, enabling you to pull a production-ready Database or Web Server in seconds. However, navigating it requires understanding "Official" vs. "Community" images.</p>
+        <blockquote class="callout">Analogy: Docker Hub is like <strong>"GitHub for Infrastructure."</strong> Instead of just sharing the blueprints (source code), you're sharing the entire physical building, fully furnished and ready for people to move in immediately. Just like NPM or PyPI, it's the central nervous system of the container ecosystem.</blockquote>
+        <ul>
+          <li><strong>Official Images:</strong> Always prioritize the "Official Image" badge (e.g., <code>node</code>, <code>postgres</code>). These are vetted by Docker and the software authors, and they receive the fastest security patches.</li>
+          <li><strong>Pulling & Pushing:</strong> Use <code>docker pull</code> to fetch an image. To share your own, you must first <code>docker login</code> and then <code>docker tag</code> your image with your username (e.g., <code>youruser/my-app:1.0</code>).</li>
+          <li><strong>The "Latest" Trap:</strong> Never use <code>:latest</code> in production. It’s a "moving target" that points to the most recent upload. If the author pushes a breaking change, your app will break on the next restart. Always use specific versions like <code>:18.4-alpine</code>.</li>
+        </ul>
+        <p><strong>Common Command:</strong> <code>docker search nginx --filter "is-official=true"</code> is a quick way to find verified images directly from your terminal.</p>
+
+        <h3>D.3 Writing Your First Dockerfile (Automation)</h3>
+        <p>A <code>Dockerfile</code> is the "Source Code" of your infrastructure. It translates human-readable commands into a reproducible image. Master the order of commands to leverage Docker's caching system effectively.</p>
+        <blockquote class="callout">Analogy: A Dockerfile is like an <strong>"Automated Assembly Line Instruction."</strong> You tell the robot exactly where to start (FROM), what parts to bring in (COPY), which screws to tighten (RUN), and which switch to turn on at the very end (CMD). If the instructions are clear, the robot builds the exact same car every single time.</blockquote>
+        <ul>
+          <li><strong>The FROM Instruction:</strong> The foundation. Always use a specific tag. <strong>Pro-Tip:</strong> Use <code>alpine</code> or <code>slim</code> variants to keep your image size minimal.</li>
+          <li><strong>WORKDIR:</strong> Creates and switches to a directory inside the container. It's much cleaner than using <code>RUN mkdir && cd</code> everywhere.</li>
+          <li><strong>RUN vs. CMD:</strong> <code>RUN</code> is a build-time command (e.g., <code>RUN npm install</code>). <code>CMD</code> is the default command that runs <strong>only</strong> when the container starts.</li>
+        </ul>
+        <pre><code># The Professional Pattern
+FROM node:18-alpine
+WORKDIR /app
+# Copy only package files first to cache dependencies!
+COPY package*.json ./
+RUN npm install
+# Copy the rest of the code later
+COPY . .
+EXPOSE 3000
+CMD ["node", "app.js"]</code></pre>
+
+        <h3>D.4 Image Optimization & Best Practices</h3>
+        <p>A "Good" image is small, secure, and fast to build. Large images (1GB+) are a burden to CI/CD pipelines and increase the "Attack Surface" by including tools that hackers can use (like <code>curl</code> or <code>gcc</code>).</p>
+        <blockquote class="callout">Analogy: Building custom images is like <strong>"Packing for a Backpacking Trip."</strong> You want everything you need for the journey, but you want to leave the heavy, unnecessary packaging at home. You wouldn't bring the whole cereal box; you'd just bring the cereal in a light Ziploc bag. Your container should only contain your app and its runtime.</blockquote>
+        <ul>
+          <li><strong>.dockerignore:</strong> Just like <code>.gitignore</code>. Use it to exclude <code>node_modules</code>, <code>.git</code>, and <code>logs</code> from being sent to the Docker daemon. This makes builds significantly faster.</li>
+          <li><strong>Multi-Stage Builds:</strong> Use one large image to compile your code (the "Build" stage) and then copy <strong>only</strong> the final compiled files into a tiny "Production" image. This can shrink a Java or Go image from 800MB to 20MB.</li>
+          <li><strong>Squashing Layers:</strong> Combine similar <code>RUN</code> commands using <code>&&</code> and <code>\</code> (e.g., <code>RUN apt update && apt install -y curl && rm -rf /var/lib/apt/lists/*</code>) to keep the layer count low.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Data Management</h2>
+
+        <h3>E.1 Volumes (Managed Persistence)</h3>
+        <p>Containers are <strong>Ephemeral</strong>. When a container is deleted, its internal filesystem is wiped. <strong>Volumes</strong> are the standard way to persist data (like Databases) outside of the container's lifecycle.</p>
+        <blockquote class="callout">Analogy: A Volume is like an <strong>"External Hard Drive."</strong> You can plug it into any laptop (Container), save your work (Data), and then unplug it and walk away. Even if the laptop is smashed (Container deleted), your work stays safe on the drive, ready to be plugged into a brand-new laptop.</blockquote>
+        <ul>
+          <li><strong>Docker Managed Storage:</strong> Volumes are stored in a dedicated area of the host (<code>/var/lib/docker/volumes/</code>). You don't manage the files directly; Docker handles the permissions and performance.</li>
+          <li><strong>Named Volumes:</strong> Created via <code>docker volume create my-data</code>. They are portable and easy to share between multiple containers (e.g., your app and a backup tool).</li>
+          <li><strong>Lifecycle:</strong> Volumes exist independently. They won't be deleted even if you remove every container on the system. You must delete them explicitly with <code>docker volume rm</code>.</li>
+        </ul>
+        <p><strong>Utility Command:</strong> <code>docker volume inspect &lt;name&gt;</code> shows you exactly where the data is stored on your host machine.</p>
+
+        <h3>E.2 Bind Mounts (Host File Mapping)</h3>
+        <p>Unlike Volumes, <strong>Bind Mounts</strong> map a specific file or directory from your host machine into the container. This is the "Secret Sauce" for a high-speed development workflow.</p>
+        <blockquote class="callout">Analogy: A Bind Mount is like <strong>"Sharing a Folder"</strong> on Google Drive or Dropbox. When you edit a file on your computer, the person in the other room (the Container) sees those changes the split second you hit "Save." No rebuilding, no restarting—just instant updates for your code.</blockquote>
+        <ul>
+          <li><strong>Hot Reloading:</strong> Map your local source folder to the container's app folder (e.g., <code>-v $(pwd):/app</code>). Your Node.js or Python app will detect the change and restart immediately.</li>
+          <li><strong>Config Injection:</strong> Use bind mounts to inject configuration files (like <code>nginx.conf</code>) from your host into a generic image without having to build a custom one.</li>
+          <li><strong>The Danger Zone:</strong> Bind mounts depend on the host's directory structure. If the path on your computer changes, the container will fail to start. Also, be careful with permissions between Windows/Mac and Linux containers.</li>
+        </ul>
+
+        <h3>E.3 Data Lifecycle & Hygiene</h3>
+        <p>Managing data is about more than just storage; it's about <strong>Observability</strong> and <strong>Maintenance</strong>. Over time, "Orphaned Volumes" can silently consume hundreds of gigabytes of your server's disk space.</p>
+        <blockquote class="callout">Analogy: Data Lifecycle is like <strong>"Managing a Library."</strong> Books (Data) come and go, but you need a system to make sure they aren't lost (Backup) and that the shelves (Volumes) aren't filled with old, useless magazines that no one reads anymore (Dangling Volumes).</blockquote>
+        <ul>
+          <li><strong>The Backup Strategy:</strong> The professional way to backup a volume is to run a temporary container that mounts the volume and a host directory, then executes <code>tar</code>: <code>docker run --rm -v my-vol:/data -v $(pwd):/backup busybox tar cvf /backup/backup.tar /data</code>.</li>
+          <li><strong>Dangling Volumes:</strong> When you delete a container with <code>docker rm</code>, the volume is <strong>NOT</strong> deleted by default. Always use <code>docker system prune --volumes</code> periodically to reclaim space.</li>
+          <li><strong>Read-Only Mode:</strong> For security-critical data (like SSL certs), mount your volume as read-only by adding <code>:ro</code> to the end of your volume flag (e.g., <code>-v certs:/etc/ssl:ro</code>).</li>
+        </ul>
+        <p><strong>Storage Check:</strong> Run <code>docker system df -v</code> to see exactly how much space is being consumed by images, containers, and volumes on your machine.</p>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Advanced Dockerfile</h2>
+
+        <h3>F.1 ENTRYPOINT vs CMD (Executive Relationship)</h3>
+        <p>This is arguably the most confusing topic for Docker beginners. Both instructions define what command runs when the container starts, but they behave very differently when you pass arguments to <code>docker run</code>. Professional Dockerfiles almost always use them in combination.</p>
+        <blockquote class="callout">Analogy: <strong>ENTRYPOINT</strong> is the "Car Engine"—it’s what the car *is* and what it does by default. <strong>CMD</strong> is the "Destination"—it’s what you want the car to do right now, but you can change it whenever you want without changing the car itself. You can't easily swap an engine while driving, but you can change your GPS destination in a second.</blockquote>
+        <ul>
+          <li><strong>The Fixed Command (ENTRYPOINT):</strong> Use this for the main executable (e.g., <code>["python"]</code> or <code>["node"]</code>). It makes your container behave like a single command-line tool.</li>
+          <li><strong>The Default Argument (CMD):</strong> Use this for the parameters (e.g., <code>["app.py"]</code>). If the user runs <code>docker run my-python-app script.py</code>, the <code>script.py</code> replaces <code>app.py</code> but still runs via the Python <code>ENTRYPOINT</code>.</li>
+          <li><strong>Override Secret:</strong> To override an <code>ENTRYPOINT</code>, you must use the <code>--entrypoint</code> flag in the CLI, whereas <code>CMD</code> is overridden simply by adding arguments after the image name.</li>
+        </ul>
+        <pre><code># The Industry Standard Pattern
+ENTRYPOINT ["npm"]
+CMD ["start"]
+# Allows user to run: docker run my-app test --grep="login"</code></pre>
+
+        <h3>F.2 Build-time vs. Runtime (The Timeline)</h3>
+        <p>Understanding the "Timeline" of a Dockerfile is critical for security and reliability. A common mistake is trying to access a live database or a secret API key during the <strong>Build</strong> phase, when they only exist during the <strong>Run</strong> phase.</p>
+        <blockquote class="callout">Analogy: Build-time is <strong>"Manufacturing the Toy"</strong> in a factory. Runtime is <strong>"Playing with the Toy"</strong> at home. You can't change the color of the plastic (the image layers) once it's in the box, but you can choose whether the toy moves left or right (the container behavior) by inserting different batteries (Environment Variables).</blockquote>
+        <ul>
+          <li><strong>Build-time (ARG):</strong> Use <code>ARG</code> for variables you need *only* during the build process (e.g., a version number for a library). These are <strong>not</strong> available once the container starts and are visible in the image history (don't use for passwords!).</li>
+          <li><strong>Runtime (ENV):</strong> Use <code>ENV</code> for variables your app needs while running (e.g., <code>DB_HOST</code>). These persist in the image and are inherited by every container launched from it.</li>
+          <li><strong>Layer Impact:</strong> Every <code>RUN</code>, <code>COPY</code>, and <code>ADD</code> instruction creates a new physical layer. <code>ENV</code> and <code>WORKDIR</code> only update the image metadata (no size increase).</li>
+        </ul>
+        <p><strong>Pro-Tip:</strong> Never bake secrets into <code>ENV</code>. Use Docker Secrets or environment variables injected at runtime via <code>docker run -e MY_SECRET=...</code> or a <code>.env</code> file.</p>
+
+        <h3>F.3 Shell vs. Exec Mode (PID 1 & Signals)</h3>
+        <p>This is the difference between a "Clean" shutdown and a "Dirty" crash. Docker instructions can be written in <strong>Shell form</strong> (<code>CMD node app.js</code>) or <strong>Exec form</strong> (<code>CMD ["node", "app.js"]</code>). The Exec form is the mandatory standard for production.</p>
+        <blockquote class="callout">Analogy: Shell mode is like <strong>"Asking a Middleman"</strong> to tell the engine to stop. Exec mode is like <strong>"Pressing the Stop Button Yourself."</strong> When you use the middleman (the shell), he might not pass the message correctly, and the engine keeps running until Docker loses patience and "force-kills" the whole building.</blockquote>
+        <ul>
+          <li><strong>PID 1 Mastery:</strong> In Exec mode, your app runs as <strong>Process ID 1</strong>. This allows it to receive <code>SIGTERM</code> signals directly, giving it 10 seconds to close database connections and save files before stopping.</li>
+          <li><strong>Zombie Processes:</strong> Shell mode wraps your app in <code>/bin/sh</code>. Most shells don't forward signals to child processes. This leads to "Zombie" processes that refuse to die, eventually eating up your server's memory.</li>
+          <li><strong>Variable Expansion:</strong> Note that Exec mode (<code>[]</code>) does <strong>not</strong> expand variables like <code>$HOME</code>. If you need variable expansion, you must either use Shell mode or manually invoke a shell in Exec mode (e.g., <code>["sh", "-c", "echo $VAR"]</code>).</li>
+        </ul>
+        <p><strong>DevOps Check:</strong> If your container takes exactly 10 seconds to stop every time, you are likely using Shell mode and Docker is killing it forcefully.</p>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Docker Compose (Multi-Container Apps)</h2>
+
+        <h3>G.1 Compose Basics (The Orchestrator)</h3>
+        <p>Managing five different <code>docker run</code> commands for a single project is a nightmare. <strong>Docker Compose</strong> allows you to define your entire multi-container architecture in a single, version-controlled YAML file.</p>
+        <blockquote class="callout">Analogy: Docker Compose is like a <strong>"Shopping List for a Party."</strong> Instead of driving to 10 different stores one by one to buy chips, soda, and cake, you just hand the list to a delivery service. They bring everything—the Web App, the Database, and the Cache—all at once, and they even make sure the chips are placed next to the dip.</blockquote>
+        <ul>
+          <li><strong>Declarative Architecture:</strong> You describe the "Desired State." Instead of "Start a network, then start a DB," you just say "I want these three services." Compose handles the creation and ordering.</li>
+          <li><strong>Single Command Lifecycle:</strong> <code>docker-compose up -d</code> launches everything. <code>docker-compose ps</code> shows the status of the whole project. <code>docker-compose logs -f</code> aggregates logs from all services into one stream.</li>
+          <li><strong>Project Names:</strong> Compose automatically prefixes your networks and containers with the folder name. This prevents "Project A" from accidentally connecting to "Project B's" database.</li>
+        </ul>
+        <p><strong>Pro-Tip:</strong> Use <code>docker-compose up --scale worker=5</code> to instantly launch 5 copies of a background processing service.</p>
+
+        <h3>G.2 Multi-Service Architectures & DNS</h3>
+        <p>In the real world, applications aren't just one process. They are a "Family" of services. Compose automatically creates a <strong>Private Bridge Network</strong> for your project, enabling containers to find each other by name.</p>
+        <blockquote class="callout">Analogy: Multi-service apps are like <strong>"A Professional Band."</strong> You have a Lead Singer (Web App), a Drummer (Database), and a Bassist (Cache). They all need to be on the same stage and listen to the same beat (the Network) to make music. If the singer can't hear the drummer, the whole show falls apart.</blockquote>
+        <ul>
+          <li><strong>Service Discovery (DNS):</strong> You don't need IP addresses. In your code, you connect to <code>mongodb://db:27017</code>. Docker's internal DNS server knows exactly which container corresponds to the name <code>db</code>.</li>
+          <li><strong>Service Isolation:</strong> Your database doesn't need to be exposed to the public internet (no <code>ports</code> needed). Only the "Web" service needs to publish a port; the DB stays safe inside the internal network, accessible only by your app.</li>
+          <li><strong>Standardized Workflows:</strong> Whether you're on Windows, Mac, or Linux, the <code>docker-compose.yml</code> ensures that the networking and environment are identical for every developer.</li>
+        </ul>
+
+        <h3>G.3 Build & Lifecycle with Compose</h3>
+        <p>Compose isn't just for running pre-built images. It can also manage the <strong>Build Process</strong> of your local source code, integrating seamlessly with your Git workflow.</p>
+        <blockquote class="callout">Analogy: Running with Compose is like <strong>"Starting a Remote Control Airplane."</strong> You flip one single switch, and the engine, the propellers, and the navigation lights all spark to life in the correct order. You don't have to manually start each motor; the system is pre-programmed to sync them up perfectly.</blockquote>
+        <ul>
+          <li><strong>Building on the Fly:</strong> Use the <code>build: .</code> instruction. When you run <code>docker-compose up --build</code>, Docker will detect code changes, rebuild your custom images, and restart the containers in one sweep.</li>
+          <li><strong>Env Injection:</strong> Compose automatically looks for a <code>.env</code> file in the same directory. You can use variables like <code>${DB_PASSWORD}</code> in your YAML, and Compose will fill them in from the file.</li>
+          <li><strong>Volume Syncing:</strong> Define your dev volumes in Compose (e.g., <code>- .:/app</code>) so that any code change on your laptop is immediately visible inside the running container.</li>
+        </ul>
+
+        <h3>G.4 Compose Best Practices (Production Readiness)</h3>
+        <p>To move from "Works" to "Production-Grade," you need to handle startup order and health monitoring. A basic Compose file might crash if the Web app tries to connect to the DB before the DB has finished initializing.</p>
+        <blockquote class="callout">Analogy: Best practices in Compose are like <strong>"Writing a clear Instruction Manual."</strong> If the manual is good, anyone on your team can launch the whole project without asking you a single question. If it's bad, they'll be calling you at 3 AM because the database didn't start in time.</blockquote>
+        <ul>
+          <li><strong>Healthchecks:</strong> Define a <code>healthcheck</code> (e.g., <code>test: ["CMD", "curl", "-f", "http://localhost"]</code>). This allows Docker to know if the app is *actually* ready, not just "running."</li>
+          <li><strong>Restart Policies:</strong> Use <code>restart: always</code> or <code>restart: unless-stopped</code>. If your server reboots or the app crashes, Docker will automatically bring it back to life.</li>
+          <li><strong>Config Extension:</strong> Use <code>extends</code> to keep your configuration DRY (Don't Repeat Yourself). You can have a <code>base.yml</code> and override only the necessary parts for <code>dev.yml</code> or <code>prod.yml</code>.</li>
+        </ul>
+        <p><strong>Note on <code>depends_on</code>:</strong> In newer versions of Compose, you can use the "long form" of <code>depends_on</code> to wait specifically for a service to be <code>service_healthy</code>, not just started.</p>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Docker Swarm (Orchestration)</h2>
+
+        <h3>H.1 Swarm Basics (Native Orchestration & Raft)</h3>
+        <p>Docker Swarm is Docker's native solution for managing a <strong>Cluster</strong> of machines. It takes the simplicity of Docker and scales it to handle production-grade traffic. It uses the <strong>Raft Consensus Algorithm</strong> to ensure all Managers agree on the state of the cluster.</p>
+        <blockquote class="callout">Analogy: A Swarm is like <strong>"A Team of Employees."</strong> Instead of you doing all the work yourself (Single machine), you have a team that shares the load. If one employee gets sick (a server fails), the manager immediately reassigns their tasks to the others so the business never stops. The Managers are the "Board of Directors" who vote on every major decision.</blockquote>
+        <ul>
+          <li><strong>Manager vs. Worker:</strong> <strong>Managers</strong> handle the orchestration and cluster state. <strong>Workers</strong> are the "Muscle" that run the actual containers (tasks). For high availability, always have an odd number of managers (3 or 5).</li>
+          <li><strong>Desired State Reconciliation:</strong> You don't tell Swarm to "Run a container." You tell it "I want 5 replicas of this web app." Swarm monitors the cluster 24/7. If a container crashes, Swarm automatically starts a new one to match your <strong>Desired State</strong>.</li>
+          <li><strong>Declarative Service Model:</strong> Services are the primary way to interact with Swarm. You define the image, ports, and replicas once, and Swarm handles the rest of the lifecycle.</li>
+        </ul>
+        <p><strong>Pro-Tip:</strong> Use <code>docker info</code> to check if your Docker engine is currently in "Swarm Mode" (active/inactive).</p>
+
+        <h3>H.2 Creating & Managing the Cluster</h3>
+        <p>Initializing a Swarm is remarkably simple. With just a few commands, you can turn a group of scattered Linux servers into a single, powerful <strong>Virtual Super-Server</strong>. This process is known as "Clustering."</p>
+        <blockquote class="callout">Analogy: Creating a cluster is like <strong>"Building a Colony."</strong> You have a Queen (the Manager) giving instructions and Workers doing the actual labor. Together, they build something much bigger and more resilient than any one of them could alone. The colony can lose individual ants (servers) but the colony itself survives.</blockquote>
+        <ul>
+          <li><strong>Initialization:</strong> <code>docker swarm init --advertise-addr &lt;IP&gt;</code>. This command makes the current machine the first Manager. It generates a unique <strong>Join Token</strong> that other nodes must provide to enter the cluster.</li>
+          <li><strong>Joining Workers:</strong> Run <code>docker swarm join-token worker</code> to get the command for adding workers. It’s a security handshake that ensures only authorized servers can join your fleet.</li>
+          <li><strong>Node Status:</strong> Run <code>docker node ls</code> on a Manager to see every server in your cluster, their health, and their current role. You can "Drain" a node to safely move its containers elsewhere before doing maintenance.</li>
+        </ul>
+
+        <h3>H.3 Scaling & The Routing Mesh</h3>
+        <p>Scaling in Swarm is instantaneous. But how does traffic find the right container if you have 100 replicas spread across 20 servers? The answer is the <strong>Ingress Routing Mesh</strong> and the <strong>Overlay Network</strong>.</p>
+        <blockquote class="callout">Analogy: Scaling is like <strong>"Opening more Checkout Lanes"</strong> at a giant grocery store. When the line (traffic) gets too long, you open more lanes instantly. The Routing Mesh is like the <strong>"Automatic Sign"</strong> at the front of the store that directs every customer to the first available cashier, no matter which door they walked through or which server they hit.</blockquote>
+        <ul>
+          <li><strong>Service Scaling:</strong> <code>docker service scale web=10</code>. Swarm uses its internal scheduler to find the nodes with the most free CPU/RAM and places the new containers there automatically.</li>
+          <li><strong>Load Balancing:</strong> Swarm creates a Virtual IP (VIP) for each service. When a user hits the cluster on port 80, Swarm’s internal Load Balancer sends that request to a healthy container using a <strong>Round Robin</strong> algorithm.</li>
+          <li><strong>The Overlay Network:</strong> Swarm creates a multi-host network that allows containers on Server A to talk to containers on Server B as if they were plugged into the same physical switch, completely encrypted by default.</li>
+        </ul>
+
+        <h3>H.4 Secrets & Config Management (Security)</h3>
+        <p>One of the biggest security risks in DevOps is "Secret Leakage"—accidentally committing passwords or API keys to Git. Swarm <strong>Secrets</strong> and <strong>Configs</strong> provide a cryptographically secure way to deliver sensitive data to your containers.</p>
+        <blockquote class="callout">Analogy: Swarm Secrets are like <strong>"A High-Security Safe."</strong> Only the containers that have the combination (permission) can see what's inside. To everyone else, including the Docker history logs and the server's hard drive, it’s just a locked, invisible box. The data only exists in the container's <strong>RAM</strong>.</blockquote>
+        <ul>
+          <li><strong>In-Memory Encryption:</strong> Secrets are never written to the disk on Worker nodes. They are decrypted only in memory when the container starts. If the power is pulled, the secret is gone from that node.</li>
+          <li><strong>Mounting (<code>/run/secrets/</code>):</strong> Your application doesn't need special code to use Docker Secrets. It just reads a file from a specific path. This makes your app "Infrastructure-Agnostic."</li>
+          <li><strong>Configs vs. Secrets:</strong> Use <strong>Configs</strong> for non-sensitive data like <code>nginx.conf</code>. This allows you to update the configuration of 100 containers at once without rebuilding the image.</li>
+        </ul>
+        <p><strong>CLI Mastery:</strong> <code>docker secret create db_pass ./password.txt</code> is how you safely inject credentials into the cluster.</p>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Kubernetes Fundamentals</h2>
+
+        <h3>I.1 Kubernetes Overview (The Cloud OS)</h3>
+        <p>Kubernetes (often abbreviated as <strong>K8s</strong>) is the de facto industry-standard orchestration platform. While Swarm is known for simplicity, Kubernetes is built for <strong>Global Scale</strong> and extreme complexity. It is effectively the "Operating System" for the modern cloud (AWS, GCP, Azure).</p>
+        <blockquote class="callout">Analogy: If Docker Swarm is a small local delivery team, Kubernetes is an <strong>"Automated Mega-Factory."</strong> It doesn't just manage the machines; it monitors the room temperature (Health), fixes broken robotic arms automatically (Self-healing), and expands the building size (Auto-scaling) based on how many orders are coming in. It is far more powerful, but it requires a full team of engineers to run the factory.</blockquote>
+        <ul>
+          <li><strong>Control Plane vs. Data Plane:</strong> K8s splits the cluster into the <strong>Control Plane</strong> (the brain that makes decisions) and the <strong>Data Plane</strong> (the nodes that do the work). This separation allows for massive reliability and scalability.</li>
+          <li><strong>Declarative Everything:</strong> In K8s, everything is a "Resource" defined in YAML. You describe the state, and the <strong>K8s Controllers</strong> work tirelessly to make it happen.</li>
+          <li><strong>The "K8s Tax":</strong> The power of K8s comes with a high learning curve and significant management overhead. It is best suited for apps that need to scale to millions of users.</li>
+        </ul>
+
+        <h3>I.2 Kubernetes Setup & Tools (The Cockpit)</h3>
+        <p>Kubernetes is notoriously complex to set up from scratch ("The Hard Way"). Fortunately, the ecosystem has created several <strong>Local Distros</strong> that allow developers to run a full K8s cluster on their laptop for testing.</p>
+        <blockquote class="callout">Analogy: K8s setup is like <strong>"Building a Flight Simulator."</strong> It’s a lot of work to get the dashboard ready, and the manual is 500 pages long. but once it’s turned on, you can practice flying the biggest jumbo jets (Enterprise Apps) in the world without actually crashing a real plane. You learn the controls (kubectl) in the simulator before you ever touch the real controls in the cloud.</blockquote>
+        <ul>
+          <li><strong>Minikube & K3s:</strong> <strong>Minikube</strong> is the classic learning tool. <strong>K3s</strong> (by Rancher) is a lightweight version optimized for edge computing and small servers.</li>
+          <li><strong>kubectl (The Wand):</strong> This is the only tool you need to manage any K8s cluster in the world. Once you <code>kubectl apply</code> a file, you are "casting a spell" that changes the physical state of your servers.</li>
+          <li><strong>Contexts & Namespaces:</strong> <strong>Contexts</strong> allow you to switch between your local dev cluster and your production cloud cluster in one command. <strong>Namespaces</strong> allow you to "Partition" a single cluster into separate areas (e.g., "Dev," "Test," "Prod").</li>
+        </ul>
+        <p><strong>Essential Command:</strong> <code>kubectl get pods -A</code> will show you every single process running across your entire cluster.</p>
+
+        <h3>I.3 Deployments (Pods, Services & Sidecars)</h3>
+        <p>Kubernetes doesn't run "Containers" directly. It runs <strong>Pods</strong>. A Pod is the smallest deployable unit and represents a "Single Instance" of an application in your cluster.</p>
+        <blockquote class="callout">Analogy: A Pod is like a <strong>"Disposable Cup."</strong> If the cup gets dirty (the app crashes), you don't try to wash it; you throw it away and grab a brand-new one from the stack. The <strong>Service</strong> is the <strong>"Water Dispenser"</strong>—it doesn't matter which cup you put under it; you always get the same water because the dispenser (Load Balancer) has a fixed, reliable address.</blockquote>
+        <ul>
+          <li><strong>Sidecar Pattern:</strong> A Pod can contain multiple containers that share the same IP and storage. A common pattern is putting your "App Container" next to a "Logging Sidecar" that ships logs to a central server.</li>
+          <li><strong>Service Types:</strong> <strong>ClusterIP</strong> (Internal only), <strong>NodePort</strong> (Exposed on every server), and <strong>LoadBalancer</strong> (Provisioned automatically by your cloud provider like AWS/Azure).</li>
+          <li><strong>Deployments:</strong> This is a "Controller" that manages your Pods. If you want to update your app, you update the Deployment, and it performs a <strong>Rolling Update</strong>, ensuring your app stays online during the transition.</li>
+        </ul>
+
+        <h3>I.4 YAML Manifests (The Blueprint)</h3>
+        <p>In Kubernetes, we don't run commands to "Do" things. We write <strong>Manifests</strong>—YAML files that describe exactly how our infrastructure should look. This is the ultimate form of <strong>Infrastructure as Code (IaC)</strong>.</p>
+        <blockquote class="callout">Analogy: K8s YAML is like <strong>"A Universal Blueprint."</strong> You can send this file to any cloud provider in the world (AWS, Google Cloud, Azure), and because they all speak "Kubernetes," they will build exactly what you described without you ever having to log into their web consoles or click a single button.</blockquote>
+        <ul>
+          <li><strong>The Anatomy of YAML:</strong> Every K8s file has four main parts: <code>apiVersion</code>, <code>kind</code> (e.g., Deployment), <code>metadata</code> (Name/Labels), and <code>spec</code> (The actual technical configuration).</li>
+          <li><strong>Labels & Selectors:</strong> This is how K8s connects things. A <strong>Service</strong> finds its <strong>Pods</strong> by looking for a specific label (e.g., <code>app: frontend</code>). It's a dynamic, powerful way to manage thousands of resources.</li>
+          <li><strong>Idempotency:</strong> You can run <code>kubectl apply -f my-app.yaml</code> a hundred times. If the file hasn't changed, K8s does nothing. If you change 3 replicas to 5, K8s only adds the 2 missing ones.</li>
+        </ul>
+        <p><strong>Note:</strong> Mastering YAML structure (especially the 2-space indentation) is the "Rite of Passage" for every Kubernetes engineer.</p>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. CI/CD with Docker</h2>
+
+        <h3>J.1 GitHub Actions (Automated YAML Workflows)</h3>
+        <p>CI/CD (Continuous Integration / Continuous Deployment) is the practice of automating your code's journey from your keyboard to the user. GitHub Actions is the modern industry standard for defining these "Pipelines" directly in your repository via YAML files.</p>
+        <blockquote class="callout">Analogy: CI/CD is like an <strong>"Automated Car Wash."</strong> You don't have to manually scrub the tires or wax the hood. You just drive the car (Push your code) into the entrance, and the machines automatically handle the soaping, scrubbing, and drying (Building, Testing, and Deploying) while you sit back and relax. If a brush breaks (a test fails), the car wash stops immediately and alerts the attendant.</blockquote>
+        <ul>
+          <li><strong>Workflow Triggers:</strong> Use <code>on: [push, pull_request]</code> to ensure that every single code change is validated before it is merged. This prevents "Broken Builds" from ever reaching the main branch.</li>
+          <li><strong>GitHub-Hosted Runners:</strong> GitHub provides temporary, clean Virtual Machines to run your Docker commands. This ensures that your build isn't contaminated by old files on a developer's laptop.</li>
+          <li><strong>The Build Matrix:</strong> You can use GitHub Actions to build your Docker image for multiple architectures (e.g., <code>amd64</code> and <code>arm64</code>) simultaneously, ensuring your app runs on both Intel servers and Apple Silicon Macs.</li>
+        </ul>
+        <p><strong>Pro-Tip:</strong> Use the <code>docker/setup-buildx-action</code> in your YAML to enable advanced caching features that can cut your build times in half.</p>
+
+        <h3>J.2 Image Pipelines & Tagging Strategies</h3>
+        <p>A typical Docker pipeline involves building an image, tagging it with a unique identifier, and pushing it to a <strong>Container Registry</strong> so your production servers can safely pull it. Tagging is your primary defense against "Deployment Confusion."</p>
+        <blockquote class="callout">Analogy: Image pipelines are like <strong>"The Morning Newspaper Delivery."</strong> The printing press (GitHub) makes the paper, and the delivery truck (the Pipeline) moves it to every doorstep (the Servers) automatically before the sun comes up. The <strong>Tag</strong> is the "Date" on the paper—without it, the server wouldn't know if it's reading today's news or a story from three years ago.</blockquote>
+        <ul>
+          <li><strong>Git SHA Tagging:</strong> Instead of <code>:latest</code>, tag your images with the first 7 characters of the Git commit (e.g., <code>app:v1.2-a8f3b21</code>). This creates an unbreakable link between your running container and the specific line of code that created it.</li>
+          <li><strong>GHCR & Docker Hub:</strong> GitHub Container Registry (GHCR) is often preferred for CI/CD because it’s tightly integrated with GitHub permissions. Use <code>docker/login-action</code> to authenticate securely without exposing passwords.</li>
+          <li><strong>Multi-Platform Builds:</strong> Modern pipelines use <strong>Buildx</strong> to create a single "Manifest" that contains versions of your image for different hardware, allowing your cluster to automatically pull the correct version.</li>
+        </ul>
+
+        <h3>J.3 Security Scanning (Shift-Left Security)</h3>
+        <p>In a containerized world, a single outdated library in your base image can expose your entire company to hackers. <strong>Scanning</strong> is the practice of checking for vulnerabilities *before* the image is ever allowed to leave the build environment.</p>
+        <blockquote class="callout">Analogy: Security scanning is like the <strong>"X-Ray Machine"</strong> at the airport. You aren't checking if the passenger is "nice"; you're looking for hidden weapons (vulnerabilities) inside their suitcase (the container) before they're allowed to get on the plane (Production). If the X-ray finds a weapon, the passenger is detained (Build is failed).</blockquote>
+        <ul>
+          <li><strong>Docker Scout & Trivy:</strong> Tools like <strong>Trivy</strong> or <strong>Docker Scout</strong> scan your image layers and cross-reference them with the CVE (Common Vulnerabilities and Exposures) database. They can detect issues in your OS (e.g., Debian) and your app dependencies (e.g., NPM packages).</li>
+          <li><strong>Breaking the Build:</strong> Configure your pipeline to return an error code if it finds "High" or "Critical" vulnerabilities. This forces developers to fix security holes *before* they can finish their task.</li>
+          <li><strong>Base Image Hygiene:</strong> 90% of vulnerabilities come from bloated base images. Simply switching from <code>python:3.9</code> (600 vulnerabilities) to <code>python:3.9-slim</code> or <code>alpine</code> can fix your security posture instantly.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB K ==================== -->
+      <section class="node section">
+        <h2>BAB K. Production & Deployment</h2>
+
+        <h3>K.1 Deployment Strategies (Zero-Downtime)</h3>
+        <p>In production, you can't just stop your app to update it. Your users expect 100% uptime. Orchestrators provide several strategies to update your code without the world noticing. This is the difference between a "Maintenance Window" and a "Seamless Experience."</p>
+        <blockquote class="callout">Analogy: A Rolling Update is like <strong>"Replacing the Tires while the car is moving."</strong> You change them one by one. Because the other three tires are still spinning and carrying the weight, the car never stops moving, and the passengers (your users) never feel a bump.</blockquote>
+        <ul>
+          <li><strong>Rolling Update (Standard):</strong> The orchestrator replaces old containers with new ones one at a time. If the new container fails its <strong>Healthcheck</strong>, the update stops, preventing a total outage.</li>
+          <li><strong>Blue/Green Deployment:</strong> You run two identical environments. You update "Green," test it, and then flip a single switch (Load Balancer) to send all traffic there. If a bug appears, you flip back to "Blue" in milliseconds.</li>
+          <li><strong>Canary Release:</strong> You send 5% of traffic to the new version (the "Canary") and 95% to the old. You monitor the Canary for errors. If it’s stable, you slowly ramp up the traffic to 100%. This is the safest way to deploy high-risk changes.</li>
+        </ul>
+
+        <h3>K.2 Private Registries & Enterprise Security</h3>
+        <p>While Docker Hub is great, professional organizations cannot store proprietary code in a public park. <strong>Private Registries</strong> allow you to host your images within your own secure perimeter (VPC).</p>
+        <blockquote class="callout">Analogy: A Private Registry is like <strong>"Owning your own Warehouse."</strong> You don't store your valuables (Your Code) in a public locker at the train station (Public Hub); you keep them behind a 10ft fence, with security guards and cameras, on your own private property. Only your authorized "Delivery Trucks" (Servers) have the key to enter.</blockquote>
+        <ul>
+          <li><strong>Managed Cloud Registries:</strong> <strong>AWS ECR</strong>, <strong>Google Artifact Registry</strong>, and <strong>Azure ACR</strong> are the industry standards. They integrate with Cloud IAM, so you don't need to manage passwords; your servers use their identity to "Pull" images.</li>
+          <li><strong>Image Pull Secrets:</strong> In Kubernetes, you must define a <code>secret</code> containing your registry credentials so the cluster can download your private images.</li>
+          <li><strong>RBAC (Role-Based Access Control):</strong> You can grant your CI/CD system "Push" rights, while your production servers only have "Pull" rights, minimizing the damage if a server is compromised.</li>
+        </ul>
+
+        <h3>K.3 Production Hardening & Distroless</h3>
+        <p>A production image must be "Hardened"—meaning you've removed every tool that an attacker could use if they managed to breach the container. This is the **Principle of Least Privilege** applied to infrastructure.</p>
+        <blockquote class="callout">Analogy: Hardening is like <strong>"Stripping a Race Car."</strong> You remove the air conditioning, the stereo, and the passenger seats. Why? Because you only need the engine and the steering wheel to win the race. Every extra pound (or tool) is just a liability that makes you slower and more vulnerable to a crash (hack).</blockquote>
+        <ul>
+          <li><strong>Non-Root Execution:</strong> Never run your app as <code>root</code>. Use <code>USER node</code> or create a custom user. This ensures that even if a hacker "breaks out" of your app, they don't have administrative power over the host server.</li>
+          <li><strong>Distroless Images:</strong> These are images that contain *only* your app and its runtime dependencies. They have no shell (bash), no package manager (apt), and no text editors. A hacker who gets inside a distroless container is "blind and handless."</li>
+          <li><strong>Read-Only Filesystems:</strong> Use <code>--read-only</code> in your container runtime. This prevents a hacker from downloading a persistent virus or changing your code at runtime. If they can't write to the disk, they can't stay.</li>
+        </ul>
+        <p><strong>Security Tip:</strong> Use <code>cap-drop: ["ALL"]</code> in your Docker Compose or K8s YAML to remove all Linux capabilities from the container except the bare minimum required to run.</p>
+      </section>
+
+      <!-- ==================== BAB L ==================== -->
+      <section class="node section">
+        <h2>BAB L. DevOps Workflow</h2>
+
+        <h3>L.1 The DevOps Lifecycle (Inner vs. Outer Loop)</h3>
+        <p>DevOps is the elimination of the "Wall" between developers and operations. Professional teams think about how their code will be tested and deployed from the very first line they write in VS Code.</p>
+        <blockquote class="callout">Analogy: The DevOps workflow is like <strong>"A Relay Race."</strong> The Developer starts with the baton (The Code), passes it to the CI system (The Build/Test), and the Ops team finishes the race (Deployment). Success depends on a smooth, automated handoff, not just how fast one person runs. In the old days, developers just "Threw the code over the wall" and hoped it wouldn't break.</blockquote>
+        <ul>
+          <li><strong>The Inner Loop:</strong> This is your local laptop environment. You use <strong>Docker Compose</strong> and <strong>Hot Reloading</strong> to iterate fast. You are the only person who sees this code.</li>
+          <li><strong>The Outer Loop:</strong> Once you <code>git push</code>, the "Outer Loop" takes over. This is where automation (GitHub Actions) builds, scans, and deploys. This is the "Truth" that matters for the company.</li>
+          <li><strong>Fast Feedback:</strong> The goal of DevOps is to tell the developer that they broke something within 5 minutes of pushing code, not 3 weeks later when it’s already in production.</li>
+        </ul>
+
+        <h3>L.2 Infrastructure as Code (IaC) & GitOps</h3>
+        <p>In the DevOps era, we never log into a server manually to change a setting. Instead, we change a text file and "apply" it. This is <strong>Infrastructure as Code</strong>. When that code is stored in Git, it’s called <strong>GitOps</strong>.</p>
+        <blockquote class="callout">Analogy: Infrastructure as Code is like a <strong>"Save State in a Video Game."</strong> If you make a massive mistake and the whole world burns, you don't have to rebuild everything from scratch. You just "Reload the Save" (re-run the YAML or Terraform script) and the entire environment returns to exactly how it was 5 minutes ago.</blockquote>
+        <ul>
+          <li><strong>Declarative vs. Imperative:</strong> Don't tell the server "Install Nginx." Tell the code "I want 1 Nginx server." Tools like <strong>Terraform</strong> and <strong>Kubernetes</strong> ensure reality matches your description.</li>
+          <li><strong>Idempotency:</strong> A fancy word that means "No matter how many times you run the script, the result is the same." This prevents the creation of "Duplicate" servers or messy, inconsistent configurations.</li>
+          <li><strong>Single Source of Truth:</strong> If it’s not in Git, it doesn't exist. This allows for total transparency and makes it easy to "Roll Back" an infrastructure change if it causes an issue.</li>
+        </ul>
+
+        <h3>L.3 Real-World Architecture Patterns</h3>
+        <p>How do giant companies like Netflix or Uber manage thousands of containers? They use standard architecture patterns that ensure reliability, security, and performance at global scale.</p>
+        <blockquote class="callout">Analogy: Real-world architecture is like <strong>"Planning a City."</strong> You don't just put buildings anywhere; you need to plan where the water flows (Data Persistence), where the electricity goes (Compute/CPU), and how the traffic (Networking) moves so that a traffic jam in one neighborhood (Microservice A) doesn't paralyze the whole city (The App).</blockquote>
+        <ul>
+          <li><strong>The Sidecar Pattern:</strong> Running a "helper" container (e.g., Envoy Proxy or a Logging agent) in the same Pod as your app. This separates "Business Logic" from "Infrastructure Logic."</li>
+          <li><strong>API Gateways:</strong> A single "Front Door" for all your microservices. It handles the heavy lifting of authentication, rate limiting, and SSL termination before the traffic ever hits your app.</li>
+          <li><strong>Stateless vs. Stateful:</strong> Always keep your application containers <strong>Stateless</strong> (replaceable and scalable). Put your "Precious" data in <strong>Stateful</strong> managed services (like RDS or persistent volumes) that are backed up and isolated.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB M ==================== -->
+      <section class="node section">
+        <h2>BAB M. Advanced Topics</h2>
+
+        <h3>M.1 Logging & Monitoring (Observability)</h3>
+        <p>In a containerized world, you can't just "Log into the server" to see what's happening. You might have 1,000 containers running across 50 servers. You need a centralized system to collect logs and metrics.</p>
+        <blockquote class="callout">Analogy: Monitoring is like <strong>"CCTV Cameras"</strong> in a giant shopping mall. You can't be in every store at once, but you have one central control room with screens that show you if something is going wrong in a far-off corner (a remote container) before the customers even notice.</blockquote>
+        <ul>
+          <li><strong>Centralized Logging:</strong> Use tools like <strong>ELK Stack</strong> (Elasticsearch, Logstash, Kibana) or <strong>Loki</strong> to aggregate logs from all your containers into one searchable dashboard.</li>
+          <li><strong>Metrics & Alerts:</strong> Use <strong>Prometheus</strong> to track CPU, RAM, and network traffic. Use <strong>Grafana</strong> to visualize this data and send alerts to Slack if a service goes down.</li>
+          <li><strong>Tracing:</strong> For microservices, use tools like <strong>Jaeger</strong> to see how a single user request moves through 5 different services, helping you find exactly where the "bottleneck" is.</li>
+        </ul>
+
+        <h3>M.2 Security Hardening & Best Practices</h3>
+        <p>Docker security is a "Defense in Depth" strategy. You don't just lock the front door; you put a safe inside a locked room inside a guarded building.</p>
+        <blockquote class="callout">Analogy: Security best practices are a <strong>"Multi-layered Defense."</strong> You have a moat (Firewall), a drawbridge (Auth), and a high-security vault (Secrets). Even if an intruder swims across the moat, they still can't open the vault to steal the gold.</blockquote>
+        <ul>
+          <li><strong>Principle of Least Privilege:</strong> Never run as root. Never give a container more permissions (CAPABILITIES) than it strictly needs to do its job.</li>
+          <li><strong>Network Isolation:</strong> Put your frontend, backend, and database on separate Docker networks. The frontend should never be able to talk directly to the database.</li>
+          <li><strong>Image Signing:</strong> Use <strong>Docker Content Trust</strong> to ensure that your servers only run images that have been digitally signed by your team, preventing "Man-in-the-Middle" attacks.</li>
+        </ul>
+
+        <h3>M.3 Scaling Distributed Systems</h3>
+        <p>Scaling a simple API is easy. Scaling a stateful system (like a database) across multiple countries is one of the hardest problems in computer science.</p>
+        <blockquote class="callout">Analogy: Scaling is like <strong>"A Chain of Franchise Restaurants."</strong> Every McDonald's is identical (Stateless API), but they all report back to one Head Office (the Database) for the final books. You can open 1,000 restaurants, but you must be very careful how they all update the central ledger without making a mistake.</blockquote>
+        <ul>
+          <li><strong>Horizontal vs. Vertical:</strong> "Vertical" means buying a bigger server. "Horizontal" (the Docker way) means adding more small servers. Horizontal is cheaper and more resilient.</li>
+          <li><strong>Autoscaling (HPA):</strong> In Kubernetes, the <strong>Horizontal Pod Autoscaler</strong> automatically adds more Pods when CPU usage hits a certain limit, then deletes them when the traffic drops to save you money.</li>
+          <li><strong>Load Balancing:</strong> Using tools like <strong>Nginx</strong> or <strong>Traefik</strong> to distribute millions of users across your fleet of containers so no single container gets overwhelmed.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== BAB N ==================== -->
+      <section class="node section">
+        <h2>BAB N. Real-World Projects</h2>
+
+        <h3>N.1 Project: Full-Stack Containerization</h3>
+        <p>In this project, you will take a real-world application (Node.js backend, React frontend, and MongoDB database) and containerize the entire stack for local development.</p>
+        <blockquote class="callout">Analogy: This project is like <strong>"Building a complete Smart Home."</strong> You aren't just installing a single lightbulb (one container); you're making sure the lights, the heating, and the security locks all talk to one central brain and work in perfect harmony.</blockquote>
+        <ul>
+          <li><strong>The Goal:</strong> Create a <code>docker-compose.yml</code> that launches all three services with a single command.</li>
+          <li><strong>Key Features:</strong> Use Bind Mounts for "Hot Reloading" on the frontend, and use a Named Volume to make sure your database data isn't lost when you restart.</li>
+          <li><strong>Deliverable:</strong> A fully automated development environment where a new developer can join the team and start coding in under 60 seconds.</li>
+        </ul>
+
+        <h3>N.2 Project: High-Availability Cluster</h3>
+        <p>Move beyond your laptop. In this project, you will deploy your application across a cluster of 3 nodes (virtual machines) using Docker Swarm or Kubernetes.</p>
+        <blockquote class="callout">Analogy: This is your <strong>"Mission Control"</strong> simulation. You're launching a ship into orbit and making sure that even if one thruster (a server) fails mid-flight, the mission succeeds and the crew (your users) stay safe.</blockquote>
+        <ul>
+          <li><strong>The Goal:</strong> Achieve "Zero-Downtime" updates. You will update the version of your app while a load-tester is running, proving that not a single request is lost.</li>
+          <li><strong>Key Features:</strong> Set up a "Routing Mesh" and practice "Scaling up" to 20 replicas during a simulated traffic surge.</li>
+          <li><strong>Deliverable:</strong> A resilient production-ready cluster that can survive the "unplugging" of a physical server without any downtime.</li>
+        </ul>
+
+        <h3>N.3 Project: The Ultimate CI/CD Pipeline</h3>
+        <p>The Capstone. You will build a professional DevOps pipeline using GitHub Actions that automates every step from "Code Commit" to "Cloud Deployment."</p>
+        <blockquote class="callout">Analogy: This is the <strong>"Grand Opening of your Mega-Factory."</strong> Everything is automated, everything is shiny, and the assembly line is moving so fast and so safely that you can serve customers around the world while you sleep.</blockquote>
+        <ul>
+          <li><strong>The Goal:</strong> Every time you push to the <code>main</code> branch, the pipeline builds the image, scans it for security flaws, runs unit tests, and deploys it to your cluster.</li>
+          <li><strong>Key Features:</strong> Slack notifications for build status, automated image tagging with Git SHAs, and secure secret management.</li>
+          <li><strong>Deliverable:</strong> A world-class deployment workflow that matches the standards of companies like Google, Meta, and Netflix.</li>
+        </ul>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

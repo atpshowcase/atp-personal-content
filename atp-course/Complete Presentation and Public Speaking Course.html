@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complete Presentation & Public Speaking Course - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - Communication Mastery & Influence</p>
+      <h1>Complete Presentation & Public Speaking Course</h1>
+      <p class="subtitle">A masterclass in stage presence and message delivery—from understanding audience psychology and content frameworks to professional slide design and peak performance mindset.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Foundations, BAB B Audience Psychology, BAB C Goal Definition, BAB D Content Creation (Hook, Body, Close), BAB E Iteration, BAB F Slide Design, BAB G Confidence, BAB H Delivery Skills, BAB I Q&A Mastery, BAB J Performance Prep, BAB K Post-Speech Strategy, BAB L Resources & Templates, BAB M Real-World Apps, BAB N Mastery Growth.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A. Introduction & Speaking Mindset</h2>
+        <h3>A.1 Course Overview (The Force Multiplier)</h3>
+        <p>Public speaking is the ultimate force multiplier for your career. We're moving from <strong>"Page to Stage"</strong>—learning how to take your written ideas and breathe life into them in front of an audience. We focus on <strong>Cognitive Load Management</strong>: ensuring your audience doesn't just listen, but actually absorbs and retains your core message through the activation of <strong>Mirror Neurons</strong>.</p>
+        <blockquote class="callout">Analogy: Public speaking is like <strong>"The Megaphone for your Career."</strong> Your ideas might be great, but if nobody can hear them clearly, they have zero impact. We're tuning the megaphone to ensure your voice carries across the entire industry without distortion.</blockquote>
+        <ul>
+          <li><strong>The Learning Path:</strong> Transforming from a nervous beginner into a high-impact authority who can command any stage.</li>
+          <li><strong>The 3 Keys to Mastery:</strong> Content (Cognitive Structure), Design (Visual Anchoring), and Delivery (Neuro-Linguistic Syncing).</li>
+        </ul>
+
+        <h3>A.2 Why Public Speaking Matters (Leaders vs. Executors)</h3>
+        <p>One great speech can change the world, your business, or your career trajectory. It is the single skill that separates <strong>"Executors"</strong> from <strong>"Leaders."</strong> Mastering this skill builds <strong>Social Capital</strong> and increases your <strong>Network Density</strong> by positioning you as a thought leader.</p>
+        <blockquote class="callout">Analogy: Speaking is like <strong>"The Spark Plug in an Engine."</strong> You can have all the fuel (Knowledge) and the expensive metal (Experience), but without the spark (Communication), the engine never starts and you stay stuck in the garage while others pass you by.</blockquote>
+        <p><strong>Pro-Tip:</strong> High-level leadership is 80% communication. The ability to explain complex strategies simply to stakeholders is what drives <strong>Communication Symmetry</strong> in an organization.</p>
+
+        <h3>A.3 Common Mistakes (Avoiding the "Death by PowerPoint" Trap)</h3>
+        <p>Most presentations fail because of the <strong>"Curse of Knowledge"</strong>—assuming the audience knows what you know. We'll learn to strip away the fluff and avoid <strong>Cognitive Dissonance</strong> by aligning your visuals perfectly with your verbal message.</p>
+        <blockquote class="callout">Analogy: A boring presentation is like <strong>"A Raincoat in a Desert."</strong> It's heavy, uncomfortable, and provides zero value to the people standing there in the heat. It actually creates a barrier between you and the hydration (Value) they need.</blockquote>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B. Audience Understanding (THE CORE 🔥)</h2>
+        <h3>B.1 Identifying Your Audience (The Diagnostic Phase)</h3>
+        <p>Who is in the room? Before you write a single word, you must move beyond demographics into <strong>Psychographics</strong>: What are their fears, hidden desires, and current expertise levels? This is the <strong>"Pre-Suasion"</strong> phase that determines your success before you even speak.</p>
+        <blockquote class="callout">Analogy: An audience is like <strong>"A Patient in a Hospital."</strong> You can't give them the right medicine (your Content) until you know what their symptoms (their Problems) are. Giving a generic speech is like giving a heart patient a band-aid—it's irrelevant and potentially harmful.</blockquote>
+        <ul>
+          <li><strong>Psychographics:</strong> Identifying the emotional state and mental models of your listeners.</li>
+          <li><strong>Expertise Mapping:</strong> Ensuring your content doesn't patronize experts or confuse beginners.</li>
+        </ul>
+
+        <h3>B.2 Audience Psychology (The Peak-End Rule)</h3>
+        <p>Master the <strong>"What's in it for me?" (WIIFM)</strong> factor. We leverage the <strong>Primacy and Recency Effects</strong> to ensure your most important points are placed where the brain is most likely to store them. We also focus on the <strong>Peak-End Rule</strong>: people judge an experience based on how they felt at its peak and at its end.</p>
+        <blockquote class="callout">Analogy: Audience psychology is like <strong>"The Current in a River."</strong> If you swim with it (addressing their biological needs for status and safety), you move fast with zero effort. If you swim against it, you'll eventually exhaust yourself and lose the room.</blockquote>
+        <p><strong>Pro-Tip:</strong> The audience is the hero of the story; you are merely the <strong>Guide</strong> (the Yoda to their Luke Skywalker), providing the wisdom they need to succeed.</p>
+
+        <h3>B.3 Connecting with Audience (The Empathy Bridge)</h3>
+        <p>Empathy is the neurochemical bridge that turns a presentation into a performance. By using <strong>Personal Vulnerability</strong> and <strong>Relatable Stories</strong>, you trigger <strong>Oxytocin Release</strong> in your audience, building instant trust and turning critics into allies.</p>
+        <blockquote class="callout">Analogy: Connecting is like <strong>"Turning on the Lights in a Dark Room."</strong> Suddenly, the audience isn't scary anymore, and they can see exactly where you're trying to take them. They stop being observers and start being participants in your journey.</blockquote>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C. Purpose of Your Speech</h2>
+
+        <h3>C.1 Defining the Goal (The North Star)</h3>
+        <p>Before you open your laptop, you must decide your primary mission: Do you want to <strong>Inform</strong> (Technical), <strong>Persuade</strong> (Sales), or <strong>Inspire</strong> (Keynote)? We use <strong>Cognitive Priming</strong> to prepare the audience's mind for the specific type of information you are about to deliver.</p>
+        <blockquote class="callout">Analogy: The Goal is your <strong>"North Star."</strong> If you get lost in a side-story or a complex graph, just look back at the star to find your way home to the main message. If it doesn't lead to the star, it's a distraction that dilutes your authority.</blockquote>
+        <ul>
+          <li><strong>Clarity:</strong> Can you summarize your goal in one sentence? If not, your message will be a "blur" in the audience's mind.</li>
+          <li><strong>Focus:</strong> One speech = One big idea. Overloading the brain leads to <strong>Information Fatigue</strong>.</li>
+        </ul>
+
+        <h3>C.2 Outcome-Based Thinking (The Destination)</h3>
+        <p>Begin with the end in mind. Leverage <strong>Behavioral Economics</strong> (Nudging) to guide the audience toward a specific action. The question isn't "What do I want to say?" but "What <strong>Behavioral Shift</strong> do I want to trigger the moment they leave?"</p>
+        <blockquote class="callout">Analogy: Outcome thinking is like <strong>"Setting the Destination in a GPS."</strong> You don't just start driving and hope you end up somewhere nice; you decide where you want to land first, and then you map the turns (the Content) to ensure the audience arrives with you.</blockquote>
+
+        <h3>C.3 Aligning Content with Goals (Occam's Razor for Speaking)</h3>
+        <p>Professional speakers apply <strong>Occam's Razor</strong>: the simplest explanation is usually the best. "Kill Your Darlings" by deleting any story or slide that doesn't directly support the primary goal, protecting the audience's limited attention span.</p>
+        <blockquote class="callout">Analogy: Aligning content is like <strong>"Packing a Survival Kit."</strong> You only bring what you need for the mission. Everything else is just dead weight that slows you down and makes the journey harder for everyone.</blockquote>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D. Content Creation (VERY IMPORTANT 🔥)</h2>
+
+        <h3>D.1 How to Start a Presentation (The Amygdala Hijack)</h3>
+        <p>The first 30 seconds are for <strong>Attention Capture</strong>. We aim for a mild "Amygdala Hijack" to snap the audience out of their passive state. Master the <strong>5 Hook Techniques</strong>: The Emotional Story, The Shocking Statistic, The Provocative Question, The Authority Quote, and The Relatable Humor.</p>
+        <blockquote class="callout">Analogy: The Opening is <strong>"The Hook of a Pop Song."</strong> If the first few seconds aren't catchy, the listener will just change the station. You have to earn the right to keep their attention for the rest of the track.</blockquote>
+
+        <h3>D.2 Structuring Content (Spatial & Logical Memory)</h3>
+        <p>A professional speech uses <strong>Mental Models</strong> to organize information. We use the <strong>"Rule of Three"</strong> to align with the brain's natural capacity for short-term memory, creating a logical flow that is easy to navigate.</p>
+        <blockquote class="callout">Analogy: Structure is like <strong>"The Bones of a Body."</strong> You don't see them on the outside, but without them, the whole presentation is just a pile of meat that can't stand up or move toward a goal.</blockquote>
+        <ul>
+          <li><strong>The Bridge:</strong> Using <strong>Transitions</strong> to maintain narrative momentum.</li>
+          <li><strong>Signposting:</strong> Using verbal cues to activate <strong>Spatial Memory</strong> (e.g., "We've covered X, now let's move to Y").</li>
+        </ul>
+
+        <h3>D.3 Content Frameworks (C.I.D.E.R)</h3>
+        <p>Master the <strong>C.I.D.E.R</strong> framework to audit your speech: Is your content <strong>Convincing</strong> (Social Proof), <strong>Interesting</strong> (Novelty), <strong>Different</strong> (Unique Angle), <strong>Educational</strong> (Utility), and <strong>Relevant</strong> (Pain-Point Alignment)?</p>
+        <blockquote class="callout">Analogy: C.I.D.E.R is the <strong>"Secret Sauce"</strong> for your presentation. Without it, the meal is just basic calories; with it, it's a 5-star experience they'll talk about for weeks.</blockquote>
+
+        <h3>D.4 Ending a Presentation (The Recency Effect)</h3>
+        <p>The "Landing" leverages the <strong>Recency Effect</strong>—the tendency to remember the last thing heard most clearly. Deliver a powerful <strong>"Call to Action" (CTA)</strong> that transforms inspiration into immediate, tangible <strong>Social Proof</strong> or movement.</p>
+        <blockquote class="callout">Analogy: The Ending is <strong>"The Last 10 Minutes of a Flight."</strong> Nobody remembers the smooth 5-hour flight if the landing is rocky; everyone remembers it if the plane touches down perfectly. Stick the landing to preserve your authority.</blockquote>
+
+        <h3>D.5 Beating Writer’s Block (Divergent Thinking)</h3>
+        <p>Use <strong>Divergent Thinking</strong> to generate ideas without judgment. Techniques like <strong>Mind Mapping</strong> and <strong>Free-Writing</strong> bypass the "Pre-Frontal Cortex Filter," allowing raw creativity to flow onto the page before refinement begins.</p>
+        <blockquote class="callout">Analogy: Writer's block is like <strong>"A Clogged Pipe."</strong> You have plenty of water (Ideas) in the reservoir, but there's a blockage (Fear of being boring) in the way. We're going to use creative tools to clear the path so the brilliance can flow.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E. Feedback & Iteration</h2>
+        <h3>E.1 Getting Feedback (The Diagnostic Phase)</h3>
+        <p>Most speakers fail because they ask for validation, not information. Learn to ask <strong>High-Value Questions</strong>: Instead of "Did you like it?", ask "What is the one thing you remember?" or "Where did I lose your attention?"</p>
+        <blockquote class="callout">Analogy: Feedback is like <strong>"The Rearview Mirror in a Car."</strong> It shows you exactly what is happening behind you so you can adjust your path for the road ahead. If you don't look, you're driving blind toward your next presentation.</blockquote>
+        <ul>
+          <li><strong>External vs. Internal:</strong> Use video recording to be your own first critic before asking others.</li>
+          <li><strong>The 2-Minute Rule:</strong> If an audience member can't summarize your speech in 2 minutes, your message is still too complex.</li>
+        </ul>
+
+        <h3>E.2 Testing Content (The Beta Test)</h3>
+        <p>Never deliver a speech for the first time to a high-stakes audience. Run <strong>Beta Sessions</strong> with friends or smaller teams. Watch for the <strong>"Lean In"</strong> moments where they are excited, and the <strong>"Phone Grab"</strong> moments where they are bored.</p>
+        <blockquote class="callout">Analogy: Testing is like <strong>"The Beta Test of a New App."</strong> You find the bugs (the boring parts) and the crashes (the confusing parts) now, in a safe environment, so the "User Experience" is perfect when it goes live for the real audience.</blockquote>
+
+        <h3>E.3 Improving Presentation (The Iteration Mindset)</h3>
+        <p>A great speech isn't written; it's <strong>Rewritten</strong>. Embrace the "Iteration Mindset" where every performance is just a prototype for the next, better version.</p>
+        <blockquote class="callout">Analogy: Improvement is like <strong>"Polishing a Diamond."</strong> It starts as a dirty rock with hidden potential, but with enough friction (Practice), time, and pressure (Feedback), it becomes something that brilliantly reflects the light of your ideas.</blockquote>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F. Slide Design (VERY PRACTICAL 🔥)</h2>
+        <h3>F.1 Presentation Tools (Choosing Your Brush)</h3>
+        <p>Go beyond the limitations of basic PowerPoint. Explore <strong>Keynote</strong> (for aesthetics), <strong>Google Slides</strong> (for collaboration), <strong>Canva</strong> (for graphics), and <strong>Gamma</strong> (for AI-powered layout). Match the tool to the mood of your message.</p>
+        <blockquote class="callout">Analogy: Tools are like <strong>"Paintbrushes."</strong> A master artist can paint a masterpiece with a cheap brush, but having the right professional equipment makes the work faster, easier, and much more enjoyable to create.</blockquote>
+
+        <h3>F.2 Slide Principles (The P.I.M.C.O Rules)</h3>
+        <p>Master the <strong>P.I.M.C.O</strong> framework: <strong>Pictures</strong> (high-quality), <strong>Inspiration</strong> (moving), <strong>Minimalism</strong> (1 idea per slide), <strong>Consistency</strong> (fonts/colors), and <strong>Originality</strong>. Kill the bullet points—if the audience is reading, they aren't listening.</p>
+        <blockquote class="callout">Analogy: Minimalism in slides is like <strong>"A Billboard on a Highway."</strong> People only have a few seconds to look at it while driving at 80mph (listening to you). If it has too many words, they'll just crash their train of thought and look away.</blockquote>
+
+        <h3>F.3 Visual Storytelling (The Subtitles)</h3>
+        <p>How to use images and infographics to explain complex data. Learn to make your <strong>"Raw Numbers"</strong> tell a human-centric story that connects the data to a real-world impact.</p>
+        <blockquote class="callout">Analogy: Visuals are like <strong>"Subtitles in a Foreign Film."</strong> They shouldn't replace the dialogue (Your Voice), but they help everyone in the room understand exactly what's going on, even if the concepts are complex or unfamiliar.</blockquote>
+
+        <h3>F.4 Enhancing Slides (Spicing the Stew)</h3>
+        <p>Learn the professional use of <strong>Motion Graphics</strong>, <strong>Brand Colors</strong>, and <strong>Media Integration</strong>. A single 10-second video or a well-timed "Reveal" animation can raise the energy of the entire room instantly.</p>
+        <blockquote class="callout">Analogy: Enhancing slides is like <strong>"Adding Spices to a Stew."</strong> A little bit of high-end design creates a flavorful, memorable experience; too much clutter, and you ruin the entire project and overwhelm the "tasting" (listening) experience.</blockquote>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G. Confidence & Mindset</h2>
+        <h3>G.1 Building Confidence (The Physical State)</h3>
+        <p>Confidence is a physical state, not just a mental one. Learn to manipulate your biology using <strong>Power-Posing</strong>, <strong>Rhythmic Breathing</strong> (The 4-7-8 technique), and how to <strong>"Command the Air"</strong> in the room by taking up space intentionally.</p>
+        <blockquote class="callout">Analogy: Confidence is like <strong>"A Shield."</strong> It doesn't mean arrows (Anxiety and self-doubt) aren't being fired at you; it means you have a professional tool to stop them from hitting your heart and affecting your performance.</blockquote>
+
+        <h3>G.2 Mental Preparation (The Olympic Method)</h3>
+        <p>Use visualization techniques perfected by elite Olympic athletes. See yourself succeeding—from the first confident word to the final thunderous applause—in vivid detail before you even step on the stage.</p>
+        <blockquote class="callout">Analogy: Visualization is like <strong>"A Virtual Reality Simulator."</strong> You "Experience" the success 100 times in your head so that by the 101st time (the real speech), it’s just boringly familiar and your body already knows exactly what to do.</blockquote>
+
+        <h3>G.3 Handling Anxiety (Reframing the Charge)</h3>
+        <p>Nervousness is just raw energy. Learn to <strong>"Reframe"</strong> fear as <strong>"Excitement."</strong> Biologically, they feel exactly the same in the body; the only difference is the mental label you give them. Use that energy to fuel your passion.</p>
+        <blockquote class="callout">Analogy: Anxiety is like <strong>"Static Electricity."</strong> It’s a literal electrical charge in your system. We’re going to learn how to ground it so it doesn't shock you when you touch the microphone, but instead lights up the room.</blockquote>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H. Delivery Skills (THE CORE 🔥)</h2>
+        <h3>H.1 Body Language (The 70/30 Rule)</h3>
+        <p>Studies show that communication is 70% non-verbal. Learn how your <strong>Open Gestures</strong>, <strong>Sustained Eye Contact</strong>, and <strong>Purposeful Movement</strong> tell a story of authority and trust that your words alone never could.</p>
+        <blockquote class="callout">Analogy: Body language is <strong>"The Volume Knob of your Speech."</strong> You can say the most brilliant words in the world, but if you look scared or closed off, you're speaking on Mute and nobody will hear you.</blockquote>
+
+        <h3>H.2 Voice Control (The Accelerator)</h3>
+        <p>Master the 3 pillars of vocal authority: <strong>Tone</strong>, <strong>Pace</strong>, and <strong>Clarity</strong>. Learn to use the <strong>"Power of the Pause"</strong> to let your massive ideas sink into the audience's minds before moving to the next one.</p>
+        <blockquote class="callout">Analogy: Voice control is like <strong>"The Accelerator in a Car."</strong> You speed up when the content is exciting, you slow down when it’s dangerous or complex, and you stop completely at the red lights (Your Key points) to let people cross.</blockquote>
+
+        <h3>H.3 Stage Presence (Magnetism)</h3>
+        <p>Presence is about <strong>Energy Management</strong>. Learn to "Scan" the room and pull the people in the "Back Rows" into your circle of influence using high-energy projection and inclusive eye contact.</p>
+        <blockquote class="callout">Analogy: Stage presence is like <strong>"Magnetism."</strong> If your energy is high and focused, every metal object (every Audience member) in the room is pulled toward you and stayed locked in without them even knowing why.</blockquote>
+
+        <h3>H.4 Storytelling (The Memory Glue)</h3>
+        <p>Make your message "Sticky." Understand the <strong>"Hero's Journey"</strong> framework and how to cast your audience as the Hero, and your message as the "Magical Sword" they need to defeat their biggest problems.</p>
+        <blockquote class="callout">Analogy: A story is <strong>"The Glue of Memory."</strong> Facts are like dry sand—they slip through your fingers and are forgotten in minutes. Stories are wet sand; they stick together and allow you to build something beautiful that lasts.</blockquote>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I. Q&A Mastery</h2>
+
+        <h3>I.1 Handling Questions (The Tennis Match)</h3>
+        <p>Learn to listen fully before you speak. Use the <strong>"Listen-Pause-Answer"</strong> technique and paraphrase the question back to the audience to ensure clarity and build massive credibility as an expert who values their input.</p>
+        <blockquote class="callout">Analogy: Q&A is like <strong>"A Game of Tennis."</strong> You aren't trying to smash the ball into the questioner's face; you're just returning it gracefully and accurately to keep the game (the conversation) going until everyone wins.</blockquote>
+
+        <h3>I.2 Difficult Questions (The Sudden Storm)</h3>
+        <p>How to stay calm when someone is aggressive or when you simply don't know the answer. Master the <strong>"Bridge" Technique</strong> to acknowledge the question and then pivot back to the safe ground of your core message.</p>
+        <blockquote class="callout">Analogy: A difficult question is like <strong>"A Sudden Storm."</strong> You can't stop the rain from falling, but you can open an umbrella (a professional response framework) and wait for it to pass without getting your message wet.</blockquote>
+
+        <h3>I.3 Audience Interaction (The Game of Catch)</h3>
+        <p>Turn a static monologue into a dynamic dialogue. Learn to lead interactive Q&A sessions that feel like a <strong>High-Level Mastermind</strong>, keeping the room active, engaged, and invested in the outcome.</p>
+        <blockquote class="callout">Analogy: Interaction is like <strong>"Playing Catch."</strong> If you just hold the ball (the Microphone) for 60 minutes, it's boring for everyone. If you throw it back and forth, everyone stays focused, active, and alert.</blockquote>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J. Preparation & Performance</h2>
+
+        <h3>J.1 Pre-Speech Preparation (Charging the Battery)</h3>
+        <p>Success is determined before you step on stage. Use rehearsal strategies like <strong>1.5x Speed Practice</strong> (speaking faster than normal) so that when you deliver the real speech at normal speed, it feels incredibly slow and easy.</p>
+        <blockquote class="callout">Analogy: Preparation is like <strong>"Charging a Battery."</strong> You do all the heavy lifting in the hours before the power is actually needed. If you didn't charge it properly, your light won't shine when the audience flips the switch.</blockquote>
+
+        <h3>J.2 Appearance (The Authority Score)</h3>
+        <p>What you wear impacts your <strong>"Authority Score."</strong> Professional image doesn't just mean a suit; it means dressing for the role you want to play. Dress 10% better than your audience to establish instant leadership.</p>
+        <blockquote class="callout">Analogy: Appearance is like <strong>"The Packaging on a Premium Gift."</strong> Even if the gift inside (your message) is amazing, if it’s wrapped in a wet paper bag, nobody is going to be excited to open it or take it seriously.</blockquote>
+
+        <h3>J.3 Performance Optimization (The Formula 1 Tweak)</h3>
+        <p>Manage your energy like an elite athlete. Use <strong>Pre-Speech Rituals</strong>, manage your nutrition, and master the "10 Minutes Before Walk-on" routine to ensure you hit the stage at peak performance levels.</p>
+        <blockquote class="callout">Analogy: Performance optimization is <strong>"The Final Tuning of a Formula 1 Car."</strong> The car is already fast, but that final micro-tweak to the tires and the engine is what makes it win the world championship by a fraction of a second.</blockquote>
+      </section>
+
+      <!-- ==================== BAB K ==================== -->
+      <section class="node section">
+        <h2>BAB K. Post-Presentation Strategy</h2>
+
+        <h3>K.1 After the Speech (The Harvest)</h3>
+        <p>The "Handoff" is critical. Learn how to <strong>Follow Up</strong> with audience members, gather leads, and capitalize on the massive energy you created during the performance to move your career forward.</p>
+        <blockquote class="callout">Analogy: Post-speech follow-up is like <strong>"Harvesting the Crops."</strong> You did the hard work of planting the seeds and watering the soil (the Speech); don't let the fruit rot on the ground just because you're tired from the performance.</blockquote>
+
+        <h3>K.2 Measuring Success (The Scoreboard)</h3>
+        <p>Go back to your <strong>Outcome Goals</strong> from BAB C. Did you achieve them? Use surveys, data, and direct feedback to prove the <strong>ROI (Return on Investment)</strong> of your time and effort on that stage.</p>
+        <blockquote class="callout">Analogy: Measuring success is like <strong>"Checking the Scoreboard."</strong> It doesn't matter how hard you played or how much you sweated; at the end of the day, you need to know if you actually won the game.</blockquote>
+
+        <h3>K.3 Continuous Improvement (The Software Update)</h3>
+        <p>Build a <strong>Feedback Loop</strong>. Record every session and watch it back with a critical eye. It’s painful to watch yourself, but it is the only guaranteed path to reaching world-class communication mastery.</p>
+        <blockquote class="callout">Analogy: Continuous improvement is like <strong>"The Yearly Software Update."</strong> You're already good, but there's always a new "Version" of you that is faster, cleaner, more efficient, and better equipped for the next challenge.</blockquote>
+      </section>
+
+      <!-- ==================== BAB L ==================== -->
+      <section class="node section">
+        <h2>BAB L. Presentation Templates & Resources</h2>
+
+        <h3>L.1 Speech Templates (The Coloring Book)</h3>
+        <p>Don't reinvent the wheel. We provide <strong>Quick-Start Structures</strong> for 25 different types of speeches—from high-stakes Sales Pitches and Technical Demos to personal Weddings and Funerals—so you can focus on the message, not the math.</p>
+        <blockquote class="callout">Analogy: Templates are like <strong>"The Outline of a Coloring Book."</strong> The professional structure is already there for you; you just have to bring the colors of your personality and the creativity of your specific message to make it a masterpiece.</blockquote>
+
+        <h3>L.2 Slide Templates (The Modern Home)</h3>
+        <p>Access a library of 50+ ready-to-use slide layouts that strictly follow the <strong>P.I.M.C.O</strong> principles. These aren't just pretty pictures; they are scientifically designed to increase audience retention and minimize cognitive load.</p>
+        <blockquote class="callout">Analogy: Slide templates are like <strong>"The Furniture in a Modern Home."</strong> You don't have to build the chair from scratch to sit comfortably; you just have to choose where to put it for the best vibe and the most efficient use of the space.</blockquote>
+
+        <h3>L.3 Practical Resources (The Power Tools)</h3>
+        <p>A curated "Black Book" of professional tools for <strong>High-Resolution Photography</strong>, custom <strong>Typography</strong>, and <strong>AI-Powered Layout Generators</strong> like Gamma and Tome to help you build world-class decks in minutes, not hours.</p>
+        <blockquote class="callout">Analogy: Resources are like <strong>"A Professional Toolkit."</strong> Instead of using a rock to hammer a nail into the wall, we're giving you a high-powered electric drill. Both get the job done, but one is much faster and leaves a cleaner finish.</blockquote>
+      </section>
+
+      <!-- ==================== BAB M ==================== -->
+      <section class="node section">
+        <h2>BAB M. Real-World Applications</h2>
+
+        <h3>M.1 Business Presentations (The Royal Pitch)</h3>
+        <p>Learn the <strong>Physics of Persuasion</strong> to win sales and master the "Investor Pitch." We focus on the intersection of emotional storytelling and cold, hard data to prove that your idea is not only viable but inevitable.</p>
+        <blockquote class="callout">Analogy: Business presentations are like <strong>"Pitching a New Discovery to a Kingdom."</strong> You have to prove it works (Data), prove it's safe (Reliability), and most importantly, prove it will make the Kingdom richer and more powerful (The ROI).</blockquote>
+
+        <h3>M.2 Career Use Cases (The Super Bowl)</h3>
+        <p>Public speaking is the fastest way to get promoted. Master the art of the <strong>Interview Presentation</strong> and high-stakes team meetings. Stand out as the person who doesn't just do the work, but can lead the room and define the vision.</p>
+        <blockquote class="callout">Analogy: Career use cases are like <strong>"The Super Bowl of Corporate Life."</strong> All the practice and small meetings have led to this moment. It’s your chance to show the coach (The Boss) that you're ready to be the Quarterback of the next big project.</blockquote>
+
+        <h3>M.3 Personal Use (The Broadcaster)</h3>
+        <p>Build your <strong>Personal Brand</strong> through the power of your voice. From networking sessions to local community events, learn to deliver a message that makes people remember your name long after the event is over.</p>
+        <blockquote class="callout">Analogy: Personal speaking is like <strong>"Broadcasting your Signal."</strong> If you don't speak, your signal is silent and nobody knows you exist. When you speak, you find your people instantly because they recognize your "Frequency."</blockquote>
+      </section>
+
+      <!-- ==================== BAB N ==================== -->
+      <section class="node section">
+        <h2>BAB N. Mastery & Long-Term Growth</h2>
+
+        <h3>N.1 Becoming a Great Speaker (The Everest Ascent)</h3>
+        <p>Professional speakers are simply beginners who refused to quit. We implement the <strong>"100-Speech Rule"</strong>: You don't need talent; you need repetitions. Learn the habits that sustain a world-class speaking career over decades.</p>
+        <blockquote class="callout">Analogy: Mastery is <strong>"Mount Everest."</strong> You can't jump to the top; you just have to take one step (One speech) at a time until the air gets thin and the view of the world is amazing. Don't look at the summit; look at your next step.</blockquote>
+
+        <h3>N.2 Speaking as a Skill (Sharpening the Blade)</h3>
+        <p>Communication is a "Lifelong Improvement" skill. Just like physical fitness, if you don't use it, you lose it. We'll help you build a <strong>Perpetual Practice Schedule</strong> to keep your skills sharp between major performances.</p>
+        <blockquote class="callout">Analogy: Speaking is like <strong>"A Sword."</strong> If you don't use it and keep it sharp, it gets rusty, dull, and useless in a fight. We're going to keep your blade gleaming and ready for any challenge the industry throws at you.</blockquote>
+
+        <h3>N.3 Impactful Communication (The Lasting Echo)</h3>
+        <p>The journey concludes by moving from "Speaker" to <strong>"Influencer."</strong> Learn how to use your voice to leave a lasting legacy in your field and change the way people think, act, and feel about your topic.</p>
+        <blockquote class="callout">Analogy: Impact is <strong>"The Echo of your Speech."</strong> Long after you leave the stage and the lights go down, your words should still be ringing in the minds of the people who heard you, driving them to action.</blockquote>
+      </section>
+
+      <section class="node">
+        <h1>🚀 Tips</h1>
+        <ul>
+          <li>Don’t trust your first thought</li>
+          <li>Always ask: “Is this true?”</li>
+          <li>Slow down your thinking when making decisions</li>
+          <li>Focus on clarity, not being right</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>
