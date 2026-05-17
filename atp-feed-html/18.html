@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AI News Carousel Template (6 Slides)</title>
+
+        <!-- Font Setup: Poppins (Heading), Inter (Body) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;700;800;900&display=swap"
+            rel="stylesheet"
+        />
+
+        <style>
+            :root {
+                --bg: #0b0f17;
+                --panel: rgba(255, 255, 255, 0.06);
+                --ink: #f5f7ff;
+                --muted: rgba(245, 247, 255, 0.72);
+                --line: rgba(255, 255, 255, 0.16);
+                --accent: #ff7a18; /* orange */
+                --accent2: #ffffff;
+
+                --radius: 44px;
+                --shadow: 0 26px 70px rgba(0, 0, 0, 0.55);
+                --maxw: 1080px;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                background:
+                    radial-gradient(
+                        1000px 700px at 15% 10%,
+                        rgba(255, 122, 24, 0.16),
+                        transparent 60%
+                    ),
+                    radial-gradient(
+                        900px 600px at 85% 20%,
+                        rgba(120, 105, 255, 0.14),
+                        transparent 55%
+                    ),
+                    var(--bg);
+                font-family:
+                    Inter,
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Arial,
+                    sans-serif;
+                color: var(--ink);
+                padding: 40px;
+            }
+
+            .feed-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 34px;
+                width: max-content;
+                margin: 0 auto;
+            }
+
+            .slide {
+                width: var(--maxw);
+                height: var(--maxw);
+                border-radius: var(--radius);
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.06),
+                    rgba(255, 255, 255, 0.03)
+                );
+                border: 1px solid var(--line);
+                box-shadow: var(--shadow);
+                position: relative;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .glow {
+                position: absolute;
+                inset: -200px;
+                background: radial-gradient(
+                    closest-side,
+                    rgba(255, 122, 24, 0.22),
+                    transparent 62%
+                );
+                filter: blur(16px);
+                pointer-events: none;
+                opacity: 0.8;
+            }
+
+            .top {
+                padding: 56px 70px 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                z-index: 2;
+            }
+
+            .brand {
+                display: inline-flex;
+                align-items: center;
+                gap: 12px;
+                padding: 10px 16px;
+                border-radius: 999px;
+                border: 1px solid var(--line);
+                background: rgba(255, 255, 255, 0.04);
+                color: var(--muted);
+                font-weight: 600;
+                letter-spacing: 0.02em;
+            }
+
+            .dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: var(--accent);
+                box-shadow: 0 0 0 4px rgba(255, 122, 24, 0.18);
+            }
+
+            .num {
+                font-family: Poppins, Inter, sans-serif;
+                font-weight: 900;
+                font-size: 28px;
+                color: var(--ink);
+                border: 1px solid var(--line);
+                background: rgba(0, 0, 0, 0.22);
+                padding: 10px 14px;
+                border-radius: 16px;
+                min-width: 56px;
+                text-align: center;
+            }
+
+            .content {
+                flex: 1;
+                padding: 34px 70px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 18px;
+                z-index: 2;
+            }
+
+            .kicker {
+                font-family: Poppins, Inter, sans-serif;
+                font-weight: 800;
+                color: var(--accent);
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                font-size: 14px;
+            }
+
+            h1 {
+                font-family: Poppins, Inter, sans-serif;
+                font-weight: 900;
+                font-size: 78px;
+                line-height: 1.02;
+                letter-spacing: -0.03em;
+                text-transform: uppercase;
+            }
+
+            h2 {
+                font-family: Poppins, Inter, sans-serif;
+                font-weight: 900;
+                font-size: 64px;
+                line-height: 1.06;
+                letter-spacing: -0.02em;
+            }
+
+            p {
+                font-size: 26px;
+                line-height: 1.45;
+                color: var(--muted);
+                max-width: 860px;
+            }
+
+            ul {
+                margin-top: 6px;
+                padding-left: 22px;
+                display: grid;
+                gap: 10px;
+                color: var(--muted);
+                font-size: 24px;
+                line-height: 1.35;
+            }
+
+            li strong {
+                color: var(--ink);
+            }
+
+            .bottom {
+                padding: 0 70px 62px;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+                z-index: 2;
+                gap: 14px;
+            }
+
+            .badge {
+                border: 1px solid var(--line);
+                background: rgba(255, 255, 255, 0.04);
+                padding: 12px 16px;
+                border-radius: 999px;
+                font-weight: 600;
+                color: var(--muted);
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                white-space: nowrap;
+            }
+
+            .cta {
+                font-family: Poppins, Inter, sans-serif;
+                font-weight: 800;
+                font-size: 22px;
+                color: var(--ink);
+                text-align: right;
+            }
+
+            .caption {
+                width: calc(var(--maxw) * 3 + 34px * 2);
+                margin: 36px auto 0;
+                border: 1px solid var(--line);
+                background: rgba(0, 0, 0, 0.35);
+                border-radius: 22px;
+                padding: 18px 18px;
+                color: var(--muted);
+            }
+
+            .caption h3 {
+                font-family: Poppins, Inter, sans-serif;
+                color: var(--ink);
+                font-size: 18px;
+                margin-bottom: 10px;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+            }
+
+            .caption pre {
+                white-space: pre-wrap;
+                font-family:
+                    ui-monospace, SFMono-Regular, Menlo, Consolas,
+                    "Liberation Mono", monospace;
+                font-size: 14px;
+                line-height: 1.5;
+            }
+
+            @media (max-width: 3600px) {
+                body {
+                    padding: 24px;
+                }
+                .feed-grid {
+                    transform: scale(0.35);
+                    transform-origin: top center;
+                }
+                .caption {
+                    transform: scale(0.9);
+                    transform-origin: top center;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="feed-grid">
+            <!-- SLIDE 1: HOOK -->
+            <section class="slide">
+                <div class="glow"></div>
+                <header class="top">
+                    <div class="brand">
+                        <span class="dot"></span> ATP • AI NEWS
+                    </div>
+                    <div class="num">1/6</div>
+                </header>
+                <div class="content">
+                    <div class="kicker">HOOK</div>
+                    <h1>TUNTUTAN 18 TAHUN: KASUS CHROMEBOOK</h1>
+                    <p>
+                        Mantan Mendikbudristek Nadiem Makarim dituntut 18 tahun
+                        penjara dalam perkara pengadaan laptop Chromebook
+                        (2019–2022). Ini bukan cuma soal angka—ini ujian besar
+                        untuk tata kelola belanja teknologi pendidikan.
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Impact:</strong> proyek digitalisasi
+                            pendidikan ikut disorot
+                        </li>
+                        <li>
+                            <strong>Angle:</strong> bedain kebijakan vs pidana,
+                            tapi tetap audit ketat
+                        </li>
+                    </ul>
+                </div>
+                <footer class="bottom">
+                    <div class="badge">
+                        Visual: judul besar + 1 icon/shape glowing
+                    </div>
+                    <div class="cta">Swipe →</div>
+                </footer>
+            </section>
+
+            <!-- SLIDE 2: APA YANG TERJADI -->
+            <section class="slide">
+                <div class="glow"></div>
+                <header class="top">
+                    <div class="brand">
+                        <span class="dot"></span> ATP • AI NEWS
+                    </div>
+                    <div class="num">2/6</div>
+                </header>
+                <div class="content">
+                    <div class="kicker">APA YANG TERJADI</div>
+                    <h2>Apa yang terjadi?</h2>
+                    <p>
+                        Jaksa menilai pengadaan Chromebook + Chrome Device
+                        Management tidak sesuai perencanaan/prinsip pengadaan.
+                        Disebut merugikan negara Rp 2,1 T dan ada tuntutan uang
+                        pengganti Rp 5,6 T (subsider 9 tahun).
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Who:</strong> Nadiem + beberapa pihak
+                            terkait (ada yang disebut buron)
+                        </li>
+                        <li>
+                            <strong>What:</strong> pengadaan Chromebook
+                            2019–2022
+                        </li>
+                        <li>
+                            <strong>So what:</strong> skala anggaran + efek ke
+                            kebijakan publik
+                        </li>
+                    </ul>
+                </div>
+                <footer class="bottom">
+                    <div class="badge">Visual: 2 kolom mini (Who/What)</div>
+                    <div class="cta">Keep going →</div>
+                </footer>
+            </section>
+
+            <!-- SLIDE 3: KENAPA INI PENTING -->
+            <section class="slide">
+                <div class="glow"></div>
+                <header class="top">
+                    <div class="brand">
+                        <span class="dot"></span> ATP • AI NEWS
+                    </div>
+                    <div class="num">3/6</div>
+                </header>
+                <div class="content">
+                    <div class="kicker">KENAPA INI PENTING</div>
+                    <h2>Kenapa ini penting?</h2>
+                    <p>
+                        Pengadaan edtech bukan sekadar “beli device”. Kalau
+                        standar kebutuhan lapangan (termasuk daerah 3T)
+                        diabaikan, program bisa gagal dan berujung masalah
+                        hukum. Ini bisa mengubah cara pemerintah belanja
+                        teknologi.
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Shift:</strong> dari “cepat digitalisasi” →
+                            “wajib bukti kebutuhan”
+                        </li>
+                        <li>
+                            <strong>Winners:</strong> proyek yang transparan +
+                            berbasis evaluasi
+                        </li>
+                        <li>
+                            <strong>Losers:</strong> pengadaan yang minim uji
+                            coba & audit
+                        </li>
+                    </ul>
+                </div>
+                <footer class="bottom">
+                    <div class="badge">
+                        Visual: before/after atau panah “shift”
+                    </div>
+                    <div class="cta">Next →</div>
+                </footer>
+            </section>
+
+            <!-- SLIDE 4: DAMPAK -->
+            <section class="slide">
+                <div class="glow"></div>
+                <header class="top">
+                    <div class="brand">
+                        <span class="dot"></span> ATP • AI NEWS
+                    </div>
+                    <div class="num">4/6</div>
+                </header>
+                <div class="content">
+                    <div class="kicker">DAMPAK</div>
+                    <h2>Dampaknya ke ekosistem</h2>
+                    <p>
+                        Kasus ini bikin semua pihak lebih hati-hati: regulator,
+                        vendor, sampai sekolah. Kontrak besar akan makin ketat,
+                        dan proses evaluasi teknologi bisa jadi wajib sebelum
+                        scale-up nasional.
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Bisnis:</strong> tender edtech makin
+                            menuntut compliance
+                        </li>
+                        <li>
+                            <strong>Pekerjaan:</strong> procurement & audit jadi
+                            “core skill”
+                        </li>
+                        <li>
+                            <strong>Developer/Creator:</strong> fokus ke solusi
+                            yang jalan offline/low-connectivity
+                        </li>
+                    </ul>
+                </div>
+                <footer class="bottom">
+                    <div class="badge">Visual: 3 bullets + ikon minimal</div>
+                    <div class="cta">Almost →</div>
+                </footer>
+            </section>
+
+            <!-- SLIDE 5: MASA DEPAN / RISIKO -->
+            <section class="slide">
+                <div class="glow"></div>
+                <header class="top">
+                    <div class="brand">
+                        <span class="dot"></span> ATP • AI NEWS
+                    </div>
+                    <div class="num">5/6</div>
+                </header>
+                <div class="content">
+                    <div class="kicker">MASA DEPAN / RISIKO</div>
+                    <h2>Risiko & masa depan</h2>
+                    <p>
+                        Risikonya: inovasi jadi takut jalan. Tapi
+                        opportunity-nya jelas: standar pengadaan bisa naik level
+                        (pilot, metrik belajar, audit vendor). Putusan
+                        pengadilan nanti bisa jadi preseden penting.
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Opportunity:</strong> “evidence-based
+                            procurement”
+                        </li>
+                        <li>
+                            <strong>Risk:</strong> proyek digital jadi terlalu
+                            defensif
+                        </li>
+                        <li>
+                            <strong>Next step:</strong> dorong pilot + evaluasi
+                            publik sebelum belanja besar
+                        </li>
+                    </ul>
+                </div>
+                <footer class="bottom">
+                    <div class="badge">
+                        Visual: timeline mini / warning label
+                    </div>
+                    <div class="cta">Last →</div>
+                </footer>
+            </section>
+
+            <!-- SLIDE 6: CTA -->
+            <section class="slide">
+                <div class="glow"></div>
+                <header class="top">
+                    <div class="brand">
+                        <span class="dot"></span> ATP • AI NEWS
+                    </div>
+                    <div class="num">6/6</div>
+                </header>
+                <div class="content">
+                    <div class="kicker">CTA</div>
+                    <h2>Menurut kamu, ini salah kebijakan atau korupsi?</h2>
+                    <p>
+                        Di sisi lain, kebijakan bisa gagal. Di sisi lain,
+                        belanja publik harus akuntabel. Kamu tim: “perkuat audit
+                        & pilot” atau “stop dulu proyek device besar-besaran”?
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Setuju?</strong> kebijakan gagal ≠ pidana
+                            (tapi audit wajib)
+                        </li>
+                        <li>
+                            <strong>Use case:</strong> kalau kamu pejabat,
+                            metrik apa yang kamu wajibkan?
+                        </li>
+                    </ul>
+                </div>
+                <footer class="bottom">
+                    <div class="badge">
+                        Visual: CTA besar + accent underline
+                    </div>
+                    <div class="cta">Comment ↓</div>
+                </footer>
+            </section>
+        </div>
+
+        <section class="caption">
+            <h3>CAPTION + HASHTAGS (Isi manual)</h3>
+            <pre>
+CAPTION:
+Tuntutan 18 tahun penjara untuk kasus Chromebook bikin banyak orang kaget.
+
+Menurut Kompas (15 Mei 2026), jaksa menilai pengadaan Chromebook 2019–2022 bermasalah, disebut merugikan negara Rp 2,1 T, plus tuntutan uang pengganti Rp 5,6 T.
+
+Pertanyaannya: gimana cara kita bedain “kebijakan gagal” vs “tindak pidana”, tanpa bikin inovasi mati?
+
+HASHTAGS (5):
+#beritaterkini #politik #hukumpidana #pengadaan #edtech
+
+THUMBNAIL HOOK:
+TUNTUTAN 18 TAHUN
+
+VISUAL DIRECTION:
+Dark futuristic • premium editorial • minimal • big typography • orange accent
+
+WARNA UTAMA:
+Black / Off-white / Orange accent
+
+FONT RECOMMENDATION:
+Poppins (judul) + Inter (body)
+</pre
+            >
+        </section>
+    </body>
+</html>

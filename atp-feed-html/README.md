@@ -158,12 +158,6 @@ Jika input berupa link berita:
 
 ---
 
-# INPUT TEMPLATE
-
-Gunakan salah satu format input berikut.
-
----
-
 ## INPUT 1 — JUDUL BERITA
 
 ```txt
@@ -179,64 +173,6 @@ engapa-nadiem-makarim-dituntut-18-tahun-penjara
 Link:
 https://www.kompas.id/artikel/mengapa-nadiem-makarim-dituntut-18-tahun-penjara```
 
----
-
-## INPUT 3 — COPY FULL ARTIKEL
-
-```txt
-Artikel:
-[PASTE ISI BERITA DI SINI]
-```
-
----
-
-## INPUT 4 — THREAD / TWEET
-
-```txt
-Thread:
-[PASTE THREAD X/TWITTER]
-```
-
----
-
-## INPUT 5 — TOPIK SAJA
-
-```txt
-Topik:
-AI menggantikan customer support
-```
-
----
-
-## INPUT 6 — FORMAT AUTOMATION API
-
-```json
-{
-  "news_title": "OpenAI launches enterprise AI agents",
-  "news_link": "https://example.com/news",
-  "target_language": "Indonesia",
-  "slides": 6,
-  "style": "dark futuristic AI"
-}
-```
-
----
-
-# CONTOH INPUT
-
-```txt
-Berita:
-OpenAI launches enterprise AI agents for automation
-```
-
-atau
-
-```txt
-Link:
-https://example.com/news
-```
-
----
 
 # CONTOH OUTPUT
 
