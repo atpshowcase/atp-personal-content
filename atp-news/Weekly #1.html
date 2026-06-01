@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ATP Weekly #23 · The Infrastructure Layer Shift</title>
+    <style>
+        /* ---------- RESET & GLOBAL ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            color: #1a1a1a;
+            line-height: 1.5;
+            font-weight: 400;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .story h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        a {
+            color: #1a1a1a;
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
+
+        a:hover {
+            color: #3b3b3b;
+        }
+
+        /* Container */
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        .site-header {
+            border-bottom: 1px solid #eaeaea;
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.02em;
+            background: #f4f4f4;
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .hero {
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-lead {
+            font-size: 1.2rem;
+            color: #3b3b3b;
+            border-left: 3px solid #e0e0e0;
+            padding-left: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Story block */
+        .story {
+            margin-bottom: 4rem;
+        }
+
+        .story-meta {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6b6b6b;
+            margin-bottom: 0.75rem;
+        }
+
+        .quick-take {
+            margin: 1rem 0 1.5rem 0;
+            font-size: 1.05rem;
+            line-height: 1.5;
+            color: #2c2c2c;
+        }
+
+        .analogy {
+            background-color: #f9f9f9;
+            border-left: 4px solid #000;
+            padding: 1.2rem 1.5rem;
+            margin: 1.5rem 0;
+            font-style: normal;
+            font-weight: 450;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .why-it-matters {
+            background-color: #f4f4f4;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 16px;
+        }
+
+        .why-it-matters h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .my-perspective {
+            border-top: 1px solid #eaeaea;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+        }
+
+        .my-perspective h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .score-grid {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.8rem;
+            margin: 1rem 0;
+            color: #4a4a4a;
+        }
+
+        .sources {
+            font-size: 0.75rem;
+            border-top: 1px solid #efefef;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            color: #7a7a7a;
+        }
+
+        /* Recap & Meta */
+        .recap {
+            background: #fafafa;
+            border-radius: 24px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .footer-note {
+            border-top: 1px solid #eaeaea;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #6b6b6b;
+            text-align: center;
+        }
+
+        hr {
+            margin: 2rem 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .recap {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="site-header">
+        <div class="logo">ATP Weekly</div>
+        <div style="margin-top: 0.5rem; font-size: 0.8rem;">AI, Engineering & Startup Intelligence</div>
+    </header>
+
+    <section class="hero">
+        <h1>Infrastructure is eating the world<br>(again, but differently)</h1>
+        <div class="hero-lead">
+            Minggu ini bukan soal model AI baru. Tapi soal siapa yang mengontrol “jalan tol” dan “dapur” di balik layar. 
+            Dari kecolongan 3.800 repo GitHub, tren Infrastructure as Vibe, hingga managed MCP dari Google — semuanya menunjuk ke arah yang sama.
+        </div>
+    </section>
+
+    <!-- STORY 1: GITHUB BREACH -->
+    <article class="story">
+        <header>
+            <div class="story-meta">BREACH · SUPPLY CHAIN</div>
+            <h2>GitHub kena hack lewat VS Code: alarm untuk supply chain software</h2>
+        </header>
+        <div class="quick-take">
+            Hacker mengaku mencuri hampir 4.000 repository internal GitHub melalui ekstensi VS Code berbahaya (Nx Console yang dibackdoor). 
+            TeamPCP meminta tebusan $95.000 dan dibantu Lapsus$ jual datanya. GitHub udah konfirmasi, tapi yang lebih mengkhawatirkan: 
+            ini bukan insiden terisolasi. Ekosistem developer kita ternyata lebih rapuh dari perkiraan.
+        </div>
+
+        <blockquote class="analogy">
+            🧩 “Kalau kode itu adalah bahan bangunan pencakar langit digital, maka ekstensi VS Code adalah kunci gudang alat. 
+            Hacker sekarang cukup merusak kuncinya, tanpa perlu bobol pintu utama.”
+        </blockquote>
+
+        <section class="why-it-matters">
+            <h4>⚡ Kenapa Ini Penting?</h4>
+            <ul style="margin-left: 1.2rem; margin-top: 0.5rem;">
+                <li><strong>Engineer:</strong> Ekstensi IDE = vektor serangan baru. Auto-update bukan lagi teman, tapi potensi backdoor.</li>
+                <li><strong>Founder / Startup:</strong> Technical debt di CI/CD bisa jadi single point of failure. Review permission dan third-party integration harus ketat.</li>
+                <li><strong>Industry impact:</strong> GitHub CTO sendiri ngaku platform kewalahan handle load dari AI agent dan punya technical debt 18 tahun. Stabilitas jadi pertanyaan besar.</li>
+            </ul>
+        </section>
+
+        <div class="score-grid">
+            <span>💥 Impact: 8/10</span>
+            <span>🆕 Novelty: 6/10</span>
+            <span>⏳ Long-term: 9/10</span>
+        </div>
+        <div class="my-perspective">
+            <h4>🎯 Pendapat Gua</h4>
+            <p>Yang menurut gua menarik adalah <strong>perubahan pola attacker</strong> dari menyerang kode aplikasi ke menyerang <em>tooling developer</em>. 
+            Ini second-order effect dari bergantungnya industri ke open-source dan ekstensi yang “dipercaya”. Dalam 1-2 tahun ke depan, kita bakal lihat gestur ke arah <strong>sandboxing IDE, signed extensions</strong>, atau bahkan perusahaan besar mulai bikin “internal marketplace” ekstensi yang sudah diaudit. 
+            Implikasi buat startup: security tooling untuk dev environment akan jadi kategori panas.</p>
+        </div>
+        <footer class="sources">
+            📎 Source: <a href="https://www.cpomagazine.com/cyber-security/github-hacker-claims-security-breach-involved-about-4000-internal-repositories-takes-bids-on-stolen-data/" target="_blank">CPO Magazine</a> · 
+            <a href="https://github.com/" target="_blank">GitHub Security Statement</a>
+        </footer>
+    </article>
+
+    <!-- STORY 2: Infrastructure as Vibe -->
+    <article class="story">
+        <header>
+            <div class="story-meta">DEVOPS · PLATFORM SHIFT</div>
+            <h2>“Infrastructure as Vibe”: ketika kita ngobrol sama terminal biar deploy</h2>
+        </header>
+        <div class="quick-take">
+            Dari lelucon Twitter jadi kategori serius: <strong>Infrastructure as Vibe</strong>. Vercel, Cloudflare, Neon sama-sama bergerak ke arah ini. 
+            Filosofinya: lo cukup bilang “deploy ini, tambah Postgres, konekin domain” — dan AI + platform otomatis infer requirement, panggil API, handle retry. 
+            Akhir dari YAML hell? Mungkin.
+        </div>
+
+        <blockquote class="analogy">
+            🧘 “Infrastructure as Code itu kayak masak panda buku resep. Infrastructure as Vibe itu kayak bilang 'koki, bikin nasi goreng enak' — dia tahu lo punya kecap dan bawang.”
+        </blockquote>
+
+        <section class="why-it-matters">
+            <h4>⚡ Kenapa Ini Penting?</h4>
+            <ul style="margin-left: 1.2rem; margin-top: 0.5rem;">
+                <li><strong>Software Engineer:</strong> Lo bakal nulis <em>intent</em>, bukan template YAML. Tapi lo harus paham trade-off: kehilangan kontrol granular demi kecepatan.</li>
+                <li><strong>Founder:</strong> Time-to-shipping bisa turun drastis. Tim kecil bisa deliver fitur kompleks tanpa perlu dedicated DevOps week.</li>
+                <li><strong>Startup risk:</strong> Vendor lock-in makin dalam. Begitu app lo bergantung pada “vibe” platform tertentu, migrasi susah karena semua inference logic proprietary.</li>
+            </ul>
+        </section>
+
+        <div class="score-grid">
+            <span>💥 Impact: 7/10</span>
+            <span>🆕 Novelty: 8/10</span>
+            <span>⏳ Long-term: 8/10</span>
+        </div>
+        <div class="my-perspective">
+            <h4>🎯 Pendapat Gua</h4>
+            <p>Yang menurut gua menarik adalah bahwa <strong>“Infrastructure as Vibe” sebenarnya natural conclusion dari agentic coding</strong>. 
+            Dalam 3 tahun, platform yang masih paksa developer nulis konfigurasi deklaratif manual bakal ditinggal. Tapi ada ironi: 
+            trend ini justru lahir karena <em>IaC terlalu kompleks</em>, padahal dulu IaC lahir karena ClickOps kacau. Sekarang kita looping ke kemudahan ekstrem, 
+            tapi dengan risiko abstraksi bocor (<em>leaky abstraction</em>) yang lebih sophisticated. Engineer yang paham <em>mental model</em> di balik vibe bakal punya unfair advantage.</p>
+        </div>
+        <footer class="sources">
+            📎 Source: <a href="https://dev.to/alexcloudstar/infrastructure-as-vibe-what-comes-after-infrastructure-as-code-5fc8" target="_blank">DEV Community (Infrastructure as Vibe)</a> · 
+            <a href="https://hackernoon.com/infrastructure-as-vibe-is-coming-for-devops" target="_blank">HackerNoon</a>
+        </footer>
+    </article>
+
+    <!-- STORY 3: LOOKER MANAGED MCP -->
+    <article class="story">
+        <header>
+            <div class="story-meta">AI AGENTS · DATA INFRA</div>
+            <h2>Looker rilis Managed MCP: tanda “USB-C untuk data enterprise” akhirnya tiba</h2>
+        </header>
+        <div class="quick-take">
+            Google mengumumkan managed MCP server untuk Looker (preview). Agent AI sekarang bisa query semantic layer Looker langsung tanpa middleware ribet. 
+            Artinya: analyst tinggal chat dengan Claude atau Cursor, dan agent bisa generate dashboard, run query, atau edit LookML — dengan governance, SSO, dan audit trail terpusat.
+        </div>
+
+        <blockquote class="analogy">
+            🔌 “MCP itu seperti USB-C untuk AI: standar universal yang bikin data di gudang (Looker) bisa langsung 'colok' ke tools AI tanpa kabel adaptor aneh-aneh.”
+        </blockquote>
+
+        <section class="why-it-matters">
+            <h4>⚡ Kenapa Ini Penting?</h4>
+            <ul style="margin-left: 1.2rem; margin-top: 0.5rem;">
+                <li><strong>Product Engineer:</strong> Lo bisa bikin internal tool yang “ngomong” ke data pakai natural language, tanpa khawatir query liar atau bocor data.</li>
+                <li><strong>Founder:</strong> Startup B2B SaaS yang built-in AI features ke analitik bisa lebih cepat go-to-market dengan MCP sebagai shortcut integrasi.</li>
+                <li><strong>Software Architecture:</strong> MCP jadi lapisan standar untuk agent-tool interaction. Ecosystem MCP server akan jadi komoditas seperti API gateway.</li>
+            </ul>
+        </section>
+
+        <div class="score-grid">
+            <span>💥 Impact: 8/10</span>
+            <span>🆕 Novelty: 7/10</span>
+            <span>⏳ Long-term: 9/10</span>
+        </div>
+        <div class="my-perspective">
+            <h4>🎯 Pendapat Gua</h4>
+            <p>Yang menurut gua menarik adalah <strong>Google mengakselerasi MCP sebagai standar de facto untuk agent-data integration</strong>. 
+            Managed MCP = mereka angkat beban operasional, sehingga adopsi enterprise meledak. Dalam 2 tahun, “MCP support” akan jadi checklist wajib untuk data platforms (Snowflake, Databricks, dll). 
+            Implikasi buat builder: skill baru yang dibutuhkan bukan lagi SQL doang, tapi <strong>designing agentic data workflows</strong> dengan MCP sebagai glue. Era semantic layer sebagai API untuk AI dimulai sekarang.</p>
+        </div>
+        <footer class="sources">
+            📎 Source: <a href="https://discuss.google.dev/t/unlocking-agentic-ai-for-enterprise-bi-announcing-looker-s-managed-mcp-server-in-preview/367431" target="_blank">Google Official Announcement</a>
+        </footer>
+    </article>
+
+    <!-- STORY 4: JENSEN 5-LAYER CAKE + IMPLIKASI -->
+    <article class="story">
+        <header>
+            <div class="story-meta">AI STRATEGY · VALUE ACCRUAL</div>
+            <h2>Jensen Huang: “AI itu kue 5 lapis, dan lo makannya dari pinggir”</h2>
+        </header>
+        <div class="quick-take">
+            Jensen Huang (Nvidia) mempopulerkan metafora “5-layer cake” untuk stack AI: Energy → Chips → Infrastructure → Models → Applications. 
+            Insight yang jarang dibahas: <strong>value bakal mengumpul di lapis paling bawah (energy/chips) dan paling atas (apps)</strong>. 
+            Lapis tengah (models) jadi komoditas. Buat founder: jangan bikin “model wrapper”.
+        </div>
+
+        <blockquote class="analogy">
+            🎂 “AI itu seperti kue lapis legit: lo kira cream (model) yang paling enak, tapi sebenarnya harga ditentukan oleh seberapa bagus oven (chip) dan seberapa eksklusif topping (aplikasi).”
+        </blockquote>
+
+        <section class="why-it-matters">
+            <h4>⚡ Kenapa Ini Penting?</h4>
+            <ul style="margin-left: 1.2rem; margin-top: 0.5rem;">
+                <li><strong>Founder/Startup:</strong> Jangan bangun startup yang hanya “bungkus API OpenAI”. Durable value ada di workflow ownership + proprietary data.</li>
+                <li><strong>Engineer:</strong> Skill paling langka ke depan: orchestration & fine-tuning di level inference, plus optimasi energy efficiency (bukan cuma performance).</li>
+                <li><strong>Investor perspective:</strong> Lapisan infrastructure (data center, cloud orchestration) jadi medan perang baru — makanya AWS/Google Cloud salipan model AI.</li>
+            </ul>
+        </section>
+
+        <div class="score-grid">
+            <span>💥 Impact: 9/10</span>
+            <span>🆕 Novelty: 6/10</span>
+            <span>⏳ Long-term: 10/10</span>
+        </div>
+        <div class="my-perspective">
+            <h4>🎯 Pendapat Gua</h4>
+            <p>Yang menurut gua menarik adalah <strong>implikasi bahwa NVIDIA tidak hanya jual chip, tapi melakukan vertical integration</strong> (investasi di energy, infra, model, apps). 
+            Kalau tren ini berlanjut 3 tahun, lanskap AI akan dikuasai 2-3 pemain full-stack yang punya dari pembangkit listrik sampai aplikasi end-user. 
+            Buka peluang untuk startup yang fokus di <em>horizontal enabler</em> (MCP, inference optimization, governance) karena raksasa bakal sibuk perang di middle layer.</p>
+        </div>
+        <footer class="sources">
+            📎 Source: <a href="https://www.philstar.com/business/2026/06/01/2531860/five-layer-cake/" target="_blank">Philstar (Jensen Huang 5-layer cake)</a> · 
+            <a href="https://www.linkedin.com/posts/dineshchandrasekar_nvidia-artificialintelligence-aistrategy-activity-7466329274472632323-HXgH" target="_blank">LinkedIn Thread</a>
+        </footer>
+    </article>
+
+    <!-- RECAP + WINNER + TRENDS -->
+    <div class="recap">
+        <h3 style="margin-bottom: 1.5rem;">⚡ TL;DR Minggu Ini</h3>
+        <ul style="margin-left: 1.2rem; line-height: 1.6;">
+            <li>🔐 <strong>GitHub breach via VS Code extension:</strong> supply chain attack makin canggih, developer tooling jadi target utama.</li>
+            <li>🧘 <strong>Infrastructure as Vibe:</strong> natural language infra provisioning mulai mainstream, death of YAML? Belum, tapi arahnya jelas.</li>
+            <li>🔌 <strong>Looker Managed MCP:</strong> Google bawa MCP ke enterprise data, standar agent-data integration makin matang.</li>
+            <li>🍰 <strong>AI 5-Layer Cake:</strong> Value bakal terkonsentrasi di energy/chips dan applications — middle layer commoditized.</li>
+            <li>🧩 <strong>GitHub trending:</strong> Agent plugin (Claude Code, n8n) + self-hosted explosion, developer concern tentang AI slop & data sovereignty.</li>
+        </ul>
+    </div>
+
+    <div class="recap" style="background: #fff; border: 1px solid #eee;">
+        <h3 style="margin-bottom: 0.5rem;">🔥 Pemenang Minggu Ini: <span style="background: #000; color: #fff; padding: 0.1rem 0.5rem; border-radius: 20px;">Google (Looker)</span></h3>
+        <p>Dengan managed MCP server, Google secara cerdik mengubah Looker dari BI tool jadi <strong>semantic brain untuk agentic AI</strong>. Mereka tidak cuma ikut standar MCP, tapi menghilangkan friction adopsi enterprise. Gerakan ini posisikan Google Cloud sebagai infrastructure pilihan untuk AI-native data apps, langsung menekan Snowflake dan Databricks.</p>
+    </div>
+
+    <div class="recap" style="margin-top: 1rem;">
+        <h3 style="margin-bottom: 0.75rem;">👀 Berita yang Kurang Diperhatiin</h3>
+        <p><strong>BadHost vulnerability (Starlette CVE-2026-48710):</strong> Ratusan AI agent stacks (vLLM, MCP servers, FastAPI) rentan Host header poisoning. Ini klasik "forgotten web security" tapi dengan konsekuensi lebih parah karena agent punya akses lebih banyak ke internal tooling. Tanda bahwa <strong>AI security bukan cuma tentang prompt injection</strong>, juga hygiene web fundamental.</p>
+        <div class="sources" style="border: none; margin-top: 0.5rem;">
+            🔗 <a href="https://rits.shanghai.nyu.edu/ai/badhost-starlette-bug-puts-ai-agent-infrastructure-on-alert/" target="_blank">NYU Shanghai: BadHost Starlette Bug</a>
+        </div>
+    </div>
+
+    <div class="recap" style="margin-top: 1rem;">
+        <h3 style="margin-bottom: 0.75rem;">📈 Trend yang Mulai Kelihatan</h3>
+        <ul style="margin-left: 1.2rem;">
+            <li><strong>Agentic workflow sebagai first-class concern</strong> — GitHub trending: plugin > model.</li>
+            <li><strong>Natural language infrastructure (Vibe)</strong> — friction di developer experience melahirkan kategori tools baru.</li>
+            <li><strong>Data governance + MCP = bundling enterprise</strong> — Looker menunjukkan cara menjual AI agents ke korporat: melalui semantic layer yang aman.</li>
+            <li><strong>Developer tool security menjadi hot topic</strong> — karena supply chain attack dimulai dari IDE ekstensi.</li>
+        </ul>
+    </div>
+
+    <div class="recap" style="margin-top: 1rem;">
+        <h3 style="margin-bottom: 0.75rem;">🔮 Minggu Depan Perlu Pantau Apa?</h3>
+        <ul style="margin-left: 1.2rem;">
+            <li><strong>Reaksi platform terhadap GitHub breach:</strong> kemungkinan GitLab atau Bitbucket rilis fitur keamanan IDE native.</li>
+            <li><strong>Respons Vercel/Cloudflare ke “Infrastructure as Vibe”:</strong> apakah mereka akan rilis produk dedicated atau cuma incremental feature.</li>
+            <li><strong>Model baru dari Anthropic atau Meta?</strong> Jika mereka rilis dengan built-in MCP support, itu akan akselerasi standar lebih cepat.</li>
+        </ul>
+        <div style="margin-top: 1rem; font-style: italic; color: #2c2c2c;">⚡ “Kalau tren ini berlanjut, dalam 18 bulan kita bakal ngerasa aneh kalau masih bikin file terraform dari nol.”</div>
+    </div>
+
+    <footer class="footer-note">
+        ATP Weekly — AI, Engineering & Startup Intelligence.<br>
+        Bukan cuma ngasih tau berita. Tapi bantu lo paham "kenapa harus peduli".<br>
+        Diterbitkan setiap Senin. Untuk engineer, founder, dan builder yang kehabisan waktu.
+    </footer>
+</div>
+</body>
+</html>

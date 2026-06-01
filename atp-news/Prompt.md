@@ -148,6 +148,7 @@ Karakter:
 * Kadang sarkastik sedikit
 * Tidak formal
 * Tidak seperti media mainstream
+* Hilangkan emot
 
 Bahasa:
 
