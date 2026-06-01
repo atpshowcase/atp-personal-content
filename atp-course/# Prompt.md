@@ -1,232 +1,561 @@
-# 🎯 ASP.NET Core MVC Live Coding Preparation
+# 🎯 System Design Interview Masterclass
 
-Short description: A preparation checklist and practical coding roadmap for an ASP.NET Core MVC live coding session using any local database such as SQLite, SQL Server, or others.
-
----
-
-# BAB A — Environment Preparation
-
-## A.1 Hardware & Development Setup
-- Prepare laptop or desktop
-- Ensure stable development environment
-- Minimum RAM recommendation for Visual Studio
-
-## A.2 Install Required Software
-- Visual Studio 2022 or Visual Studio Code
-- .NET SDK installed
-- Browser for testing application
-
-## A.3 Database Preparation
-- SQLite setup
-- SQL Server setup
-- Alternative local databases (PostgreSQL/MySQL)
-
-👉 Goal: Ensure development environment is fully ready before live coding begins.
+Short description: A complete roadmap for mastering system design interviews by learning scalability principles, capacity estimation, architecture patterns, and designing real-world distributed systems.
 
 ---
 
-# BAB B — ASP.NET Core MVC Project Setup
+# BAB A — System Design Interview Foundation
 
-## B.1 Create New ASP.NET Core MVC Project
-- Create project using Visual Studio
-- Configure project name and location
-- Select ASP.NET Core MVC template
+## A.1 Understanding System Design Interviews
+- How system design interviews are evaluated
+- Communication and trade-off discussions
+- Common interview structure
 
-## B.2 Configure Project Structure
-- Controllers folder
-- Models folder
-- Views folder
-- wwwroot static assets
+## A.2 System Design Framework
+- Requirement gathering
+- Capacity estimation
+- API design
+- High-level design
+- Deep dive analysis
 
-## B.3 Run Initial Project
-- Build project successfully
-- Run localhost application
-- Verify MVC default page
+## A.3 Functional vs Non-Functional Requirements
+- Functional requirements
+- Scalability requirements
+- Availability requirements
+- Latency expectations
 
-👉 This section validates that the environment works correctly.
-
----
-
-# BAB C — Database Configuration
-
-## C.1 Database Connection Setup
-- Configure connection string
-- appsettings.json configuration
-- Database provider setup
-
-## C.2 Entity Framework Core Setup
-- Install EF Core packages
-- Configure DbContext
-- Register services in Program.cs
-
-## C.3 Initial Migration
-- Create first migration
-- Update database
-- Verify table creation
-
-👉 Database integration is the core backend foundation.
+👉 This framework is reused in every system design problem.
 
 ---
 
-# BAB D — MVC Core Development
+# BAB B — Capacity Estimation
 
-## D.1 Creating Models
-- Define entity classes
-- Add validation attributes
-- Configure relationships if needed
+## B.1 DAU & MAU Estimation
+- Daily Active Users
+- Monthly Active Users
+- Growth assumptions
 
-## D.2 Creating Controllers
-- Generate MVC controller
-- Handle HTTP requests
-- Return views and data
+## B.2 Throughput Calculation
+- Requests per second (RPS)
+- Read-heavy vs write-heavy systems
+- Peak traffic estimation
 
-## D.3 Creating Views
-- Razor syntax basics
-- Form creation
-- Data display with tables
+## B.3 Storage Estimation
+- Daily storage growth
+- Yearly storage projection
+- Media storage calculations
 
-👉 This section demonstrates full MVC workflow.
+## B.4 Memory Estimation
+- Cache sizing
+- Working set calculations
 
----
+## B.5 Network Bandwidth
+- Upload traffic
+- Download traffic
+- CDN considerations
 
-# BAB E — CRUD Implementation (Live Coding Focus)
-
-## E.1 Create Feature
-- Build create form
-- Save data into database
-- Form validation
-
-## E.2 Read Feature
-- Display list data
-- Detail page implementation
-
-## E.3 Update & Delete Feature
-- Edit existing records
-- Delete records safely
-
-👉 CRUD implementation is commonly used in live coding interviews.
+👉 Capacity estimation is one of the biggest differentiators in senior-level interviews.
 
 ---
 
-# BAB F — Best Practices During Live Coding
+# BAB C — API Design Fundamentals
 
-## F.1 Clean Coding
-- Use meaningful naming
-- Keep controller logic simple
-- Organize code properly
+## C.1 REST API Design
+- Resource-oriented design
+- URL conventions
+- HTTP methods
 
-## F.2 Communication During Coding
-- Explain what you are doing
-- Describe technical decisions
-- Mention alternative approaches
+## C.2 User Operations
+- Create
+- Update
+- Delete
+- Retrieve
 
-## F.3 Debugging Strategy
-- Read error messages carefully
-- Test feature incrementally
-- Stay calm under pressure
+## C.3 Designing Scalable APIs
+- Pagination
+- Filtering
+- Sorting
+- Versioning
 
-👉 Interviewers evaluate problem-solving process, not only final output.
+👉 Every large-scale system starts with well-defined APIs.
 
 ---
 
-# BAB G — Suggested 30-Minute Live Coding Flow
+# BAB D — Design Instagram / Social Media Platform
 
-## G.1 First 5 Minutes
-- Create project
-- Setup database connection
+## D.1 Post Creation
+- Text posts
+- Image uploads
+- Video uploads
 
-## G.2 Next 10 Minutes
-- Create model and DbContext
-- Run migration
+## D.2 Social Interactions
+- Likes
+- Comments
+- Shares
 
-## G.3 Next 10 Minutes
-- Build CRUD controller and views
-- Test insert & display data
+## D.3 Following System
+- Follow users
+- Unfollow users
 
-## G.4 Last 5 Minutes
-- Explain architecture
-- Refactor if needed
-- Answer questions confidently
+## D.4 News Feed
+- Fan-out on write
+- Fan-out on read
+- Feed generation
 
-👉 Time management is critical during live coding.
+## D.5 Media Processing
+- Object storage
+- CDN
+- Image optimization
+- Video transcoding
+
+## D.6 Celebrity Account Optimization
+- High-follower accounts
+- Feed scalability challenges
+
+👉 Classic FAANG system design interview question.
+
+---
+
+# BAB E — Design YouTube / Video Streaming Platform
+
+## E.1 Upload Workflow
+- Video ingestion
+- Metadata management
+
+## E.2 Processing Pipeline
+- Video transcoding
+- Content processing workflow
+
+## E.3 Streaming Architecture
+- HLS encoding
+- Adaptive bitrate streaming
+- CDN integration
+
+## E.4 Storage Strategy
+- Video storage
+- Metadata storage
+
+👉 Covers media-heavy distributed systems.
+
+---
+
+# BAB F — Design TinyURL
+
+## F.1 URL Shortening Fundamentals
+- Long URL to short URL
+- URL redirection
+
+## F.2 Short URL Generation
+- Random strings
+- Hash-based approach
+- Counter-based approach
+
+## F.3 Base62 Encoding
+- ID generation
+- Encoding and decoding
+
+## F.4 Collision Handling
+- Duplicate detection
+- Unique generation strategies
+
+## F.5 Scalability Concerns
+- High traffic redirection
+- Cache optimization
+
+👉 One of the most frequently asked interview questions.
+
+---
+
+# BAB G — Design Rate Limiter
+
+## G.1 Why Rate Limiting Matters
+- Abuse prevention
+- Resource protection
+
+## G.2 Placement of Rate Limiter
+- API Gateway
+- Service Layer
+
+## G.3 Storage Design
+- Counter storage
+- Rule storage
+
+## G.4 Algorithms
+
+### Token Bucket
+- Token generation
+- Burst handling
+
+### Leaky Bucket
+- Fixed output rate
+
+### Fixed Window Counter
+- Simplicity trade-offs
+
+### Sliding Window Log
+- Accurate request counting
+
+### Sliding Window Counter
+- Hybrid solution
+
+## G.5 Race Condition Handling
+- Atomic operations
+- Distributed counters
+
+👉 Extremely common senior backend interview topic.
+
+---
+
+# BAB H — Design WhatsApp / Chat System
+
+## H.1 One-to-One Messaging
+- Message delivery
+- Offline users
+
+## H.2 Group Messaging
+- Group architecture
+- Message fan-out
+
+## H.3 Online Presence
+- Last seen
+- Online status
+
+## H.4 Message Status
+- Sent
+- Delivered
+- Read
+
+## H.5 Media Messaging
+- Images
+- Videos
+- Documents
+
+## H.6 WebSocket Architecture
+- Persistent connections
+- Connection management
+
+## H.7 End-to-End Encryption
+- Message privacy
+- Encryption workflow
+
+👉 Covers real-time distributed systems.
+
+---
+
+# BAB I — Design Search Engine
+
+## I.1 Search Requirements
+- Keyword search
+- Fuzzy search
+
+## I.2 Indexing System
+- Inverted index
+- Search indexing pipeline
+
+## I.3 Ranking System
+- Relevance scoring
+- Ranking algorithms
+
+## I.4 Query Correction
+- Spell correction
+- Levenshtein distance
+
+## I.5 Elasticsearch Fundamentals
+- Search cluster
+- Query execution
+
+👉 Teaches search architecture used in large-scale applications.
+
+---
+
+# BAB J — Design Airbnb
+
+## J.1 Property Management
+- Create property
+- Update property
+
+## J.2 Search Properties
+- Location search
+- Availability search
+
+## J.3 Booking Workflow
+- Reservation process
+- Payment flow
+
+## J.4 Concurrent Booking Problem
+- Double booking prevention
+- Distributed locking
+
+👉 Excellent example of consistency challenges.
+
+---
+
+# BAB K — Design Notification System
+
+## K.1 Notification Types
+- Push notifications
+- Email notifications
+- SMS notifications
+
+## K.2 User Preferences
+- Opt-in
+- Opt-out
+
+## K.3 Notification Prioritization
+- Critical notifications
+- Marketing notifications
+
+## K.4 Rate Limiting Notifications
+- Prevent notification spam
+
+## K.5 Decoupled Architecture
+- Queue-based processing
+- Async delivery
+
+👉 Covers event-driven architectures.
+
+---
+
+# BAB L — Design Logging Platform
+
+## L.1 Log Collection
+- Service logs
+- Centralized logging
+
+## L.2 Kafka Pipeline
+- Buffering events
+- Event streaming
+
+## L.3 Flink Processing
+- Real-time processing
+- Aggregations
+
+## L.4 Storage Layer
+- Hot storage
+- Cold storage
+
+## L.5 Query & Dashboard
+- Monitoring
+- Analytics
+
+👉 Similar to ELK / Datadog architecture.
+
+---
+
+# BAB M — Design OTP Service
+
+## M.1 OTP Generation
+- Secure code generation
+
+## M.2 OTP Validation
+- Verification workflow
+
+## M.3 Cache Integration
+- Redis usage
+
+## M.4 Security Measures
+- Expiration
+- Rate limiting
+- Replay prevention
+
+## M.5 High Availability
+- Multi-region support
+- Failover strategies
+
+👉 Frequently asked backend design problem.
+
+---
+
+# BAB N — Core Infrastructure Concepts
+
+## N.1 Scaling
+- Vertical scaling
+- Horizontal scaling
+
+## N.2 Load Balancers
+- L4 load balancer
+- L7 load balancer
+
+## N.3 Database Scaling
+- Replication
+- Sharding
+
+## N.4 Caching
+- Redis
+- Memcached
+
+## N.5 CDN
+- Static asset delivery
+- Global distribution
+
+## N.6 Messaging Systems
+- Kafka
+- RabbitMQ
+
+## N.7 API Gateway
+- Routing
+- Authentication
+- Rate limiting
+
+👉 These are building blocks used repeatedly across all designs.
+
+---
+
+# BAB O — Networking Fundamentals
+
+## O.1 DNS
+- Name resolution
+
+## O.2 TCP & UDP
+- Reliability
+- Performance trade-offs
+
+## O.3 HTTP
+- Request-response model
+
+## O.4 WebSocket
+- Persistent communication
+
+## O.5 Reverse Proxy
+- Nginx
+- Traffic routing
+
+👉 Essential knowledge for backend and distributed systems.
+
+---
+
+# BAB P — Advanced Backend Technologies
+
+## P.1 GraphQL
+- Flexible querying
+
+## P.2 gRPC
+- High-performance RPC
+
+## P.3 REST APIs
+- Standard web APIs
+
+## P.4 Message Queues
+- Async communication
+
+👉 Modern backend communication patterns.
+
+---
+
+# BAB Q — Data Storage & Caching
+
+## Q.1 SQL Databases
+- Relational modeling
+
+## Q.2 NoSQL Databases
+- Key-value
+- Document stores
+
+## Q.3 Object Storage
+- S3-style systems
+
+## Q.4 Caching Strategies
+- Cache Aside
+- Write Through
+- Write Back
+- Read Through
+
+👉 One of the highest ROI sections for interviews.
+
+---
+
+# BAB R — Advanced Distributed Systems
+
+## R.1 Cloud Computing
+- Cloud-native systems
+
+## R.2 Logging & Monitoring
+- Observability
+
+## R.3 Consistent Hashing
+- Distributed partitioning
+
+## R.4 CAP Theorem
+- Consistency
+- Availability
+- Partition Tolerance
+
+## R.5 Database Indexing
+- B-Tree concepts
+- Query optimization
+
+## R.6 Kafka Event Streaming
+- Event-driven systems
+
+👉 These concepts separate senior engineers from mid-level engineers.
 
 ---
 
 # 💡 Key Insights
 
 ### 1. Big Picture
-This preparation focuses on demonstrating practical ASP.NET Core MVC development skills under interview conditions.
+
+This course teaches a repeatable framework for solving any System Design Interview problem:
+
+Requirements → Capacity Estimation → API Design → High-Level Design → Deep Dive → Trade-offs
 
 ### 2. Core Skills
-- ASP.NET Core MVC setup
-- Entity Framework Core integration
-- CRUD implementation
-- Live problem solving
+
+- Scalability Engineering
+- Distributed Systems
+- Capacity Planning
+- Database Design
+- Caching Strategy
+- Event-Driven Architecture
+- Communication During Interviews
 
 ### 3. Unique Value
-Combines technical preparation with communication and interview execution strategy.
 
----
-
-# ⚠️ Real Talk
-
-- What this preparation is GOOD at
-  - Preparing for live coding interviews
-  - Demonstrating practical backend skills
-  - Building confidence under time pressure
-
-- What it does NOT cover
-  - Advanced architecture
-  - Microservices
-  - Enterprise-level scaling
-
-- Who it is suitable for
-  - Junior to mid-level .NET developers
-  - ASP.NET Core interview candidates
-  - Students preparing technical assessments
+Unlike most courses that teach tools individually, this course teaches how to combine databases, caches, queues, CDNs, APIs, and distributed systems into complete production architectures.
 
 ---
 
 # 🔥 Positioning
 
-| Skill Area              | Role                          |
-|-------------------------|-------------------------------|
-| ASP.NET Core MVC        | Backend Development Core      |
-| Entity Framework Core   | Database Access Layer         |
-| CRUD Operations         | Practical Development Skill   |
-| Live Coding             | Interview Execution           |
-| Communication           | Professional Confidence       |
+| Skill Area | Role |
+|------------|------|
+| System Design | Senior Engineer Foundation |
+| Distributed Systems | Scalability Expertise |
+| Databases | Data Layer Design |
+| Caching | Performance Optimization |
+| Messaging Systems | Event-Driven Architecture |
+| Networking | Infrastructure Foundation |
+| Capacity Estimation | Interview Differentiator |
 
 ---
 
 # 🚀 Best Learning Strategy
 
-1. Prepare environment before interview day
-2. Practice creating MVC projects repeatedly
-3. Memorize basic EF Core workflow
-4. Build CRUD apps without tutorials
-5. Simulate 30-minute coding sessions
+1. Master BAB A–C first
+2. Learn BAB N–R infrastructure concepts
+3. Practice TinyURL, Rate Limiter, WhatsApp, and News Feed repeatedly
+4. Draw architecture diagrams by hand
+5. Practice explaining trade-offs aloud
+6. Conduct mock system design interviews weekly
 
-👉 Key rule: Repetition builds speed and confidence
+👉 If your goal is FAANG Senior Engineer, Staff Engineer, Principal Engineer, or Solution Architect roles, this course covers approximately 80–90% of the recurring system design patterns asked in interviews.
 
 ---
 
 # 🔥 Ultimate Insight
 
 ```md
-Preparation → Execution → Communication → Confidence
-
-# 🔥 Ultimate Insight
-
-```md
-Foundation → Architecture → Real Projects → Professional Practices → Senior Developer
-
-# 🚀 Tips
-
-- Don’t trust your first thought
-- Always ask: “Is this true?”
-- Slow down your thinking when making decisions
-- Focus on clarity, not being right
+Requirements
+    ↓
+Capacity Estimation
+    ↓
+API Design
+    ↓
+System Components
+    ↓
+Scalability Trade-offs
+    ↓
+Production-Ready Architecture
 
 1. Jelaskan semua materi dengan gaya tongkrongan Indonesia, tapi tetap jelas, runut, dan informatif.
 2. Buat file HTML baru dengan template visual yang sama seperti `Docker-for-Developers-Complete.html`.

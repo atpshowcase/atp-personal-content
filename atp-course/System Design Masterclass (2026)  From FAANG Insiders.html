@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>System Design Interview Masterclass Complete - Tiptap Style</title>
+  <style>
+    :root {
+      --page-bg: #f2efe8;
+      --editor-bg: #fcfbf8;
+      --toolbar-bg: #f5f2ea;
+      --text: #1f1f1b;
+      --muted: #666154;
+      --line: #d9d2c7;
+      --chip: #ece6da;
+      --chip-active: #d9cfbf;
+      --maxw: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #f7f4ed, var(--page-bg));
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.75;
+      padding: 28px 14px;
+    }
+
+    .editor-shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      background: var(--editor-bg);
+      box-shadow: 0 16px 48px rgba(65, 47, 22, 0.12);
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      background: var(--toolbar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .actions {
+      border-bottom: 1px solid var(--line);
+      background: #f8f5ee;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .chip {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: #efe8dc;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: #e5dec5;
+    }
+
+    .section-copy-btn {
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .copy-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .doc {
+      padding: 30px 24px 46px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      line-height: 1.25;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin-top: 0;
+      color: #4b463d;
+      font-size: 1rem;
+    }
+
+    h2 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-size: 1.35rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5dec5;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: #2e2a22;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 1rem 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .node {
+      margin-top: 24px;
+    }
+
+    .summary {
+      border: 1px solid #dfd6c5;
+      background: #f7f2e8;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .summary strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    blockquote.callout {
+      border-left: 3px solid #9b8f7b;
+      margin: 1rem 0;
+      padding: 0.4rem 1rem;
+      color: #433d33;
+      background: #f8f4ec;
+      font-style: italic;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: 1px solid #2e2e2e;
+      border-left: 3px solid #9b8f7b;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #111;
+    }
+
+    @media print {
+      .toolbar, .actions, .copy-btn, .copy-actions-inline { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="editor-shell">
+    <div class="toolbar">
+      <span class="chip active">Paragraph</span>
+      <span class="chip">Heading</span>
+      <span class="chip">Bullet List</span>
+      <span class="chip">Ordered List</span>
+      <span class="chip">Code Block</span>
+      <span class="chip">Blockquote</span>
+    </div>
+
+    <div class="actions">
+      <button class="copy-btn" id="copyRichHtmlBtn" type="button">Copy Rich HTML for Tiptap</button>
+      <button class="copy-btn" id="copyTiptapSafeBtn" type="button">Copy Tiptap-Safe HTML</button>
+      <span class="copy-note" id="copyStatus">Copy this, then paste it into Tiptap.</span>
+    </div>
+
+    <article class="doc">
+      <p class="meta">Tiptap Style Notes - System Design Interview Masterclass</p>
+      <h1>System Design Masterclass (2026)  From FAANG Insiders</h1>
+      <p class="subtitle">A complete roadmap for mastering system design interviews by learning scalability principles, capacity estimation, architecture patterns, and real-world distributed system cases.</p>
+
+      <div class="summary">
+        <strong>Quick Map Section:</strong>
+        <p>BAB A Interview Foundation, BAB B Capacity Estimation, BAB C API Design Fundamentals, BAB D Instagram / Social Media Design, BAB E YouTube / Video Streaming Design, BAB F TinyURL Design, BAB G Rate Limiter Design, BAB H WhatsApp / Chat System, BAB I Search Engine, BAB J Airbnb, BAB K Notification System, BAB L Logging Platform, BAB M OTP Service, BAB N Core Infrastructure Concepts, BAB O Networking Fundamentals, BAB P Advanced Backend Technologies, BAB Q Data Storage & Caching, BAB R Advanced Distributed Systems.</p>
+        <p>Sub-chapters use hierarchical numbering: A.1, A.2, B.1, B.2, and so on.</p>
+      </div>
+
+      <!-- ==================== BAB A ==================== -->
+      <section class="node section">
+        <h2>BAB A — System Design Interview Foundation</h2>
+
+        <h3>A.1 Understanding System Design Interviews</h3>
+        <p>System design interviews are evaluated on clarity, structure, and the quality of your trade-off decisions. Interviewers are looking for engineers who can turn ambiguous requirements into a viable architecture, explain each choice, and adapt as new constraints appear.</p>
+        <ul>
+          <li><strong>How system design interviews are evaluated:</strong> Problem decomposition, correctness, scalability, reliability, and communication.</li>
+          <li><strong>Communication and trade-off discussions:</strong> Always explain why you chose one approach over another, and show that you understand the downside as well as the upside.</li>
+          <li><strong>Common interview structure:</strong> Requirements gathering, high-level design, component deep dive, and non-functional requirements.</li>
+        </ul>
+
+        <h3>A.2 System Design Framework</h3>
+        <p>A reliable framework keeps your interview structured and memorable. Use the same sequence every time: gather requirements, estimate capacity, define APIs, sketch the high-level architecture, and then dive deeper into the riskiest parts.</p>
+        <ul>
+          <li><strong>Requirement gathering:</strong> Clarify functional and non-functional goals, user roles, and success metrics before drawing anything.</li>
+          <li><strong>Capacity estimation:</strong> Validate that your design can support realistic load and growth scenarios.</li>
+          <li><strong>API design:</strong> Define the key endpoints and contract shapes to anchor your architecture.</li>
+          <li><strong>High-level design:</strong> Draw the main components and their interactions, then explain traffic flows.</li>
+          <li><strong>Deep dive analysis:</strong> Pick one or two critical pieces—data partitioning, caching, consistency, availability—and examine them in detail.</li>
+        </ul>
+
+        <h3>A.3 Functional vs Non-Functional Requirements</h3>
+        <p>Separating functional from non-functional requirements helps you avoid building the wrong system. Functional requirements tell you what the system must do. Non-functional requirements tell you how well it must do it.</p>
+        <ul>
+          <li><strong>Functional requirements:</strong> Features like user registration, post creation, search, redirection, or throttling.</li>
+          <li><strong>Scalability requirements:</strong> Support for traffic growth, horizontal scaling, and elastic capacity.</li>
+          <li><strong>Availability requirements:</strong> Uptime expectations, failure recovery, and graceful degradation strategies.</li>
+          <li><strong>Latency expectations:</strong> Response time targets for user-facing operations and background processes.</li>
+        </ul>
+        <blockquote class="callout">This framework is reused in every system design problem.</blockquote>
+      </section>
+
+      <!-- ==================== BAB B ==================== -->
+      <section class="node section">
+        <h2>BAB B — Capacity Estimation</h2>
+
+        <h3>B.1 DAU &amp; MAU Estimation</h3>
+        <p>Estimating active users is the first step in sizing any system. Use Daily Active Users and Monthly Active Users to convert product expectations into traffic projections.</p>
+        <ul>
+          <li><strong>Daily Active Users:</strong> The number of users who use the service in a single day.</li>
+          <li><strong>Monthly Active Users:</strong> The number of unique users over 30 days, which helps estimate long-term retention and load patterns.</li>
+          <li><strong>Growth assumptions:</strong> Model conservative, expected, and aggressive growth paths so you can choose architecture that handles the future, not just today.</li>
+        </ul>
+
+        <blockquote class="callout">
+          <strong>Analogy: Forecasting Crowd Size for a Concert.</strong>
+          If you only estimate people walking through the door today, you may be fine. But if you also estimate next month, next quarter, and next year, you can decide whether to build a small club or a stadium.
+        </blockquote>
+
+        <h3>B.2 Throughput Calculation</h3>
+        <p>Requests per second is the most important number in a system design interview. Break down user behavior into read and write operations, then map those operations to peak traffic volume.</p>
+        <ul>
+          <li><strong>Requests per second (RPS):</strong> Estimate the load during peak windows, not just average traffic.</li>
+          <li><strong>Read-heavy vs write-heavy systems:</strong> Know which side dominates for your product and choose caches or write-optimized storage accordingly.</li>
+          <li><strong>Peak traffic estimation:</strong> Use daily traffic, peak daily percentage, and burst factors to calculate the peak load that matters.</li>
+        </ul>
+
+        <blockquote class="callout">
+          <strong>Analogy: Measuring Rush Hour on a Highway.</strong>
+          Average speed across the whole day is not enough. You need to know how many cars show up at 6 PM, because that is when the road must still work.
+        </blockquote>
+
+        <h3>B.3 Storage Estimation</h3>
+        <p>Storage sizing keeps your architecture grounded. Estimate how much data is created each day, how long it must be retained, and whether long-term archive or active storage is required.</p>
+        <ul>
+          <li><strong>Daily storage growth:</strong> Multiply average object size by daily volume to understand new storage needs.</li>
+          <li><strong>Yearly storage projection:</strong> Project growth over 12 months to decide whether you need tiered storage or lifecycle policies.</li>
+          <li><strong>Media storage calculations:</strong> Account for large objects like images and videos separately from text or metadata.</li>
+        </ul>
+
+        <blockquote class="callout">
+          <strong>Analogy: Managing a Warehouse.</strong>
+          If you only count boxes arriving today, the shelves will overflow in a month. You need to know the rate of arrival and the lifetime of each box.
+        </blockquote>
+
+        <h3>B.4 Memory Estimation</h3>
+        <p>Memory sizing is key for cache layers and in-memory processing. Decide how much state must be stored in memory to meet latency goals without overcommitting expensive RAM.</p>
+        <ul>
+          <li><strong>Cache sizing:</strong> Estimate how much cached data is required to achieve the desired hit rate.</li>
+          <li><strong>Working set calculations:</strong> Analyze the portion of data that is actively used at any given time.</li>
+        </ul>
+
+        <blockquote class="callout">
+          <strong>Analogy: Your Desk Workspace.</strong>
+          You only keep the files you're actively using on your desk. Everything else stays in the cabinet. If your desk is too full, you slow down.
+        </blockquote>
+
+        <h3>B.5 Network Bandwidth</h3>
+        <p>Bandwidth matters more than developers often realize. Estimate the traffic across each boundary in your architecture so you avoid choosing a design that bottlenecks on network capacity.</p>
+        <ul>
+          <li><strong>Upload traffic:</strong> User-generated content, event ingestion, and API payload size.</li>
+          <li><strong>Download traffic:</strong> API responses, media delivery, and CDN bandwidth.</li>
+          <li><strong>CDN considerations:</strong> Use edge caching for static content and heavy media to reduce origin load and improve user experience.</li>
+        </ul>
+
+        <blockquote class="callout">Capacity estimation is one of the biggest differentiators in senior-level interviews.</blockquote>
+      </section>
+
+      <!-- ==================== BAB C ==================== -->
+      <section class="node section">
+        <h2>BAB C — API Design Fundamentals</h2>
+
+        <h3>C.1 REST API Design</h3>
+        <p>Good API design sets the foundation for clear system boundaries. Use RESTful conventions to make interfaces predictable and easy to consume.</p>
+        <ul>
+          <li><strong>Resource-oriented design:</strong> Model API endpoints around nouns like /users, /posts, /videos, and /links.</li>
+          <li><strong>URL conventions:</strong> Keep paths consistent and hierarchical, using plural nouns and nested resources where appropriate.</li>
+          <li><strong>HTTP methods:</strong> Use GET for reads, POST for creation, PUT/PATCH for updates, and DELETE for removals.</li>
+        </ul>
+
+        <h3>C.2 User Operations</h3>
+        <p>Designing the core CRUD operations first gives you a clear anchor for the rest of the architecture.</p>
+        <ul>
+          <li><strong>Create:</strong> Define how data enters the system and what validation is required.</li>
+          <li><strong>Update:</strong> Choose between full object replacement and partial updates based on API complexity.</li>
+          <li><strong>Delete:</strong> Decide whether deletions are hard or soft, and how they impact downstream systems.</li>
+          <li><strong>Retrieve:</strong> Optimize read operations with filters, pagination, and projection.
+          </li>
+        </ul>
+
+        <h3>C.3 Designing Scalable APIs</h3>
+        <p>Scalable APIs are not just about the server. They require data-aware design, versioning, and clear controls on the result set.</p>
+        <ul>
+          <li><strong>Pagination:</strong> Never return unbounded lists; support page or cursor-based pagination.</li>
+          <li><strong>Filtering:</strong> Allow clients to limit the data they request so the backend work stays efficient.</li>
+          <li><strong>Sorting:</strong> Provide consistent ordering semantics and sensible defaults for results.</li>
+          <li><strong>Versioning:</strong> Protect the API contract over time and support backward-compatible iterations.</li>
+        </ul>
+        <blockquote class="callout">Every large-scale system starts with well-defined APIs.</blockquote>
+      </section>
+
+      <!-- ==================== BAB D ==================== -->
+      <section class="node section">
+        <h2>BAB D — Design Instagram / Social Media Platform</h2>
+
+        <h3>D.1 Post Creation</h3>
+        <p>Social media post creation is the heart of the product. Design a service that accepts text, images, and videos while validating content, metadata, and permissions.</p>
+        <ul>
+          <li><strong>Text posts:</strong> Simple content creation with metadata like captions, hashtags, and mentions.</li>
+          <li><strong>Image uploads:</strong> Support multi-file upload, image validation, and storage placement.</li>
+          <li><strong>Video uploads:</strong> Handle large payloads, background processing, and eventual availability.</li>
+        </ul>
+
+        <h3>D.2 Social Interactions</h3>
+        <p>Likes, comments, and shares are the social signals that make the system sticky. Each interaction has different throughput and consistency characteristics.</p>
+        <ul>
+          <li><strong>Likes:</strong> High frequency, eventually consistent counters, and cache-friendly read patterns.</li>
+          <li><strong>Comments:</strong> Moderated text content with strong read consistency for recent conversations.</li>
+          <li><strong>Shares:</strong> Scaled distribution of content through feeds and notifications.</li>
+        </ul>
+
+        <h3>D.3 Following System</h3>
+        <p>The follow graph is one of the most important data structures in a social platform. It drives both visibility and feed generation.</p>
+        <ul>
+          <li><strong>Follow users:</strong> Represent directed edges and store them in a structure that scales for heavy-read and heavy-write access patterns.</li>
+          <li><strong>Unfollow users:</strong> Support fast removal and consistent feed pruning without expensive recomputation.</li>
+        </ul>
+
+        <h3>D.4 News Feed</h3>
+        <p>Generating the news feed is a design choice between precomputing content and computing it on demand.</p>
+        <ul>
+          <li><strong>Fan-out on write:</strong> Push new content into followers' feeds when posts are created; fast reads but expensive writes.</li>
+          <li><strong>Fan-out on read:</strong> Compute the feed when the user requests it; cheaper writes but heavier read latency.</li>
+          <li><strong>Feed generation:</strong> Combine chronological ordering, personalization signals, and caching to meet freshness and latency goals.</li>
+        </ul>
+
+        <h3>D.5 Media Processing</h3>
+        <p>Social media systems are media-heavy. Processing pipelines must transform raw uploads into optimized delivery formats and serve them reliably.</p>
+        <ul>
+          <li><strong>Object storage:</strong> Store originals in a durable object store and serve derived assets from CDN-ready locations.</li>
+          <li><strong>CDN:</strong> Cache static assets near users to reduce latency and origin load.</li>
+          <li><strong>Image optimization:</strong> Generate multiple resolutions and formats for different devices.</li>
+          <li><strong>Video transcoding:</strong> Convert uploads into adaptive bitrate streams and store variants for playback.</li>
+        </ul>
+
+        <h3>D.6 Celebrity Account Optimization</h3>
+        <p>High-follower accounts create extreme scale challenges. Your design must handle superstar traffic without slowing down regular users.</p>
+        <ul>
+          <li><strong>High-follower accounts:</strong> Use fan-out optimizations, partial materialization, and selective caching for superstar feeds.</li>
+          <li><strong>Feed scalability challenges:</strong> Avoid loading a single feed entry to all followers in one operation; shard and batch pushes where possible.</li>
+        </ul>
+        <blockquote class="callout">Classic FAANG system design interview question.</blockquote>
+      </section>
+
+      <!-- ==================== BAB E ==================== -->
+      <section class="node section">
+        <h2>BAB E — Design YouTube / Video Streaming Platform</h2>
+
+        <h3>E.1 Upload Workflow</h3>
+        <p>Video upload is the entry point for a streaming platform. Build a reliable ingestion pipeline that accepts large chunks, validates metadata, and persists content.</p>
+        <ul>
+          <li><strong>Video ingestion:</strong> Support resumable uploads, chunked transfer, and user feedback on progress.</li>
+          <li><strong>Metadata management:</strong> Store titles, descriptions, tags, categories, and access controls separately from raw media.</li>
+        </ul>
+
+        <h3>E.2 Processing Pipeline</h3>
+        <p>Transcoding and content processing are the backbone of a video platform. This pipeline turns uploads into playable formats and extracts search-friendly metadata.</p>
+        <ul>
+          <li><strong>Video transcoding:</strong> Generate multiple resolutions and bitrates for adaptive playback.</li>
+          <li><strong>Content processing workflow:</strong> Run thumbnail generation, moderation checks, and metadata enrichment as separate pipeline stages.</li>
+        </ul>
+
+        <h3>E.3 Streaming Architecture</h3>
+        <p>Streaming large video files efficiently requires edge delivery and adaptive streaming techniques.</p>
+        <ul>
+          <li><strong>HLS encoding:</strong> Segment video into chunks that can be downloaded progressively by players.</li>
+          <li><strong>Adaptive bitrate streaming:</strong> Serve different quality levels based on network conditions to avoid buffering.</li>
+          <li><strong>CDN integration:</strong> Push playback segments to the edge to scale global delivery and reduce origin bandwidth.</li>
+        </ul>
+
+        <h3>E.4 Storage Strategy</h3>
+        <p>Video storage is expensive, so a practical design uses multiple tiers and caches to balance cost and performance.</p>
+        <ul>
+          <li><strong>Video storage:</strong> Keep master copies in durable object storage and hot playback segments in faster edge caches.</li>
+          <li><strong>Metadata storage:</strong> Use a low-latency datastore for search and recommendation, separate from raw media storage.</li>
+        </ul>
+        <blockquote class="callout">Covers media-heavy distributed systems.</blockquote>
+      </section>
+
+      <!-- ==================== BAB F ==================== -->
+      <section class="node section">
+        <h2>BAB F — Design TinyURL</h2>
+
+        <h3>F.1 URL Shortening Fundamentals</h3>
+        <p>URL shortening appears simple, but it demands durability, correctness, and extreme read performance at scale. The system must convert long URLs into compact aliases and redirect without failure.</p>
+        <ul>
+          <li><strong>Long URL to short URL:</strong> Store the original URL and return a short code that can be resolved quickly.</li>
+          <li><strong>URL redirection:</strong> Redirect requests to the original destination with minimal latency and high availability.</li>
+        </ul>
+
+        <h3>F.2 Short URL Generation</h3>
+        <p>Generating unique short URLs is the key design question. Choose a strategy that minimizes collisions and supports scale.</p>
+        <ul>
+          <li><strong>Random strings:</strong> Generate short codes with enough entropy to avoid collisions, and retry on duplicates.</li>
+          <li><strong>Hash-based approach:</strong> Use a hash function on the long URL and encode the result, while handling collisions carefully.</li>
+          <li><strong>Counter-based approach:</strong> Use a sequential ID and encode it into a compact form; this is simple and easy to shard.</li>
+        </ul>
+
+        <h3>F.3 Base62 Encoding</h3>
+        <p>Base62 encoding compresses numeric IDs into short, URL-safe strings. It's the most common technique for building memorable codes.</p>
+        <ul>
+          <li><strong>ID generation:</strong> Convert a numeric sequence into a compact code using digits, lowercase, and uppercase letters.</li>
+          <li><strong>Encoding and decoding:</strong> Ensure the mapping is reversible so the system can efficiently resolve the short code back to the original URL.</li>
+        </ul>
+
+        <h3>F.4 Collision Handling</h3>
+        <p>Any generation strategy must be resilient to collisions. Plan for detection, retries, and consistency in your storage layer.</p>
+        <ul>
+          <li><strong>Duplicate detection:</strong> Use unique constraints or idempotent checks to catch collisions at write time.</li>
+          <li><strong>Unique generation strategies:</strong> Implement fallback mechanisms like salted hashing or alternate counters when a collision is detected.</li>
+        </ul>
+
+        <h3>F.5 Scalability Concerns</h3>
+        <p>A URL shortener is mostly a read-heavy system. Design for millions of redirects per second while keeping the write path lightweight and fast.</p>
+        <ul>
+          <li><strong>High traffic redirection:</strong> Use caching and distributed key-value storage for the lookup path.</li>
+          <li><strong>Cache optimization:</strong> Cache the most popular short URLs at the edge and ensure cache invalidation is simple.</li>
+        </ul>
+        <blockquote class="callout">One of the most frequently asked interview questions.</blockquote>
+      </section>
+
+      <!-- ==================== BAB G ==================== -->
+      <section class="node section">
+        <h2>BAB G — Design Rate Limiter</h2>
+
+        <h3>G.1 Why Rate Limiting Matters</h3>
+        <p>Rate limiting protects services from abuse, helps maintain stability, and enforces fair use. In interviews, rate limiting is a great way to show that you can think beyond feature correctness to system resilience.</p>
+        <ul>
+          <li><strong>Abuse prevention:</strong> Prevent malicious or accidental overuse that could degrade service quality.</li>
+          <li><strong>Resource protection:</strong> Guard downstream systems and preserve capacity for legitimate users.</li>
+        </ul>
+
+        <h3>G.2 Placement of Rate Limiter</h3>
+        <p>Where you place the rate limiter changes the design entirely. You can apply limits at the edge, gateway, or service layer depending on the level of control you need.</p>
+        <ul>
+          <li><strong>API Gateway:</strong> Ideal when you need centralized enforcement and a consistent policy across many services.</li>
+          <li><strong>Service Layer:</strong> Use per-service limits when each backend needs its own throttling rules or when latency is critical.</li>
+        </ul>
+
+        <h3>G.3 Storage Design</h3>
+        <p>Rate limiter state must be fast and durable enough to support the counting algorithm. Choose the right datastore for your expected traffic and consistency needs.</p>
+        <ul>
+          <li><strong>Counter storage:</strong> Use in-memory stores or low-latency databases for frequent increments and reads.</li>
+          <li><strong>Rule storage:</strong> Store rate limit policies separately so they can be updated without redeploying the enforcement component.</li>
+        </ul>
+
+        <h3>G.4 Algorithms</h3>
+        <p>Different algorithms trade precision for performance. Interviewers expect you to know the most common ones and when each is appropriate.</p>
+
+        <h4>Token Bucket</h4>
+        <p>The token bucket algorithm allows bursts while enforcing an average rate. It's a strong choice for APIs that can tolerate short spikes.</p>
+        <ul>
+          <li><strong>Token generation:</strong> Refill tokens at a steady rate and allow requests to consume tokens.</li>
+          <li><strong>Burst handling:</strong> Let traffic burst until the bucket is empty, then throttle new requests.</li>
+        </ul>
+
+        <h4>Leaky Bucket</h4>
+        <p>The leaky bucket enforces a fixed output rate regardless of input bursts. It is simple and predictable, making it a good fit for smoothing traffic to downstream services.</p>
+        <ul>
+          <li><strong>Fixed output rate:</strong> Drain requests at a constant speed, buffering excess requests until the system can handle them.</li>
+        </ul>
+
+        <h4>Fixed Window Counter</h4>
+        <p>The fixed window counter is the simplest algorithm. It works in fixed intervals, but may allow bursts at window boundaries.</p>
+        <ul>
+          <li><strong>Simplicity trade-offs:</strong> Easy to implement, but can miscount requests near the edge of windows.</li>
+        </ul>
+
+        <h4>Sliding Window Log</h4>
+        <p>The sliding window log is the most accurate algorithm, tracking timestamps for each request. It is heavier on storage but provides precise enforcement.</p>
+        <ul>
+          <li><strong>Accurate request counting:</strong> Record each request timestamp and count only those within the active window.</li>
+        </ul>
+
+        <h4>Sliding Window Counter</h4>
+        <p>The sliding window counter is a hybrid that balances accuracy and performance. It uses multiple sub-windows to approximate a sliding view without logging every request.</p>
+        <ul>
+          <li><strong>Hybrid solution:</strong> Keep counters for recent intervals and interpolate between them for a near-real-time rate estimate.</li>
+        </ul>
+
+        <h3>G.5 Race Condition Handling</h3>
+        <p>Rate limiting is a concurrent system by nature. When many requests increment shared counters at the same time, you need atomic operations and distributed coordination to avoid inconsistencies.</p>
+        <ul>
+          <li><strong>Atomic operations:</strong> Use atomic increments or compare-and-set operations so counters remain correct even under high concurrency.</li>
+          <li><strong>Distributed counters:</strong> Keep the counter state in a highly available store that supports fast increments and strong ordering where needed.</li>
+          <li><strong>Sharded counters:</strong> Split counters across shards to reduce contention and then merge totals safely for analytics or enforcement.</li>
+        </ul>
+        <blockquote class="callout">Rate limiter correctness depends on both the algorithm and the way shared state is updated under concurrent load.</blockquote>
+      </section>
+
+      <!-- ==================== BAB H ==================== -->
+      <section class="node section">
+        <h2>BAB H — Design WhatsApp / Chat System</h2>
+
+        <h3>H.1 One-to-One Messaging</h3>
+        <p>One-to-one chat should deliver messages quickly and handle users who are offline without losing data.</p>
+        <ul>
+          <li><strong>Message delivery:</strong> Ensure reliable sends and retries until the recipient confirms receipt.</li>
+          <li><strong>Offline users:</strong> Store messages until the recipient reconnects and then deliver them in order.</li>
+        </ul>
+
+        <h3>H.2 Group Messaging</h3>
+        <p>Group chats need a scalable architecture for fan-out and member notifications so messages reach everyone without overwhelming the system.</p>
+        <ul>
+          <li><strong>Group architecture:</strong> Track membership and group metadata separately from message content.</li>
+          <li><strong>Message fan-out:</strong> Push new messages to each member or use a pull model depending on scale and latency needs.</li>
+        </ul>
+
+        <h3>H.3 Online Presence</h3>
+        <p>Online status tells users whether people are available, but it also creates very high-frequency state updates.</p>
+        <ul>
+          <li><strong>Last seen:</strong> Store lightweight timestamps and update them only when necessary to avoid excessive churn.</li>
+          <li><strong>Online status:</strong> Use heartbeat signals and presence services to track active connections.</li>
+        </ul>
+
+        <h3>H.4 Message Status</h3>
+        <p>Message states like sent, delivered, and read create a richer experience, but they also introduce more distributed state to manage.</p>
+        <ul>
+          <li><strong>Sent:</strong> Confirm that the message left the sender's device and entered the system.</li>
+          <li><strong>Delivered:</strong> Confirm that the message reached the recipient's device or server.
+          </li>
+          <li><strong>Read:</strong> Track the final acknowledgement when the recipient opens the message.</li>
+        </ul>
+
+        <h3>H.5 Media Messaging</h3>
+        <p>Chat systems must support attachments without sacrificing performance or storage efficiency.</p>
+        <ul>
+          <li><strong>Images:</strong> Upload, compress, and store images separately from text messages.</li>
+          <li><strong>Videos:</strong> Handle large files with resumable uploads and separate streaming delivery.</li>
+          <li><strong>Documents:</strong> Securely store and share file attachments with proper access control.</li>
+        </ul>
+
+        <h3>H.6 WebSocket Architecture</h3>
+        <p>Real-time chat relies on persistent connections, and handling those connections at scale is one of the hardest parts.</p>
+        <ul>
+          <li><strong>Persistent connections:</strong> Keep sockets open for low-latency delivery and use heartbeats to detect disconnects.</li>
+          <li><strong>Connection management:</strong> Route users to the right server and transfer state cleanly when they reconnect.</li>
+        </ul>
+
+        <h3>H.7 End-to-End Encryption</h3>
+        <p>Encryption keeps messages private even when the transport layer or storage systems are untrusted.</p>
+        <ul>
+          <li><strong>Message privacy:</strong> Encrypt content on the client before it leaves the device.</li>
+          <li><strong>Encryption workflow:</strong> Manage keys and trust so only authorized participants can decrypt messages.</li>
+        </ul>
+        <blockquote class="callout">Real-time chat systems combine networking, state, and privacy concerns into one complex design problem.</blockquote>
+      </section>
+
+      <!-- ==================== BAB I ==================== -->
+      <section class="node section">
+        <h2>BAB I — Design Search Engine</h2>
+
+        <h3>I.1 Search Requirements</h3>
+        <p>Start with what the search must do. Keyword search and fuzzy matching are the most common user expectations.</p>
+        <ul>
+          <li><strong>Keyword search:</strong> Find documents containing the requested terms quickly.</li>
+          <li><strong>Fuzzy search:</strong> Handle typos and near matches so users still get relevant results.</li>
+        </ul>
+
+        <h3>I.2 Indexing System</h3>
+        <p>An inverted index is the foundation of search. Build it so documents can be found by term rather than by scanning the full dataset.</p>
+        <ul>
+          <li><strong>Inverted index:</strong> Map terms to the documents that contain them for fast lookups.</li>
+          <li><strong>Search indexing pipeline:</strong> Process new content, update the index, and keep it fresh without blocking queries.</li>
+        </ul>
+
+        <h3>I.3 Ranking System</h3>
+        <p>Ranking decides which results users see first. Good ranking balances relevance, popularity, and freshness.</p>
+        <ul>
+          <li><strong>Relevance scoring:</strong> Score results based on query match quality and term importance.</li>
+          <li><strong>Ranking algorithms:</strong> Combine multiple signals to order results meaningfully.</li>
+        </ul>
+
+        <h3>I.4 Query Correction</h3>
+        <p>Search must help users recover from mistakes. Spelling correction and suggestions keep the experience smooth.</p>
+        <ul>
+          <li><strong>Spell correction:</strong> Detect likely typos and propose corrected queries.</li>
+          <li><strong>Levenshtein distance:</strong> Use edit distance to compare query terms with known words.</li>
+        </ul>
+
+        <h3>I.5 Elasticsearch Fundamentals</h3>
+        <p>Modern search often runs on clustered search engines that handle indexing, querying, and scaling.</p>
+        <ul>
+          <li><strong>Search cluster:</strong> Use separate nodes for indexing, query serving, and coordination.</li>
+          <li><strong>Query execution:</strong> Distribute queries across shards and merge results efficiently.</li>
+        </ul>
+        <blockquote class="callout">Search architecture is a great way to show how systems can handle large data and low-latency queries.</blockquote>
+      </section>
+
+      <!-- ==================== BAB J ==================== -->
+      <section class="node section">
+        <h2>BAB J — Design Airbnb</h2>
+
+        <h3>J.1 Property Management</h3>
+        <p>Property data is the core of a marketplace. Design create and update flows that keep listings accurate and searchable.</p>
+        <ul>
+          <li><strong>Create property:</strong> Collect location, pricing, photos, and availability in a consistent model.</li>
+          <li><strong>Update property:</strong> Allow hosts to change details without breaking existing bookings or search results.</li>
+        </ul>
+
+        <h3>J.2 Search Properties</h3>
+        <p>Search is the main entry point for guests. Location and availability filters are essential for good booking experiences.</p>
+        <ul>
+          <li><strong>Location search:</strong> Support geographic filtering and relevance based on the guest's query.</li>
+          <li><strong>Availability search:</strong> Show only properties that can actually be booked for the requested dates.</li>
+        </ul>
+
+        <h3>J.3 Booking Workflow</h3>
+        <p>Booking requires a reliable workflow that reserves inventory and handles payments safely.</p>
+        <ul>
+          <li><strong>Reservation process:</strong> Lock the property for the requested time while the guest completes checkout.</li>
+          <li><strong>Payment flow:</strong> Integrate payment processing and confirm the booking only after payment clears.</li>
+        </ul>
+
+        <h3>J.4 Concurrent Booking Problem</h3>
+        <p>Multiple guests may try to book the same property at once. Avoid double bookings with careful concurrency control.</p>
+        <ul>
+          <li><strong>Double booking prevention:</strong> Use transactional reservation checks or optimistic locking to ensure availability.</li>
+          <li><strong>Distributed locking:</strong> Coordinate across services when inventory updates happen in multiple places.</li>
+        </ul>
+        <blockquote class="callout">Airbnb is a strong interview example because it combines search, booking workflow, and consistency challenges.</blockquote>
+      </section>
+
+      <!-- ==================== BAB K ==================== -->
+      <section class="node section">
+        <h2>BAB K — Design Notification System</h2>
+
+        <h3>K.1 Notification Types</h3>
+        <p>Notification systems must support different channels and delivery guarantees depending on the message type.</p>
+        <ul>
+          <li><strong>Push notifications:</strong> Real-time mobile alerts for urgent updates.</li>
+          <li><strong>Email notifications:</strong> Reliable delivery for more detailed or delayed messages.</li>
+          <li><strong>SMS notifications:</strong> Short text alerts with high delivery reliability.</li>
+        </ul>
+
+        <h3>K.2 User Preferences</h3>
+        <p>User controls are essential to avoid notification fatigue and stay compliant with privacy expectations.</p>
+        <ul>
+          <li><strong>Opt-in:</strong> Let users choose the notifications they want to receive.</li>
+          <li><strong>Opt-out:</strong> Respect users who want to stop certain alerts or channels.</li>
+        </ul>
+
+        <h3>K.3 Notification Prioritization</h3>
+        <p>Not all notifications are equal. Separate critical system alerts from marketing or informational messages.</p>
+        <ul>
+          <li><strong>Critical notifications:</strong> Delivery should be fast and reliable.</li>
+          <li><strong>Marketing notifications:</strong> Can be batched or delayed to reduce user disruption.</li>
+        </ul>
+
+        <h3>K.4 Rate Limiting Notifications</h3>
+        <p>Notification streams can overwhelm users and systems if left unchecked, so throttling is important.</p>
+        <ul>
+          <li><strong>Prevent notification spam:</strong> Enforce limits per user and per channel.</li>
+        </ul>
+
+        <h3>K.5 Decoupled Architecture</h3>
+        <p>Async, queue-based delivery makes notifications scalable and resilient.</p>
+        <ul>
+          <li><strong>Queue-based processing:</strong> Buffer notifications and retry failed deliveries.</li>
+          <li><strong>Async delivery:</strong> Separate sending from event generation so spikes do not break the core product.</li>
+        </ul>
+        <blockquote class="callout">Notifications are a perfect example of event-driven architecture and user-facing reliability.</blockquote>
+      </section>
+
+      <!-- ==================== BAB L ==================== -->
+      <section class="node section">
+        <h2>BAB L — Design Logging Platform</h2>
+
+        <h3>L.1 Log Collection</h3>
+        <p>Collecting logs from many services is the first step in building observability for a distributed system.</p>
+        <ul>
+          <li><strong>Service logs:</strong> Gather application and infrastructure logs from every component.</li>
+          <li><strong>Centralized logging:</strong> Send logs to a common system where they can be searched and analyzed.</li>
+        </ul>
+
+        <h3>L.2 Kafka Pipeline</h3>
+        <p>A message bus like Kafka helps buffer logs and stream them reliably to downstream processors.</p>
+        <ul>
+          <li><strong>Buffering events:</strong> Decouple producers and consumers so log spikes do not overwhelm the system.</li>
+          <li><strong>Event streaming:</strong> Stream logs to analytics and alerting pipelines in real time.</li>
+        </ul>
+
+        <h3>L.3 Flink Processing</h3>
+        <p>Real-time processing lets you aggregate and enrich logs as they arrive.</p>
+        <ul>
+          <li><strong>Real-time processing:</strong> Compute metrics and alerts from streaming log data.</li>
+          <li><strong>Aggregations:</strong> Summarize events for dashboards and trend analysis.</li>
+        </ul>
+
+        <h3>L.4 Storage Layer</h3>
+        <p>Log data is often stored in both hot and cold tiers based on how quickly it needs to be accessed.</p>
+        <ul>
+          <li><strong>Hot storage:</strong> Keep recent logs in fast storage for debugging and monitoring.</li>
+          <li><strong>Cold storage:</strong> Archive older logs cost-effectively for compliance and long-term analysis.</li>
+        </ul>
+
+        <h3>L.5 Query &amp; Dashboard</h3>
+        <p>The final layer is user access: search, monitor, and draw insights from logs.</p>
+        <ul>
+          <li><strong>Monitoring:</strong> Build dashboards and alerts for important system behavior.</li>
+          <li><strong>Analytics:</strong> Use search and aggregation to answer operational questions.</li>
+        </ul>
+        <blockquote class="callout">A logging platform is a great case study for combining streaming, storage, and observability.</blockquote>
+      </section>
+
+      <!-- ==================== BAB M ==================== -->
+      <section class="node section">
+        <h2>BAB M — Design OTP Service</h2>
+
+        <h3>M.1 OTP Generation</h3>
+        <p>OTP systems need secure codes that are easy to generate and hard to guess.</p>
+        <ul>
+          <li><strong>Secure code generation:</strong> Use strong randomness and avoid predictable sequences.</li>
+        </ul>
+
+        <h3>M.2 OTP Validation</h3>
+        <p>Validation must be fast and ensure codes cannot be reused after they expire.</p>
+        <ul>
+          <li><strong>Verification workflow:</strong> Check the provided code, expire it after use, and reject invalid attempts.</li>
+        </ul>
+
+        <h3>M.3 Cache Integration</h3>
+        <p>Redis or similar caches make OTP validation fast while keeping the system stateless.</p>
+        <ul>
+          <li><strong>Redis usage:</strong> Store OTP values and expiration times in a low-latency cache.</li>
+        </ul>
+
+        <h3>M.4 Security Measures</h3>
+        <p>Protect OTP flows from abuse with expiration, rate limiting, and replay prevention.</p>
+        <ul>
+          <li><strong>Expiration:</strong> Keep OTP codes valid only for a short window.</li>
+          <li><strong>Rate limiting:</strong> Prevent repeated generation and validation attempts from the same user or device.</li>
+          <li><strong>Replay prevention:</strong> Ensure an OTP cannot be reused after it has been accepted.</li>
+        </ul>
+
+        <h3>M.5 High Availability</h3>
+        <p>OTP services are often part of authentication, so they must remain available across regions.</p>
+        <ul>
+          <li><strong>Multi-region support:</strong> Replicate OTP state or use regional caches to serve users near them.</li>
+          <li><strong>Failover strategies:</strong> Keep fallback paths so authentication still works during outages.</li>
+        </ul>
+        <blockquote class="callout">OTP systems are small but critical, and they highlight security plus reliability requirements.</blockquote>
+      </section>
+
+      <!-- ==================== BAB N ==================== -->
+      <section class="node section">
+        <h2>BAB N — Core Infrastructure Concepts</h2>
+
+        <h3>N.1 Scaling</h3>
+        <p>Understand the difference between growing vertically and horizontally so you choose the right scaling strategy.</p>
+        <ul>
+          <li><strong>Vertical scaling:</strong> Add more power to a single machine for easier management but limited capacity.</li>
+          <li><strong>Horizontal scaling:</strong> Add more machines to increase capacity and resilience.</li>
+        </ul>
+
+        <h3>N.2 Load Balancers</h3>
+        <p>Load balancers distribute traffic and can also provide health checks, SSL termination, and routing intelligence.</p>
+        <ul>
+          <li><strong>L4 load balancer:</strong> Works at the transport layer for simple, fast traffic distribution.</li>
+          <li><strong>L7 load balancer:</strong> Inspects HTTP requests and routes them based on headers, paths, and content.</li>
+        </ul>
+
+        <h3>N.3 Database Scaling</h3>
+        <p>Scaling databases requires replication for reads and sharding for writes.</p>
+        <ul>
+          <li><strong>Replication:</strong> Copy data across nodes for availability and read scalability.</li>
+          <li><strong>Sharding:</strong> Split data into partitions so writes and storage scale horizontally.</li>
+        </ul>
+
+        <h3>N.4 Caching</h3>
+        <p>Caching speeds up systems by keeping hot data closer to the application and avoiding repeated backend work.</p>
+        <ul>
+          <li><strong>Redis:</strong> A versatile in-memory store for low-latency caching.</li>
+          <li><strong>Memcached:</strong> A lightweight cache for simple key-value access patterns.</li>
+        </ul>
+
+        <h3>N.5 CDN</h3>
+        <p>Content delivery networks make global traffic faster by serving static assets close to users.</p>
+        <ul>
+          <li><strong>Static asset delivery:</strong> Cache images, scripts, and media at the edge.</li>
+          <li><strong>Global distribution:</strong> Use multiple edge locations to reduce latency worldwide.</li>
+        </ul>
+
+        <h3>N.6 Messaging Systems</h3>
+        <p>Messaging systems decouple services and enable asynchronous processing.</p>
+        <ul>
+          <li><strong>Kafka:</strong> Durable event streaming for high-throughput data flows.</li>
+          <li><strong>RabbitMQ:</strong> Flexible queuing for task distribution and event delivery.</li>
+        </ul>
+
+        <h3>N.7 API Gateway</h3>
+        <p>API gateways centralize routing, authentication, and cross-cutting concerns like rate limiting.</p>
+        <ul>
+          <li><strong>Routing:</strong> Send requests to the correct backend service.</li>
+          <li><strong>Authentication:</strong> Enforce access controls before traffic reaches application services.</li>
+          <li><strong>Rate limiting:</strong> Apply policies centrally for consistent protection.</li>
+        </ul>
+        <blockquote class="callout">Infrastructure concepts are the reusable building blocks behind every large system design.</blockquote>
+      </section>
+
+      <!-- ==================== BAB O ==================== -->
+      <section class="node section">
+        <h2>BAB O — Networking Fundamentals</h2>
+
+        <h3>O.1 DNS</h3>
+        <p>DNS translates human-friendly names into IP addresses so users can reach your service without memorizing endpoints.</p>
+        <ul>
+          <li><strong>Name resolution:</strong> Map domain names to server addresses reliably and quickly.</li>
+        </ul>
+
+        <h3>O.2 TCP &amp; UDP</h3>
+        <p>Choose the right transport protocol depending on whether you need reliability or speed.</p>
+        <ul>
+          <li><strong>Reliability:</strong> TCP provides ordered, reliable delivery.</li>
+          <li><strong>Performance trade-offs:</strong> UDP can be faster for real-time traffic but needs handling for packet loss.</li>
+        </ul>
+
+        <h3>O.3 HTTP</h3>
+        <p>HTTP is the core protocol for web APIs and browser traffic. Understand its request-response model and semantics.</p>
+        <ul>
+          <li><strong>Request-response model:</strong> Clients send requests and servers return status codes and payloads.</li>
+        </ul>
+
+        <h3>O.4 WebSocket</h3>
+        <p>WebSocket provides persistent bidirectional communication for real-time features like chat and live updates.</p>
+        <ul>
+          <li><strong>Persistent communication:</strong> Keep a connection open for fast, duplex message exchange.</li>
+        </ul>
+
+        <h3>O.5 Reverse Proxy</h3>
+        <p>Reverse proxies route traffic, provide security, and help manage load across backend servers.</p>
+        <ul>
+          <li><strong>Nginx:</strong> A common reverse proxy for traffic routing and SSL termination.</li>
+          <li><strong>Traffic routing:</strong> Direct requests to the right service based on host, path, or headers.</li>
+        </ul>
+        <blockquote class="callout">Networking fundamentals are essential for designing systems that actually work in production.</blockquote>
+      </section>
+
+      <!-- ==================== BAB P ==================== -->
+      <section class="node section">
+        <h2>BAB P — Advanced Backend Technologies</h2>
+
+        <h3>P.1 GraphQL</h3>
+        <p>GraphQL offers flexible querying and lets clients request exactly the data they need.</p>
+        <ul>
+          <li><strong>Flexible querying:</strong> Clients shape responses, which can reduce over-fetching and simplify API usage.</li>
+        </ul>
+
+        <h3>P.2 gRPC</h3>
+        <p>gRPC is a high-performance RPC framework useful for service-to-service communication in microservices environments.</p>
+        <ul>
+          <li><strong>High-performance RPC:</strong> Use binary protocols and generated client code for fast internal APIs.</li>
+        </ul>
+
+        <h3>P.3 REST APIs</h3>
+        <p>REST remains the standard for web APIs and is often the best choice for external-facing services.</p>
+        <ul>
+          <li><strong>Standard web APIs:</strong> Use HTTP and resource-based patterns for broad compatibility and simplicity.</li>
+        </ul>
+
+        <h3>P.4 Message Queues</h3>
+        <p>Message queues provide reliable async communication and help absorb bursts in traffic.</p>
+        <ul>
+          <li><strong>Async communication:</strong> Decouple producers and consumers so services can scale independently.</li>
+        </ul>
+        <blockquote class="callout">Modern backend systems often combine GraphQL, gRPC, REST, and queues depending on use case.</blockquote>
+      </section>
+
+      <!-- ==================== BAB Q ==================== -->
+      <section class="node section">
+        <h2>BAB Q — Data Storage &amp; Caching</h2>
+
+        <h3>Q.1 SQL Databases</h3>
+        <p>Relational databases are ideal for structured data and strong consistency requirements.</p>
+        <ul>
+          <li><strong>Relational modeling:</strong> Design normalized schemas that represent entities and relationships clearly.</li>
+        </ul>
+
+        <h3>Q.2 NoSQL Databases</h3>
+        <p>NoSQL stores are useful when your data model is flexible or you need extreme scale.</p>
+        <ul>
+          <li><strong>Key-value:</strong> Fast access for simple lookup patterns.</li>
+          <li><strong>Document stores:</strong> Flexible structures for evolving application data.</li>
+        </ul>
+
+        <h3>Q.3 Object Storage</h3>
+        <p>Object storage is the right choice for large unstructured files like media and backups.</p>
+        <ul>
+          <li><strong>S3-style systems:</strong> Durable, scalable storage with URLs and metadata support.</li>
+        </ul>
+
+        <h3>Q.4 Caching Strategies</h3>
+        <p>Good caching reduces latency and backend load when used with the right invalidation strategy.</p>
+        <ul>
+          <li><strong>Cache Aside:</strong> Load data into cache on demand.</li>
+          <li><strong>Write Through:</strong> Update cache and datastore together.</li>
+          <li><strong>Write Back:</strong> Write to cache first, then persist later.</li>
+          <li><strong>Read Through:</strong> Let the cache load missing values automatically.</li>
+        </ul>
+        <blockquote class="callout">Storage and caching decisions are the highest ROI topics in system design interviews.</blockquote>
+      </section>
+
+      <!-- ==================== BAB R ==================== -->
+      <section class="node section">
+        <h2>BAB R — Advanced Distributed Systems</h2>
+
+        <h3>R.1 Cloud Computing</h3>
+        <p>Cloud-native design uses managed services and elastic infrastructure to build systems that scale on demand.</p>
+        <ul>
+          <li><strong>Cloud-native systems:</strong> Use services like compute, storage, and networking that scale automatically.</li>
+        </ul>
+
+        <h3>R.2 Logging &amp; Monitoring</h3>
+        <p>Observability is central to distributed systems. Track logs, metrics, and traces so you can diagnose failures quickly.</p>
+        <ul>
+          <li><strong>Observability:</strong> Collect the right signals to understand system health and behavior.</li>
+        </ul>
+
+        <h3>R.3 Consistent Hashing</h3>
+        <p>Consistent hashing helps distribute data and traffic evenly while minimizing rebalancing when nodes change.</p>
+        <ul>
+          <li><strong>Distributed partitioning:</strong> Assign keys to nodes so the system can scale without massive reshuffling.</li>
+        </ul>
+
+        <h3>R.4 CAP Theorem</h3>
+        <p>The CAP theorem explains the trade-offs between consistency, availability, and partition tolerance in distributed systems.</p>
+        <ul>
+          <li><strong>Consistency:</strong> Every read sees the latest write.</li>
+          <li><strong>Availability:</strong> The system responds even when some nodes fail.</li>
+          <li><strong>Partition tolerance:</strong> The system continues despite network splits.</li>
+        </ul>
+
+        <h3>R.5 Database Indexing</h3>
+        <p>Indexing speeds queries by organizing data for fast lookups, which is essential for large-scale datasets.</p>
+        <ul>
+          <li><strong>B-Tree concepts:</strong> Use balanced tree structures to index relational data efficiently.</li>
+          <li><strong>Query optimization:</strong> Choose indexes that match common query patterns.</li>
+        </ul>
+
+        <h3>R.6 Kafka Event Streaming</h3>
+        <p>Kafka is a popular event-streaming platform for building resilient, event-driven systems.</p>
+        <ul>
+          <li><strong>Event-driven systems:</strong> Use streams to decouple producers from consumers and build scalable pipelines.</li>
+        </ul>
+        <blockquote class="callout">Advanced distributed systems are about making the right trade-offs at scale.</blockquote>
+      </section>
+
+      <section class="node section">
+        <h2>Course Takeaways</h2>
+        <p>This course covers the repeatable system design framework interviewers expect: requirements, capacity estimation, API design, high-level architecture, deep dives, and trade-offs.</p>
+        <ul>
+          <li>Scalability engineering, distributed systems, and backend architecture are the core skills.</li>
+          <li>Practice problem patterns like TinyURL, rate limiter, chat, search, and booking systems.</li>
+          <li>Learn infrastructure concepts like load balancing, caching, messaging, and observability.</li>
+        </ul>
+      </section>
+
+      <section class="node section">
+        <h2>Positioning</h2>
+        <p>This roadmap is built for engineers preparing for senior and above roles in system design interviews.</p>
+        <ul>
+          <li>System Design: senior engineer foundation.</li>
+          <li>Distributed Systems: scalability expertise.</li>
+          <li>Databases: strong data layer design.</li>
+          <li>Caching: performance optimization.</li>
+          <li>Messaging Systems: event-driven architecture.</li>
+          <li>Networking: infrastructure foundation.</li>
+          <li>Capacity Estimation: interview differentiator.</li>
+        </ul>
+      </section>
+
+      <section class="node section">
+        <h2>Best Learning Strategy</h2>
+        <ol>
+          <li>Master BAB A–C first.</li>
+          <li>Learn BAB N–R infrastructure concepts.</li>
+          <li>Practice TinyURL, rate limiter, WhatsApp, and news feed repeatedly.</li>
+          <li>Draw architecture diagrams by hand.</li>
+          <li>Practice explaining trade-offs aloud.</li>
+          <li>Conduct mock system design interviews weekly.</li>
+        </ol>
+      </section>
+
+      <section class="node section">
+        <h2>Ultimate Insight</h2>
+        <pre><code>Requirements
+    ↓
+Capacity Estimation
+    ↓
+API Design
+    ↓
+System Components
+    ↓
+Scalability Trade-offs
+    ↓
+Production-Ready Architecture
+</code></pre>
+        <p>This is the central flow for solving system design interview problems in a structured way.</p>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById("copyRichHtmlBtn");
+    const copySafeBtn = document.getElementById("copyTiptapSafeBtn");
+    const copyStatus = document.getElementById("copyStatus");
+    const docNode = document.querySelector(".doc");
+    const COPY_BUTTON_SELECTOR = ".section-copy-btn, .bab-copy-btn, .sub-copy-btn, .copy-actions-inline";
+
+    function unwrapElement(el) {
+      const parent = el.parentNode;
+      if (!parent) return;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    }
+
+    function buildTiptapSafeHtml() {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      clone.querySelectorAll(".meta, h1, .subtitle").forEach((el) => el.remove());
+      
+      clone.querySelectorAll(".summary").forEach((el) => {
+        const p = document.createElement("p");
+        p.innerHTML = el.innerHTML;
+        el.replaceWith(p);
+      });
+
+      clone.querySelectorAll("section, .node, div").forEach((el) => unwrapElement(el));
+
+      const allowed = new Set(["H2", "H3", "P", "UL", "OL", "LI", "STRONG", "EM", "BR", "BLOCKQUOTE", "PRE", "CODE"]);
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+      const toRemove = [];
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        if (!allowed.has(el.tagName)) {
+          toRemove.push(el);
+        }
+      }
+      toRemove.forEach((el) => unwrapElement(el));
+
+      clone.querySelectorAll("*").forEach((el) => {
+        Array.from(el.attributes).forEach((attr) => el.removeAttribute(attr.name));
+      });
+
+      return clone.innerHTML.trim();
+    }
+
+    function buildCleanHtmlFromNode(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      return clone.innerHTML.trim();
+    }
+
+    function buildSubBabTextHtml(h3) {
+      const wrapper = document.createElement("div");
+      let current = h3.nextElementSibling;
+      while (current) {
+        if (current.tagName === "H3" || current.tagName === "H2") break;
+        if (!current.matches(COPY_BUTTON_SELECTOR)) {
+          wrapper.appendChild(current.cloneNode(true));
+        }
+        current = current.nextElementSibling;
+      }
+      return wrapper.innerHTML.trim();
+    }
+
+    function getSubCode(h3Text) {
+       const match = h3Text.match(/^([A-Z]\.[0-9]+)/);
+       return match ? match[1] : h3Text.split('.')[0] || h3Text;
+    }
+
+    function injectCopyButtons() {
+      docNode.querySelectorAll("section.node").forEach((section) => {
+        const h2 = section.querySelector("h2");
+        if (!h2) return;
+
+        const h2Text = h2.textContent.trim();
+        const prefixMatch = h2Text.match(/BAB\s+([A-Z])/);
+        const prefix = prefixMatch ? "BAB " + prefixMatch[1] : "BAB";
+        
+        const babButton = document.createElement("button");
+        babButton.type = "button";
+        babButton.className = "copy-btn section-copy-btn bab-copy-btn";
+        babButton.textContent = "Copy " + prefix;
+        babButton.addEventListener("click", () => {
+          copyHtml(buildCleanHtmlFromNode(section), h2Text);
+        });
+        h2.insertAdjacentElement("afterend", babButton);
+
+        const h3List = section.querySelectorAll("h3");
+        h3List.forEach((h3) => {
+          const fullTitle = h3.textContent.trim();
+          const shortCode = getSubCode(fullTitle);
+
+          const row = document.createElement("div");
+          row.className = "copy-actions-inline sub-copy-btn";
+
+          const btnSub = document.createElement("button");
+          btnSub.type = "button";
+          btnSub.className = "copy-btn";
+          btnSub.textContent = shortCode;
+          btnSub.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(shortCode);
+              copyStatus.textContent = shortCode + " copied.";
+            } catch (err) {
+              copyStatus.textContent = "Failed to copy " + shortCode;
+            }
+          });
+
+          const btnJudul = document.createElement("button");
+          btnJudul.type = "button";
+          btnJudul.className = "copy-btn";
+          btnJudul.textContent = "Title " + shortCode;
+          btnJudul.addEventListener("click", () => {
+             const titleOnly = fullTitle.replace(/^[A-Z]\.[0-9]+\s*/, "");
+            copyHtml("<h3>" + titleOnly + "</h3>", "Title " + shortCode);
+          });
+
+          const btnIsi = document.createElement("button");
+          btnIsi.type = "button";
+          btnIsi.className = "copy-btn";
+          btnIsi.textContent = "Content " + shortCode;
+          btnIsi.addEventListener("click", () => {
+            const isiHtml = buildSubBabTextHtml(h3);
+            if (!isiHtml) {
+              copyStatus.textContent = shortCode + " has no content.";
+              return;
+            }
+            copyHtml(isiHtml, "Content " + shortCode);
+          });
+
+          row.appendChild(btnSub);
+          row.appendChild(btnJudul);
+          row.appendChild(btnIsi);
+          h3.insertAdjacentElement("afterend", row);
+        });
+      });
+    }
+
+    async function copyHtml(content, label) {
+      try {
+        const plain = content
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        if (window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([content], { type: "text/html" }),
+              "text/plain": new Blob([plain], { type: "text/plain" })
+            })
+          ]);
+        } else {
+          await navigator.clipboard.writeText(content);
+        }
+        copyStatus.textContent = label + " copied. Ready to paste.";
+      } catch (err) {
+        copyStatus.textContent = "Auto-copy failed.";
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener("click", () => {
+      const clone = docNode.cloneNode(true);
+      clone.querySelectorAll(COPY_BUTTON_SELECTOR).forEach((el) => el.remove());
+      copyHtml(clone.innerHTML.trim(), "Rich HTML");
+    });
+
+    copySafeBtn.addEventListener("click", () => {
+      copyHtml(buildTiptapSafeHtml(), "Tiptap-Safe HTML");
+    });
+
+    injectCopyButtons();
+  </script>
+</body>
+</html>

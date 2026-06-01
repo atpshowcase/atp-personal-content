@@ -115,4 +115,4 @@ Tambahkan juga di bawahnya:
 6) FONT RECOMMENDATION (heading/body)
 
 INPUT:
-[Paste salah satu: Judul / Link / Artikel / Thread]
+https://www.cnbc.com/2026/05/28/anthropic-open-ai-startup-value.html
