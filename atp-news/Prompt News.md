@@ -276,6 +276,7 @@ Prioritas:
 2. Research paper
 3. Engineering blog
 4. Reuters/Bloomberg
+5. Link article
 
 ---
 
