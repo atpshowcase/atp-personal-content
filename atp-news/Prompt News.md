@@ -75,7 +75,7 @@ Gunakan hanya jika membantu pemahaman.
 
 # Cari Berita
 
-Cari berita dalam 7 hari terakhir.
+Cari berita 8 Juni - 14 Juni 2026.
 
 Prioritas:
 

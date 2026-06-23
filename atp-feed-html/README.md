@@ -115,4 +115,4 @@ Tambahkan juga di bawahnya:
 6) FONT RECOMMENDATION (heading/body)
 
 INPUT:
-https://www.cnbc.com/2026/05/28/anthropic-open-ai-startup-value.html
+https://www.tbsnews.net/tech/pewdiepie-launches-odysseus-free-self-hosted-ai-workspace-challenge-big-tech-subscriptions
