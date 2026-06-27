@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>HTTP Methods Explained</title>
+    <title>3 Git Commands Every Beginner Should Know</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -117,8 +117,7 @@
         </div>
 
         <h1>
-            HTTP Methods Explained:
-            GET, POST, PUT & DELETE
+            3 Git Commands Every Beginner Should Know
         </h1>
 
         <p>
@@ -130,7 +129,7 @@
         </p>
 
         <p>
-            Every developer uses GET, POST, PUT and DELETE.
+            Does version control feel completely overwhelming to you?
         </p>
 
         <p>
@@ -138,136 +137,114 @@
         </p>
 
         <p>
-            Do you actually know what they're saying to the server?
+            Do you really need to memorize 50 different Git commands just to get started?
         </p>
 
         <blockquote>
-            Most beginners memorize them.
+            Most beginners try to learn everything at once.
 
-            The best developers understand the conversation.
+            The best developers just master the workflow.
         </blockquote>
 
         <p>
-            Let's change that.
+            Let's simplify it down to the only three commands you actually need right now.
         </p>
 
         <hr>
 
-        <h2>1. GET</h2>
+        <h2>1. git add</h2>
 
         <p>
-            Imagine walking into a restaurant.
+            Imagine you're packing for a trip.
         </p>
 
         <p>
-            You haven't ordered anything.
+            You wouldn't just grab your entire house and throw it in the car.
         </p>
 
         <p>
-            You're just reading the menu.
+            You pack specific items into a suitcase first.
         </p>
 
         <p>
-            That's exactly what GET does.
+            That's exactly what <code>git add</code> does.
         </p>
 
         <p>
-            It simply asks the server...
+            It simply tells Git...
         </p>
 
         <blockquote>
-            "Can I see the data?"
+            "I want to include these specific files in my next save."
         </blockquote>
 
-        <pre><code>GET /users</code></pre>
+        <pre><code>git add .</code></pre>
 
         <p>
-            Nothing changes.
+            Nothing is permanently saved yet.
 
-            You're only reading.
+            You're just staging the files for the trip.
         </p>
 
         <hr>
 
-        <h2>2. POST</h2>
+        <h2>2. git commit</h2>
 
         <p>
-            Now you're ready to order.
+            Now your suitcase is packed.
         </p>
 
         <p>
-            You tell the waiter exactly what you want.
+            But you need to put a label on it so you remember exactly what's inside.
         </p>
 
         <p>
-            You're creating something new.
+            That's what <code>git commit</code> does.
         </p>
 
-        <pre><code>POST /users</code></pre>
+        <pre><code>git commit -m "Added the login feature"</code></pre>
 
         <p>
-            That's POST.
+            You're taking a permanent snapshot of everything in your suitcase.
         </p>
 
         <p>
-            It sends new information to the server.
+            And attaching a clear sticky note to it.
+        </p>
+        
+        <p>
+            Now, if you ever completely break your code...
+            You can just time-travel back to this exact snapshot.
         </p>
 
         <hr>
 
-        <h2>3. PUT</h2>
+        <h2>3. git push</h2>
 
         <p>
-            A minute later...
+            Okay, your code is safely saved on your computer.
         </p>
 
         <p>
-            You change your order.
+            But what if your laptop suddenly dies?
         </p>
 
         <p>
-            "Actually...
-            Can I have the chicken sandwich instead?"
+            You need to back it up to the cloud.
         </p>
 
         <p>
-            You're not placing another order.
+            That's <code>git push</code>.
+        </p>
+
+        <pre><code>git push origin main</code></pre>
+        
+        <p>
+            It takes your labeled suitcase and ships it off to GitHub.
         </p>
 
         <p>
-            You're updating the existing one.
-        </p>
-
-        <pre><code>PUT /users/1</code></pre>
-
-        <hr>
-
-        <h2>4. DELETE</h2>
-
-        <p>
-            Then you decide...
-        </p>
-
-        <p>
-            "I don't want the fries anymore."
-        </p>
-
-        <p>
-            The waiter removes them.
-        </p>
-
-        <p>
-            That's DELETE.
-        </p>
-
-        <pre><code>DELETE /users/1</code></pre>
-
-        <p>
-            It tells the server to remove something that already exists.
-        </p>
-
-        <p>
-            Maybe don't practice this on production though.
+            Now your work is safe in the cloud, and your whole team can see it.
         </p>
 
         <hr>
@@ -279,38 +256,33 @@
         </p>
 
         <p>
-            These aren't random words.
+            It's not about memorizing commands.
         </p>
 
         <p>
-            They're simply four different ways your app talks to a server.
+            It's just a simple, three-step workflow.
         </p>
 
         <table>
 
             <tr>
-                <th>Method</th>
-                <th>What it says</th>
+                <th>Command</th>
+                <th>The Action</th>
             </tr>
 
             <tr>
-                <td>GET</td>
-                <td>Show me the data.</td>
+                <td>git add</td>
+                <td>Pack the suitcase (Stage).</td>
             </tr>
 
             <tr>
-                <td>POST</td>
-                <td>Create something new.</td>
+                <td>git commit</td>
+                <td>Label the suitcase (Save).</td>
             </tr>
 
             <tr>
-                <td>PUT</td>
-                <td>Replace this with the new version.</td>
-            </tr>
-
-            <tr>
-                <td>DELETE</td>
-                <td>Remove this.</td>
+                <td>git push</td>
+                <td>Ship the suitcase (Upload).</td>
             </tr>
 
         </table>
@@ -324,16 +296,16 @@
         </p>
 
         <p>
-            Don't memorize HTTP methods.
+            Don't get overwhelmed by Git.
         </p>
 
         <p>
-            Think of them as a conversation between your application and the server.
+            Think of it as simply packing, labeling, and shipping your code.
         </p>
 
         <p>
             Once you see that pattern...
-            APIs suddenly become much easier to understand.
+            Version control suddenly becomes much easier to understand.
         </p>
 
         <p>
