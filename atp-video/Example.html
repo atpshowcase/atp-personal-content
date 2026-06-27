@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HTTP Methods Explained</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:Inter,sans-serif;
+    background:#f5f5f5;
+    color:#222;
+    padding:60px 20px;
+
+}
+
+.container{
+
+    max-width:900px;
+    margin:auto;
+    background:white;
+    border-radius:18px;
+    padding:50px;
+    box-shadow:0 10px 35px rgba(0,0,0,.08);
+
+}
+
+.badge{
+
+    display:inline-block;
+    background:#ececec;
+    padding:6px 12px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.5px;
+    margin-bottom:18px;
+
+}
+
+h1{
+
+    font-size:48px;
+    line-height:1.1;
+    margin-bottom:40px;
+    font-weight:800;
+
+}
+
+h2{
+
+    font-size:42px;
+    margin-top:45px;
+    margin-bottom:20px;
+
+}
+
+p{
+
+    font-size:22px;
+    line-height:1.8;
+    margin-bottom:18px;
+    color:#444;
+
+}
+
+hr{
+
+    margin:45px 0;
+    border:none;
+    border-top:1px solid #e6e6e6;
+
+}
+
+code{
+
+    background:#efefef;
+    padding:3px 8px;
+    border-radius:6px;
+    font-size:18px;
+
+}
+
+pre{
+
+    background:#0d0d0d;
+    color:white;
+    border-radius:18px;
+    padding:28px;
+    margin:25px 0;
+    overflow:auto;
+
+}
+
+pre code{
+
+    background:none;
+    color:white;
+    font-size:22px;
+
+}
+
+blockquote{
+
+    margin:20px 0;
+    padding:18px 24px;
+    border-left:5px solid #2563eb;
+    background:#f8fbff;
+    font-size:24px;
+    font-weight:600;
+    color:#111;
+
+}
+
+table{
+
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+
+}
+
+th,td{
+
+    border:1px solid #e5e5e5;
+    padding:18px;
+    text-align:left;
+    font-size:20px;
+
+}
+
+th{
+
+    background:#f6f6f6;
+
+}
+
+ul{
+
+    margin-top:20px;
+    margin-left:30px;
+
+}
+
+li{
+
+    margin-bottom:12px;
+    font-size:22px;
+
+}
+
+.summary{
+
+    background:#fafafa;
+    padding:30px;
+    border-radius:15px;
+    margin-top:25px;
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="badge">INSTAGRAM • DRAFT</div>
+
+<h1>HTTP Methods Explained: GET, POST, PUT & DELETE</h1>
+
+<p>
+Hey everyone, ATP here. Today, let's learn about four HTTP methods every beginner developer should know together.
+</p>
+
+<p>
+If you're new to APIs, you've probably seen <strong>GET, POST, PUT, and DELETE</strong> and wondered...
+</p>
+
+<blockquote>
+"Do I really need to learn all of these?"
+</blockquote>
+
+<p>
+The answer is yes—but don't worry.
+They're actually much simpler than they sound.
+</p>
+
+<hr>
+
+<h2>1. GET</h2>
+
+<p>
+When your application needs to retrieve data from a server, you'll use <code>GET</code>.
+</p>
+
+<p>
+Think of it like asking:
+</p>
+
+<blockquote>
+"Hey server, can I see the data?"
+</blockquote>
+
+<p>
+GET only reads information.
+It doesn't change anything on the server.
+</p>
+
+<pre><code>GET /users</code></pre>
+
+<p>
+For example, when you open an online store to browse products, your app is making a GET request.
+</p>
+
+<hr>
+
+<h2>2. POST</h2>
+
+<p>
+Now let's say you want to create something new.
+</p>
+
+<p>
+Maybe you're creating an account.
+Sending a message.
+Uploading a photo.
+</p>
+
+<p>
+That's where <code>POST</code> comes in.
+</p>
+
+<pre><code>POST /users</code></pre>
+
+<p>
+POST sends new data to the server so it can create a new resource.
+</p>
+
+<hr>
+
+<h2>3. PUT</h2>
+
+<p>
+Sometimes the data already exists.
+You just want to update it.
+</p>
+
+<p>
+That's exactly what <code>PUT</code> is for.
+</p>
+
+<pre><code>PUT /users/1</code></pre>
+
+<p>
+Imagine your profile says you're 20 years old.
+After your birthday, you update it to 21.
+</p>
+
+<p>
+You're replacing the existing information—not creating another profile.
+</p>
+
+<hr>
+
+<h2>4. DELETE</h2>
+
+<p>
+Sometimes you don't need the data anymore.
+</p>
+
+<p>
+Maybe you want to delete a post.
+Remove an account.
+Delete a product.
+</p>
+
+<p>
+That's where <code>DELETE</code> comes in.
+</p>
+
+<pre><code>DELETE /users/1</code></pre>
+
+<p>
+DELETE tells the server to remove an existing resource.
+</p>
+
+<p>
+Just... maybe don't try this on your production database.
+Your teammates will definitely remember you.
+</p>
+
+<hr>
+
+<h2>Quick Summary</h2>
+
+<div class="summary">
+
+<table>
+
+<tr>
+<th>Method</th>
+<th>Purpose</th>
+</tr>
+
+<tr>
+<td><strong>GET</strong></td>
+<td>Read data</td>
+</tr>
+
+<tr>
+<td><strong>POST</strong></td>
+<td>Create new data</td>
+</tr>
+
+<tr>
+<td><strong>PUT</strong></td>
+<td>Update existing data</td>
+</tr>
+
+<tr>
+<td><strong>DELETE</strong></td>
+<td>Remove data</td>
+</tr>
+
+</table>
+
+<ul>
+<li>✅ GET → Read</li>
+<li>✅ POST → Create</li>
+<li>✅ PUT → Update</li>
+<li>✅ DELETE → Remove</li>
+</ul>
+
+</div>
+
+<hr>
+
+<h2>Closing</h2>
+
+<p>
+If you remember one thing from today, remember this:
+GET reads, POST creates, PUT updates, and DELETE removes.
+</p>
+
+<p>
+These four methods make up the majority of API requests you'll work with as a software engineer.
+</p>
+
+<p>
+<strong>Keep learning, and I'll see you in the next one.</strong>
+</p>
+
+</div>
+
+</body>
+</html>
