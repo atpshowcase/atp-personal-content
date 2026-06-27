@@ -1,129 +1,39 @@
-You are a professional technical content writer and UI designer.
+## Style Reference
 
-Create a clean educational HTML page following this exact design style.
+Use the public content style of Jason Cooperson's Instagram as a high-level inspiration for pacing and storytelling:
 
-## Overall Style
+https://www.instagram.com/jasoncooperson/
 
-The page should look like a premium developer article designed for Instagram carousel screenshots, LinkedIn posts, or blog content.
+This reference is ONLY for understanding the overall presentation style.
 
-Style requirements:
+Draw inspiration from:
+- Strong curiosity hooks
+- Fast-paced storytelling
+- Short, punchy sentences
+- One idea introduced at a time
+- Conversational and confident tone
+- Story-first, explanation-second
+- Real-world analogies that simplify technical concepts
+- Curiosity gaps that keep viewers watching
+- A satisfying "Aha!" moment near the end
+- High retention through rhythm and pacing
+- Educational but entertaining
+- Easy enough for beginners to understand
+- Professional creator-quality narration
 
-• Clean white background
-• Rounded container (16–20px radius)
-• Soft shadow
-• Plenty of whitespace
-• Modern typography (Inter font)
-• Large bold title (48px+)
-• Section headings around 36–42px
-• Comfortable reading spacing
-• Professional minimal design
-• Black rounded code blocks
-• Light gray inline code
-• Thin horizontal dividers between sections
-• Responsive layout
-• Maximum width around 900px
-• Similar visual style to Linear, Stripe Docs, Vercel Docs, or Notion.
+Do NOT copy or closely imitate:
+- Specific wording
+- Sentences
+- Catchphrases
+- Script structure unique to the creator
+- Jokes
+- Personal opinions
+- Signature expressions
+- Any copyrighted or distinctive creative elements
 
-Do NOT make it colorful.
-Do NOT use gradients.
-Do NOT use cards everywhere.
-Keep everything simple and elegant.
+Instead, create an original ATP-style script that captures the same high-level qualities while developing its own unique voice.
 
------------------------------------
-
-The page structure should always be:
-
-1. Small badge
-Example:
-
-INSTAGRAM • DRAFT
-
-2. Large page title
-
-3. Introduction
-
-Use a friendly beginner tone.
-
-Opening format:
-
-Hey everyone, ATP here. Today, let's learn about {TOPIC} together.
-
-If you're new to {SUBJECT}, you've probably wondered...
-
-Include one short quote/question inside a blockquote.
-
-4. Multiple numbered sections
-
-Each section should contain:
-
-• Large heading
-
-Example:
-
-1. GET
-
-• Short explanation
-
-• Beginner-friendly language
-
-• Real-world analogy
-
-• Code block if applicable
-
-Example:
-
-GET /users
-
-• One practical example
-
-Separate every section using a horizontal divider.
-
-5. Quick Summary
-
-Create a simple table.
-
-Example
-
-| Topic | Meaning |
-
-Then provide a short bullet list summarizing the key ideas.
-
-6. Closing
-
-End with:
-
-If you remember one thing today...
-
-Then summarize everything in 2–3 sentences.
-
-Finish with
-
-Keep learning, and I'll see you in the next one.
-
------------------------------------
-
-Writing Style
-
-Use:
-
-• Casual
-• Friendly
-• Slightly cheeky
-• Beginner friendly
-• Software engineer creator vibe
-• Easy English
-• Short paragraphs
-• One idea per paragraph
-
-Avoid:
-
-❌ Long paragraphs
-
-❌ Academic language
-
-❌ Buzzwords
-
-❌ Walls of text
+The finished script should feel like an original software engineering creator who is inspired by the pacing and educational style of Jason Cooperson, but is not a copy of his work.
 
 -----------------------------------
 
@@ -157,4 +67,4 @@ Use Inter from Google Fonts.
 
 Today's topic is:
 
-{TOPIC}
+HTTP Methods Explained: GET, POST, PUT & DELETE
