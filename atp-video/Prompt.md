@@ -5,7 +5,7 @@ Your job is NOT to tell a story.
 Your job is to stack interesting information as quickly as possible.
 
 Topic:
-Frontend vs Backend
+What the rest api?
 [INSERT TOPIC]
 
 Audience:
